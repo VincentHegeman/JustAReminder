@@ -4,54 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Nooit Meer Vergeten - Dashboard</title>
+    <title>Dashboard — Nooit Meer Vergeten</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        :root {
-            --navy: #172542;
-            --navy-light: #26385f;
-            --blue: #4d79d8;
-            --blue-soft: #eaf2ff;
-
-            --green: #45a878;
-            --green-soft: #e9f8f0;
-
-            --purple: #8868d9;
-            --purple-soft: #f1ecff;
-
-            --pink: #e987a8;
-            --pink-soft: #fff0f5;
-
-            --orange: #e7a33a;
-            --orange-soft: #fff5df;
-
-            --cream: #faf8f4;
-            --white: #ffffff;
-
-            --text: #1e2d4b;
-            --text-light: #71809a;
-            --border: #e8eaf0;
-
-            --shadow: 0 8px 30px rgba(31, 48, 78, 0.07);
-            --radius: 22px;
-        }
-
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            font-family:
-                Inter,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                sans-serif;
-            background: var(--cream);
-            color: var(--text);
+            font-family: Inter, Arial, sans-serif;
+            background: #f7f4ef;
+            color: #202020;
         }
 
         button,
@@ -65,25 +32,18 @@
             cursor: pointer;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        /* =========================
-           LAYOUT
-        ========================= */
-
         .app {
-            display: flex;
             min-height: 100vh;
+            display: flex;
         }
+
+        /* SIDEBAR */
 
         .sidebar {
             width: 250px;
-            background: linear-gradient(180deg, #172542 0%, #1d2b4a 100%);
+            background: #20201f;
             color: white;
-            padding: 25px 17px;
+            padding: 26px 18px;
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -93,1039 +53,462 @@
             z-index: 20;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 8px 30px;
+        .logo {
+            padding: 4px 10px 30px;
         }
 
-        .brand-icon {
-            width: 43px;
-            height: 43px;
-            background: #eef2ff;
-            color: #426ac0;
-            border-radius: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            font-weight: 800;
+        .logo h1 {
+            font-size: 20px;
+            letter-spacing: -0.5px;
         }
 
-        .brand-text {
-            font-size: 18px;
-            font-weight: 750;
-            line-height: 1.05;
-            letter-spacing: -0.3px;
-        }
-
-        .brand-text span {
-            display: block;
+        .logo p {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 5px;
         }
 
         .nav {
             display: flex;
             flex-direction: column;
-            gap: 7px;
+            gap: 5px;
         }
 
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            padding: 12px 14px;
-            border-radius: 13px;
-            color: #dbe2f1;
+        .nav a {
+            color: #cfcfcf;
+            text-decoration: none;
+            padding: 12px 13px;
+            border-radius: 10px;
             font-size: 14px;
-            font-weight: 550;
-            transition: 0.2s ease;
+            transition: 0.2s;
         }
 
-        .nav-link:hover {
-            background: rgba(255,255,255,0.08);
+        .nav a:hover,
+        .nav a.active {
+            background: #353533;
             color: white;
-        }
-
-        .nav-link.active {
-            background: rgba(113, 143, 216, 0.38);
-            color: white;
-        }
-
-        .nav-icon {
-            width: 21px;
-            text-align: center;
-            font-size: 17px;
-        }
-
-        .nav-divider {
-            height: 1px;
-            background: rgba(255,255,255,0.15);
-            margin: 17px 7px;
         }
 
         .sidebar-bottom {
             margin-top: auto;
         }
 
-        .logout-button {
-            width: 100%;
-            border: 0;
-            background: transparent;
-            color: #dbe2f1;
-            padding: 12px 14px;
-            border-radius: 13px;
-            text-align: left;
+        .profile-mini {
             display: flex;
-            gap: 13px;
             align-items: center;
-            transition: 0.2s;
-        }
-
-        .logout-button:hover {
-            background: rgba(255,255,255,0.08);
+            gap: 10px;
+            padding: 13px 10px;
+            border-top: 1px solid #3a3a38;
             color: white;
+            text-decoration: none;
         }
 
-        /* =========================
-           MAIN
-        ========================= */
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #d9c7aa;
+            color: #26231f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .profile-mini strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .profile-mini span {
+            display: block;
+            color: #999;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* MAIN */
 
         .main {
             margin-left: 250px;
             width: calc(100% - 250px);
-            min-height: 100vh;
+            padding: 34px;
         }
 
         .topbar {
-            height: 78px;
-            background: rgba(255,255,255,0.94);
-            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 35px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            backdrop-filter: blur(12px);
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .search-box {
-            width: min(450px, 55%);
-            position: relative;
-        }
-
-        .search-box span {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #78859c;
-            font-size: 18px;
-        }
-
-        .search-box input {
-            width: 100%;
-            height: 43px;
-            border: 1px solid #e4e7ee;
-            border-radius: 14px;
-            padding: 0 17px 0 44px;
-            outline: none;
-            color: var(--text);
-            background: #fbfbfc;
-            transition: 0.2s;
-        }
-
-        .search-box input:focus {
-            background: white;
-            border-color: #9bb4ed;
-            box-shadow: 0 0 0 4px rgba(77,121,216,0.08);
-        }
-
-        .user-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: #203760;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .user-name {
-            font-size: 14px;
-            font-weight: 650;
-        }
-
-        .user-arrow {
-            color: #8a96a9;
-            font-size: 12px;
-        }
-
-        .content {
-            padding: 34px 36px 50px;
-            max-width: 1550px;
-            margin: 0 auto;
-        }
-
-        /* =========================
-           WELCOME
-        ========================= */
-
-        .welcome {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            min-height: 115px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .welcome-text {
-            position: relative;
-            z-index: 2;
-        }
-
-        .welcome h1 {
-            font-size: 32px;
-            line-height: 1.15;
-            margin: 0 0 8px;
-            letter-spacing: -1px;
+        .welcome h2 {
+            font-size: 27px;
+            letter-spacing: -0.7px;
         }
 
         .welcome p {
-            margin: 0;
-            color: var(--text-light);
-            font-size: 15px;
+            color: #777;
+            margin-top: 5px;
+            font-size: 14px;
         }
 
-        .welcome-decoration {
-            width: 260px;
-            height: 120px;
-            position: relative;
-            margin-right: 20px;
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .sun {
-            position: absolute;
-            right: 50px;
-            top: 8px;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: #ffd56a;
+        .search {
+            width: 250px;
+            background: white;
+            border: 1px solid #e5e0d8;
+            border-radius: 11px;
+            padding: 11px 13px;
+            outline: none;
         }
 
-        .hill {
-            position: absolute;
-            right: 0;
-            bottom: 5px;
-            width: 190px;
-            height: 55px;
-            background: #8bc59d;
-            border-radius: 100% 100% 0 0;
-            transform: rotate(-4deg);
+        .search:focus {
+            border-color: #aaa;
         }
 
-        .hill.second {
-            right: 65px;
-            bottom: 0;
-            width: 160px;
-            height: 43px;
-            background: #6eab83;
-            transform: rotate(5deg);
+        .primary-btn {
+            border: none;
+            background: #20201f;
+            color: white;
+            border-radius: 11px;
+            padding: 11px 16px;
+            font-weight: 600;
         }
 
-        /* =========================
-           STATS
-        ========================= */
+        .primary-btn:hover {
+            background: #363634;
+        }
+
+        /* STATS */
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr) 1.35fr;
-            gap: 16px;
-            margin-bottom: 26px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        .stat-card {
-            min-height: 135px;
-            border-radius: 20px;
-            padding: 19px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid transparent;
+        .stat {
+            background: white;
+            border: 1px solid #ebe6df;
+            border-radius: 15px;
+            padding: 20px;
         }
 
-        .stat-card.blue {
-            background: #edf5ff;
-            border-color: #dcecff;
-        }
-
-        .stat-card.green {
-            background: #edf9f2;
-            border-color: #d9f0e3;
-        }
-
-        .stat-card.purple {
-            background: #f3efff;
-            border-color: #e7defe;
-        }
-
-        .stat-card.teal {
-            background: #edf8f7;
-            border-color: #d9efec;
-        }
-
-        .stat-card.orange {
-            background: #fff6e3;
-            border-color: #f8e8c1;
-        }
-
-        .stat-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-            font-size: 17px;
-            font-weight: 800;
-        }
-
-        .blue .stat-icon {
-            background: #d9eaff;
-            color: #3570cb;
-        }
-
-        .green .stat-icon {
-            background: #d5f1df;
-            color: #359566;
-        }
-
-        .purple .stat-icon {
-            background: #e4d9ff;
-            color: #7654c8;
-        }
-
-        .teal .stat-icon {
-            background: #d4efeb;
-            color: #388c84;
-        }
-
-        .orange .stat-icon {
-            background: #ffe8b5;
-            color: #d8891d;
-        }
-
-        .stat-title {
-            color: #64738e;
-            font-size: 13px;
-            margin-bottom: 3px;
-        }
-
-        .stat-number {
-            font-size: 25px;
-            font-weight: 750;
-            letter-spacing: -0.5px;
-        }
-
-        .stat-sub {
-            color: #7b879c;
+        .stat-label {
+            color: #777;
             font-size: 12px;
-            margin-top: 2px;
+            margin-bottom: 8px;
         }
 
-        .encouragement {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .stat-value {
+            font-size: 27px;
+            font-weight: 700;
         }
 
-        .encouragement h3 {
-            margin: 0 0 7px;
-            font-size: 17px;
-        }
+        /* CONTENT */
 
-        .encouragement p {
-            margin: 0;
-            color: #69768a;
-            font-size: 13px;
-            line-height: 1.5;
-            max-width: 220px;
-        }
-
-        /* =========================
-           MAIN GRID
-        ========================= */
-
-        .dashboard-grid {
+        .content-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 275px;
-            gap: 22px;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
         }
 
         .card {
             background: white;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-
-        .reminders-card {
-            overflow: hidden;
+            border: 1px solid #ebe6df;
+            border-radius: 16px;
+            padding: 20px;
         }
 
         .card-header {
-            padding: 23px 24px 17px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            gap: 10px;
+            margin-bottom: 18px;
         }
 
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
-
-        .card-title-icon {
-            width: 37px;
-            height: 37px;
-            background: var(--blue-soft);
-            color: var(--blue);
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .card-header h3 {
             font-size: 17px;
-        }
-
-        .card-title h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .add-button {
-            border: 0;
-            background: var(--navy);
-            color: white;
-            border-radius: 12px;
-            padding: 10px 15px;
-            font-weight: 650;
-            font-size: 13px;
-            transition: 0.2s;
-        }
-
-        .add-button:hover {
-            background: #26385f;
-            transform: translateY(-1px);
         }
 
         .filters {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 24px 17px;
-            border-bottom: 1px solid #eef0f4;
-            gap: 10px;
+            gap: 6px;
         }
 
-        .filter-buttons {
-            display: flex;
-            gap: 7px;
-            flex-wrap: wrap;
-        }
-
-        .filter-button {
-            border: 0;
-            background: #f5f6f8;
-            color: #68768d;
-            border-radius: 20px;
-            padding: 8px 13px;
+        .filter {
+            border: 1px solid #e4dfd7;
+            background: #faf8f5;
+            padding: 7px 11px;
+            border-radius: 8px;
             font-size: 12px;
-            font-weight: 600;
         }
 
-        .filter-button.active {
-            background: var(--navy);
+        .filter.active {
+            background: #20201f;
             color: white;
+            border-color: #20201f;
         }
 
-        .sort-select {
-            border: 1px solid #e5e7ec;
-            border-radius: 10px;
-            padding: 8px 10px;
-            color: #68768d;
-            background: white;
-            outline: none;
-            font-size: 12px;
-        }
+        /* REMINDERS */
 
-        /* =========================
-           REMINDER LIST
-        ========================= */
-
-        .reminder-list {
-            padding: 0 20px;
+        .reminders {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
         }
 
         .reminder {
-            display: grid;
-            grid-template-columns: 27px 48px minmax(0,1fr) 150px 32px;
-            gap: 13px;
-            align-items: center;
-            min-height: 94px;
-            border-bottom: 1px solid #eef0f4;
-            padding: 12px 4px;
-            transition: 0.2s;
-        }
-
-        .reminder:last-child {
-            border-bottom: 0;
-        }
-
-        .reminder:hover {
-            background: #fbfcfe;
+            border: 1px solid #ebe6df;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
         }
 
         .check {
             width: 20px;
             height: 20px;
-            border: 2px solid #cbd3df;
+            border: 1px solid #bbb;
             border-radius: 6px;
             background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .check.done {
+            background: #20201f;
+            border-color: #20201f;
+            position: relative;
+        }
+
+        .check.done::after {
+            content: "✓";
             color: white;
-            font-size: 11px;
-        }
-
-        .check.completed {
-            background: var(--green);
-            border-color: var(--green);
-        }
-
-        .reminder-icon {
-            width: 43px;
-            height: 43px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 750;
-            font-size: 16px;
-        }
-
-        .icon-pink {
-            background: var(--pink-soft);
-            color: #d96289;
-        }
-
-        .icon-green {
-            background: var(--green-soft);
-            color: #389768;
-        }
-
-        .icon-purple {
-            background: var(--purple-soft);
-            color: #7654c8;
-        }
-
-        .icon-orange {
-            background: var(--orange-soft);
-            color: #d78a1e;
-        }
-
-        .icon-blue {
-            background: var(--blue-soft);
-            color: #3971c9;
+            font-size: 13px;
+            position: absolute;
+            left: 3px;
+            top: 0px;
         }
 
         .reminder-main {
+            flex: 1;
             min-width: 0;
         }
 
         .reminder-title {
+            font-weight: 600;
             font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
-        .reminder.completed .reminder-title {
+        .reminder-title.done {
             text-decoration: line-through;
-            color: #8a95a7;
+            color: #999;
         }
 
         .reminder-description {
-            color: #7b8799;
+            color: #777;
             font-size: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 7px;
+            margin-top: 4px;
         }
 
-        .tags {
+        .reminder-meta {
             display: flex;
-            gap: 5px;
             flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
         }
 
         .tag {
-            display: inline-flex;
-            border-radius: 20px;
-            padding: 4px 8px;
+            background: #f2eee8;
+            color: #665f55;
+            border-radius: 6px;
+            padding: 4px 7px;
             font-size: 10px;
-            font-weight: 700;
-        }
-
-        .tag-category {
-            background: #edf1f8;
-            color: #5e6e87;
         }
 
         .priority-high {
-            background: #ffe8e7;
-            color: #d76561;
-        }
-
-        .priority-normal {
-            background: #fff2cf;
-            color: #a97916;
+            background: #eee0da;
+            color: #8b4937;
         }
 
         .priority-low {
-            background: #e8f6ed;
-            color: #39855e;
+            background: #e5eee7;
+            color: #47634f;
         }
 
-        .reminder-date {
-            color: #687790;
-            font-size: 12px;
-            line-height: 1.8;
-        }
-
-        .date-line {
+        .reminder-actions {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
-        .more-button {
-            border: 0;
-            background: transparent;
-            color: #8b96a7;
-            font-size: 20px;
-            padding: 4px;
-        }
-
-        .more-button:hover {
-            color: var(--navy);
-        }
-
-        .empty-state {
-            padding: 60px 20px;
-            text-align: center;
-            color: #7a8799;
-        }
-
-        .empty-state h3 {
-            color: var(--text);
-            margin-bottom: 7px;
-        }
-
-        .bottom-note {
-            margin: 12px 20px 20px;
-            padding: 12px 15px;
-            background: #f6f8fa;
-            border-radius: 12px;
-            color: #7b8798;
-            font-size: 12px;
-        }
-
-        /* =========================
-           SIDE CARDS
-        ========================= */
-
-        .side-column {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-        .side-card {
-            padding: 19px;
-        }
-
-        .side-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
-
-        .side-card-header h3 {
-            margin: 0;
-            font-size: 15px;
-        }
-
-        .count {
-            min-width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background: var(--blue-soft);
-            color: var(--blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .small-btn {
+            border: 1px solid #e5e0d8;
+            background: #faf8f5;
+            border-radius: 7px;
+            padding: 6px 8px;
             font-size: 11px;
-            font-weight: 750;
         }
 
-        .mini-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 11px 0;
-            border-bottom: 1px solid #eef0f4;
-        }
-
-        .mini-item:last-child {
-            border-bottom: 0;
-        }
-
-        .mini-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .empty {
+            text-align: center;
+            padding: 45px 15px;
+            color: #888;
             font-size: 13px;
-            flex-shrink: 0;
         }
 
-        .mini-content {
-            min-width: 0;
+        /* UPCOMING */
+
+        .upcoming-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee9e2;
         }
 
-        .mini-title {
-            font-size: 12px;
-            font-weight: 650;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .upcoming-item:last-child {
+            border-bottom: none;
         }
 
-        .mini-date {
-            color: #8792a3;
-            font-size: 10px;
-            margin-top: 3px;
-        }
-
-        .view-all {
-            display: block;
-            text-align: center;
-            border: 1px solid #e5e8ee;
-            border-radius: 10px;
-            padding: 9px;
-            margin-top: 13px;
+        .upcoming-date {
+            color: #9a7f59;
             font-size: 11px;
-            font-weight: 650;
-            color: #52627d;
+            margin-bottom: 4px;
         }
 
-        .view-all:hover {
-            background: #f8f9fb;
+        .upcoming-title {
+            font-size: 13px;
+            font-weight: 600;
         }
 
-        .plant-card {
-            min-height: 160px;
-            background: linear-gradient(145deg, #eff9f3, #f7fbf7);
-            border: 1px solid #dfeee5;
-            border-radius: var(--radius);
-            position: relative;
-            overflow: hidden;
-            padding: 22px;
-        }
+        /* MODAL */
 
-        .plant-card h3 {
-            margin: 0 0 6px;
-            font-size: 16px;
-        }
-
-        .plant-card p {
-            color: #718077;
-            font-size: 12px;
-            line-height: 1.5;
-            max-width: 155px;
-            margin: 0;
-        }
-
-        .plant {
-            position: absolute;
-            right: 20px;
-            bottom: -4px;
-            width: 55px;
-            height: 75px;
-        }
-
-        .plant-stem {
-            position: absolute;
-            width: 4px;
-            height: 55px;
-            background: #559c6d;
-            left: 27px;
-            bottom: 15px;
-            border-radius: 5px;
-        }
-
-        .leaf {
-            position: absolute;
-            width: 25px;
-            height: 14px;
-            background: #68b27e;
-            border-radius: 100% 0 100% 0;
-        }
-
-        .leaf.one {
-            left: 4px;
-            top: 27px;
-            transform: rotate(-30deg);
-        }
-
-        .leaf.two {
-            right: 2px;
-            top: 16px;
-            transform: rotate(30deg);
-        }
-
-        .leaf.three {
-            left: 7px;
-            top: 5px;
-            transform: rotate(-20deg);
-        }
-
-        .pot {
-            position: absolute;
-            bottom: 0;
-            left: 10px;
-            width: 38px;
-            height: 22px;
-            background: #c59c84;
-            border-radius: 3px 3px 10px 10px;
-        }
-
-        /* =========================
-           MODAL
-        ========================= */
-
-        .modal-backdrop {
-            display: none;
+        .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 27, 48, 0.5);
-            z-index: 100;
-            padding: 20px;
-            align-items: center;
+            background: rgba(0,0,0,0.45);
+            display: none;
             justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 100;
         }
 
-        .modal-backdrop.show {
+        .modal-overlay.show {
             display: flex;
         }
 
         .modal {
             background: white;
-            width: min(650px, 100%);
-            max-height: 92vh;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
             overflow-y: auto;
-            border-radius: 24px;
-            box-shadow: 0 30px 80px rgba(15, 27, 48, 0.25);
+            border-radius: 18px;
+            padding: 25px;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 22px 24px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
         }
 
-        .modal-header h2 {
-            margin: 0;
+        .modal-header h3 {
             font-size: 20px;
         }
 
-        .close-button {
-            border: 0;
-            background: #f3f5f8;
-            width: 35px;
-            height: 35px;
-            border-radius: 10px;
-            color: #68768a;
-            font-size: 18px;
+        .close {
+            border: none;
+            background: #f2eee8;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
         }
 
-        .modal-body {
-            padding: 23px 24px;
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .field.full {
-            grid-column: 1 / -1;
-        }
-
-        .field label {
+        .form-group label {
+            display: block;
             font-size: 12px;
-            font-weight: 700;
-            color: #52627c;
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
-        .field input,
-        .field textarea,
-        .field select {
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            border: 1px solid #dfe3ea;
-            border-radius: 11px;
-            padding: 11px 12px;
+            border: 1px solid #ded8cf;
+            border-radius: 9px;
+            padding: 10px;
             outline: none;
-            background: #fbfcfd;
-            color: var(--text);
+            background: white;
         }
 
-        .field textarea {
+        .form-group textarea {
             min-height: 85px;
             resize: vertical;
         }
 
-        .field input:focus,
-        .field textarea:focus,
-        .field select:focus {
-            background: white;
-            border-color: #9ab3ea;
-            box-shadow: 0 0 0 4px rgba(77,121,216,0.07);
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
-        .modal-footer {
+        .modal-actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 9px;
-            padding: 17px 24px;
-            border-top: 1px solid var(--border);
+            justify-content: space-between;
+            margin-top: 20px;
         }
 
-        .secondary-button,
-        .primary-button,
-        .danger-button {
-            border: 0;
-            border-radius: 11px;
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 650;
+        .delete-btn {
+            border: none;
+            background: #f4e6e2;
+            color: #8b4937;
+            padding: 10px 13px;
+            border-radius: 9px;
         }
 
-        .secondary-button {
-            background: #f1f3f6;
-            color: #5d6a7f;
-        }
-
-        .primary-button {
-            background: var(--navy);
+        .save-btn {
+            border: none;
+            background: #20201f;
             color: white;
+            padding: 10px 18px;
+            border-radius: 9px;
+            font-weight: 600;
         }
 
-        .danger-button {
-            background: #fff0ef;
-            color: #c95652;
-        }
-
-        /* =========================
-           TOAST
-        ========================= */
-
-        .toast {
-            position: fixed;
-            right: 25px;
-            bottom: 25px;
-            background: #172542;
-            color: white;
-            padding: 13px 17px;
-            border-radius: 12px;
-            font-size: 13px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.18);
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(10px);
-            transition: 0.25s;
-            z-index: 200;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* =========================
-           MOBILE
-        ========================= */
+        /* MOBILE */
 
         .mobile-header {
             display: none;
         }
 
-        @media (max-width: 1150px) {
+        @media (max-width: 1050px) {
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .encouragement {
-                grid-column: span 2;
-            }
-
-            .dashboard-grid {
+            .content-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .side-column {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .plant-card {
-                grid-column: span 2;
             }
         }
 
-        @media (max-width: 850px) {
+        @media (max-width: 800px) {
             .sidebar {
                 display: none;
             }
@@ -1133,141 +516,66 @@
             .main {
                 margin-left: 0;
                 width: 100%;
+                padding: 20px;
             }
 
             .mobile-header {
-                height: 64px;
-                background: var(--navy);
-                color: white;
                 display: flex;
-                align-items: center;
                 justify-content: space-between;
-                padding: 0 18px;
+                align-items: center;
+                margin-bottom: 25px;
             }
 
-            .mobile-brand {
-                font-size: 16px;
-                font-weight: 750;
+            .mobile-header strong {
+                font-size: 18px;
+            }
+
+            .mobile-header a {
+                text-decoration: none;
+                color: #20201f;
+                background: white;
+                border: 1px solid #e5e0d8;
+                border-radius: 9px;
+                padding: 8px 10px;
+                font-size: 12px;
             }
 
             .topbar {
-                top: 64px;
-                padding: 0 18px;
-                height: 70px;
+                display: block;
             }
 
-            .content {
-                padding: 25px 18px 40px;
+            .top-actions {
+                margin-top: 15px;
             }
 
-            .welcome-decoration {
-                display: none;
-            }
-
-            .welcome h1 {
-                font-size: 27px;
-            }
-
-            .reminder {
-                grid-template-columns: 25px 43px minmax(0,1fr) 30px;
-            }
-
-            .reminder-date {
-                display: none;
-            }
-
-            .more-button {
-                grid-column: 4;
+            .search {
+                width: 100%;
             }
         }
 
-        @media (max-width: 600px) {
-            .search-box {
-                width: 100%;
-            }
-
-            .user-area {
-                display: none;
-            }
-
+        @media (max-width: 550px) {
             .stats {
                 grid-template-columns: 1fr 1fr;
-                gap: 10px;
             }
 
-            .stat-card {
-                min-height: 125px;
+            .stat {
                 padding: 15px;
             }
 
-            .encouragement {
-                grid-column: span 2;
+            .stat-value {
+                font-size: 23px;
             }
 
-            .dashboard-grid {
-                display: block;
+            .card {
+                padding: 15px;
             }
 
-            .side-column {
-                display: block;
-                margin-top: 18px;
-            }
-
-            .side-card {
-                margin-bottom: 18px;
-            }
-
-            .plant-card {
-                min-height: 145px;
-            }
-
-            .card-header {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .filters {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .sort-select {
-                width: 100%;
-            }
-
-            .reminder {
-                grid-template-columns: 23px 40px minmax(0,1fr) 28px;
-                gap: 8px;
-                min-height: 85px;
-            }
-
-            .reminder-icon {
-                width: 38px;
-                height: 38px;
-            }
-
-            .reminder-title {
-                font-size: 13px;
-            }
-
-            .reminder-description {
-                font-size: 11px;
-            }
-
-            .form-grid {
+            .form-row {
                 grid-template-columns: 1fr;
             }
 
-            .field.full {
-                grid-column: auto;
-            }
-
-            .modal-footer {
-                flex-direction: column-reverse;
-            }
-
-            .modal-footer button {
-                width: 100%;
+            .reminder-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -1277,308 +585,132 @@
 
 <div class="app">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
 
-        <div class="brand">
-            <div class="brand-icon">✓</div>
-            <div class="brand-text">
-                <span>Nooit Meer</span>
-                <span>Vergeten</span>
-            </div>
+        <div class="logo">
+            <h1>Nooit Meer Vergeten</h1>
+            <p>Jouw persoonlijke overzicht</p>
         </div>
 
         <nav class="nav">
-
-            <a href="dashboard.html" class="nav-link active">
-                <span class="nav-icon">⌂</span>
-                <span>Overzicht</span>
-            </a>
-
-            <a href="#" class="nav-link" onclick="setView('today'); return false;">
-                <span class="nav-icon">□</span>
-                <span>Vandaag</span>
-            </a>
-
-            <a href="#" class="nav-link" onclick="setView('upcoming'); return false;">
-                <span class="nav-icon">◷</span>
-                <span>Aankomend</span>
-            </a>
-
-            <a href="#" class="nav-link" onclick="setView('completed'); return false;">
-                <span class="nav-icon">✓</span>
-                <span>Voltooid</span>
-            </a>
-
-            <div class="nav-divider"></div>
-
-            <a href="#" class="nav-link" onclick="showCategoryInfo(); return false;">
-                <span class="nav-icon">◇</span>
-                <span>Categorieën</span>
-            </a>
-
-            <a href="instellingen.html" class="nav-link">
-                <span class="nav-icon">⚙</span>
-                <span>Instellingen</span>
-            </a>
-
+            <a href="dashboard.html" class="active">Overzicht</a>
+            <a href="#" onclick="setFilter('today'); return false;">Vandaag</a>
+            <a href="#" onclick="setFilter('upcoming'); return false;">Aankomend</a>
+            <a href="#" onclick="setFilter('completed'); return false;">Voltooid</a>
+            <a href="#" onclick="openNewReminder(); return false;">Nieuwe herinnering</a>
         </nav>
 
         <div class="sidebar-bottom">
-            <button class="logout-button" onclick="logout()">
-                <span class="nav-icon">↪</span>
-                <span>Uitloggen</span>
-            </button>
+            <a href="instellingen.html" class="profile-mini">
+                <div class="avatar" id="sidebarAvatar">V</div>
+
+                <div>
+                    <strong id="sidebarName">Laden...</strong>
+                    <span>Instellingen</span>
+                </div>
+            </a>
         </div>
 
     </aside>
 
 
-    <!-- MOBILE HEADER -->
-    <div class="mobile-header">
-        <div class="mobile-brand">Nooit Meer Vergeten</div>
-        <button
-            onclick="logout()"
-            style="background:none;border:0;color:white;font-size:20px;"
-        >
-            ↪
-        </button>
-    </div>
-
-
-    <!-- MAIN -->
     <main class="main">
 
-        <!-- TOPBAR -->
-        <header class="topbar">
+        <div class="mobile-header">
+            <strong>Nooit Meer Vergeten</strong>
+            <a href="instellingen.html">Instellingen</a>
+        </div>
 
-            <div class="search-box">
-                <span>⌕</span>
+        <div class="topbar">
+
+            <div class="welcome">
+                <h2 id="welcomeTitle">Goedendag</h2>
+                <p>Hier staat je persoonlijke overzicht.</p>
+            </div>
+
+            <div class="top-actions">
                 <input
-                    type="text"
+                    type="search"
                     id="searchInput"
-                    placeholder="Zoek herinneringen..."
-                    autocomplete="off"
+                    class="search"
+                    placeholder="Zoeken..."
                 >
+
+                <button class="primary-btn" onclick="openNewReminder()">
+                    + Nieuwe
+                </button>
             </div>
 
-            <div class="user-area">
-                <div class="user-avatar" id="userAvatar">G</div>
-                <div class="user-name" id="userName">Gebruiker</div>
-                <div class="user-arrow">⌄</div>
+        </div>
+
+
+        <section class="stats">
+
+            <div class="stat">
+                <div class="stat-label">Totaal</div>
+                <div class="stat-value" id="totalCount">0</div>
             </div>
 
-        </header>
+            <div class="stat">
+                <div class="stat-label">Vandaag</div>
+                <div class="stat-value" id="todayCount">0</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Aankomend</div>
+                <div class="stat-value" id="upcomingCount">0</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Voltooid</div>
+                <div class="stat-value" id="completedCount">0</div>
+            </div>
+
+        </section>
 
 
-        <!-- CONTENT -->
-        <div class="content">
+        <div class="content-grid">
 
-            <!-- WELCOME -->
-            <section class="welcome">
+            <section class="card">
 
-                <div class="welcome-text">
-                    <h1 id="welcomeTitle">Goedemorgen</h1>
-                    <p>Hier is een overzicht van je herinneringen.</p>
-                </div>
+                <div class="card-header">
 
-                <div class="welcome-decoration">
-                    <div class="sun"></div>
-                    <div class="hill"></div>
-                    <div class="hill second"></div>
-                </div>
-
-            </section>
-
-
-            <!-- STATS -->
-            <section class="stats">
-
-                <div class="stat-card blue">
-                    <div class="stat-icon">□</div>
-                    <div class="stat-title">Totaal</div>
-                    <div class="stat-number" id="totalCount">0</div>
-                    <div class="stat-sub">herinneringen</div>
-                </div>
-
-                <div class="stat-card green">
-                    <div class="stat-icon">✓</div>
-                    <div class="stat-title">Vandaag</div>
-                    <div class="stat-number" id="todayCount">0</div>
-                    <div class="stat-sub">herinneringen</div>
-                </div>
-
-                <div class="stat-card purple">
-                    <div class="stat-icon">◷</div>
-                    <div class="stat-title">Aankomend</div>
-                    <div class="stat-number" id="upcomingCount">0</div>
-                    <div class="stat-sub">herinneringen</div>
-                </div>
-
-                <div class="stat-card teal">
-                    <div class="stat-icon">✓</div>
-                    <div class="stat-title">Voltooid</div>
-                    <div class="stat-number" id="completedCount">0</div>
-                    <div class="stat-sub">herinneringen</div>
-                </div>
-
-                <div class="stat-card orange encouragement">
-                    <h3>Goed bezig</h3>
-                    <p id="encouragementText">
-                        Elke herinnering die je afrondt, is weer een stap vooruit.
-                    </p>
-                </div>
-
-            </section>
-
-
-            <!-- MAIN DASHBOARD GRID -->
-            <section class="dashboard-grid">
-
-                <!-- REMINDERS -->
-                <div class="card reminders-card">
-
-                    <div class="card-header">
-
-                        <div class="card-title">
-                            <div class="card-title-icon">♧</div>
-                            <h2>Herinneringen</h2>
-                        </div>
-
-                        <button
-                            class="add-button"
-                            onclick="openCreateModal()"
-                        >
-                            + Nieuwe herinnering
-                        </button>
-
-                    </div>
-
+                    <h3>Herinneringen</h3>
 
                     <div class="filters">
+                        <button class="filter active" onclick="setFilter('all', this)">
+                            Alles
+                        </button>
 
-                        <div class="filter-buttons">
+                        <button class="filter" onclick="setFilter('open', this)">
+                            Openstaand
+                        </button>
 
-                            <button
-                                class="filter-button active"
-                                data-filter="all"
-                                onclick="setFilter('all')"
-                            >
-                                Alles
-                            </button>
-
-                            <button
-                                class="filter-button"
-                                data-filter="open"
-                                onclick="setFilter('open')"
-                            >
-                                Openstaand
-                            </button>
-
-                            <button
-                                class="filter-button"
-                                data-filter="completed"
-                                onclick="setFilter('completed')"
-                            >
-                                Voltooid
-                            </button>
-
-                        </div>
-
-                        <select
-                            class="sort-select"
-                            id="sortSelect"
-                            onchange="renderReminders()"
-                        >
-                            <option value="date">Sorteer op: Datum</option>
-                            <option value="title">Sorteer op: Naam</option>
-                            <option value="priority">Sorteer op: Prioriteit</option>
-                        </select>
-
-                    </div>
-
-
-                    <div class="reminder-list" id="reminderList">
-                        <div class="empty-state">
-                            <h3>Herinneringen laden...</h3>
-                            <p>Even geduld.</p>
-                        </div>
-                    </div>
-
-                    <div class="bottom-note" id="bottomNote">
-                        Je herinneringen worden veilig opgeslagen.
+                        <button class="filter" onclick="setFilter('completed', this)">
+                            Voltooid
+                        </button>
                     </div>
 
                 </div>
 
-
-                <!-- RIGHT COLUMN -->
-                <div class="side-column">
-
-                    <!-- TODAY -->
-                    <div class="card side-card">
-
-                        <div class="side-card-header">
-                            <h3>Vandaag</h3>
-                            <div class="count" id="todaySideCount">0</div>
-                        </div>
-
-                        <div id="todayList"></div>
-
-                        <a
-                            href="#"
-                            class="view-all"
-                            onclick="setView('today'); return false;"
-                        >
-                            Bekijk vandaag
-                        </a>
-
-                    </div>
-
-
-                    <!-- UPCOMING -->
-                    <div class="card side-card">
-
-                        <div class="side-card-header">
-                            <h3>Aankomende herinneringen</h3>
-                            <div class="count" id="upcomingSideCount">0</div>
-                        </div>
-
-                        <div id="upcomingList"></div>
-
-                        <a
-                            href="#"
-                            class="view-all"
-                            onclick="setView('upcoming'); return false;"
-                        >
-                            Bekijk alles
-                        </a>
-
-                    </div>
-
-
-                    <!-- DECORATION -->
-                    <div class="plant-card">
-
-                        <h3>Een stap tegelijk</h3>
-
-                        <p>
-                            Kleine herinneringen helpen je om overzicht te houden.
-                        </p>
-
-                        <div class="plant">
-                            <div class="plant-stem"></div>
-                            <div class="leaf one"></div>
-                            <div class="leaf two"></div>
-                            <div class="leaf three"></div>
-                            <div class="pot"></div>
-                        </div>
-
-                    </div>
-
+                <div id="remindersList" class="reminders">
+                    <div class="empty">Herinneringen laden...</div>
                 </div>
 
             </section>
+
+
+            <aside class="card">
+
+                <div class="card-header">
+                    <h3>Aankomend</h3>
+                </div>
+
+                <div id="upcomingList">
+                    <div class="empty">Laden...</div>
+                </div>
+
+            </aside>
 
         </div>
 
@@ -1588,140 +720,149 @@
 
 
 <!-- MODAL -->
-<div class="modal-backdrop" id="modalBackdrop">
+
+<div class="modal-overlay" id="modalOverlay">
 
     <div class="modal">
 
         <div class="modal-header">
+            <h3 id="modalTitle">Nieuwe herinnering</h3>
 
-            <h2 id="modalTitle">Nieuwe herinnering</h2>
-
-            <button
-                class="close-button"
-                onclick="closeModal()"
-            >
+            <button class="close" onclick="closeModal()">
                 ×
             </button>
-
         </div>
 
 
         <form id="reminderForm">
 
-            <div class="modal-body">
+            <div class="form-group">
+                <label for="titel">Titel</label>
 
-                <div class="form-grid">
-
-                    <div class="field full">
-                        <label for="title">Titel</label>
-                        <input
-                            type="text"
-                            id="title"
-                            placeholder="Bijvoorbeeld: Tandartsafspraak"
-                            required
-                        >
-                    </div>
+                <input
+                    type="text"
+                    id="titel"
+                    required
+                    placeholder="Bijvoorbeeld: Tandartsafspraak"
+                >
+            </div>
 
 
-                    <div class="field full">
-                        <label for="description">Beschrijving</label>
-                        <textarea
-                            id="description"
-                            placeholder="Extra informatie..."
-                        ></textarea>
-                    </div>
+            <div class="form-group">
+                <label for="beschrijving">Beschrijving</label>
+
+                <textarea
+                    id="beschrijving"
+                    placeholder="Extra informatie..."
+                ></textarea>
+            </div>
 
 
-                    <div class="field">
-                        <label for="date">Datum</label>
-                        <input type="date" id="date">
-                    </div>
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="datum">Datum</label>
+
+                    <input
+                        type="date"
+                        id="datum"
+                    >
+                </div>
 
 
-                    <div class="field">
-                        <label for="time">Tijd</label>
-                        <input type="time" id="time">
-                    </div>
+                <div class="form-group">
+                    <label for="tijd">Tijd</label>
 
-
-                    <div class="field">
-                        <label for="category">Categorie</label>
-
-                        <select id="category">
-                            <option value="">Geen categorie</option>
-                            <option value="Privé">Privé</option>
-                            <option value="Werk">Werk</option>
-                            <option value="Gezondheid">Gezondheid</option>
-                            <option value="Thuis">Thuis</option>
-                            <option value="Afspraken">Afspraken</option>
-                            <option value="Overig">Overig</option>
-                        </select>
-                    </div>
-
-
-                    <div class="field">
-                        <label for="priority">Prioriteit</label>
-
-                        <select id="priority">
-                            <option value="laag">Laag</option>
-                            <option value="normaal" selected>Normaal</option>
-                            <option value="hoog">Hoog</option>
-                        </select>
-                    </div>
-
-
-                    <div class="field">
-                        <label for="repeat">Herhaling</label>
-
-                        <select id="repeat">
-                            <option value="geen">Geen herhaling</option>
-                            <option value="dagelijks">Dagelijks</option>
-                            <option value="wekelijks">Wekelijks</option>
-                            <option value="maandelijks">Maandelijks</option>
-                            <option value="jaarlijks">Jaarlijks</option>
-                        </select>
-                    </div>
-
-
-                    <div class="field full">
-                        <label for="notes">Notities</label>
-                        <textarea
-                            id="notes"
-                            placeholder="Eventuele extra notities..."
-                        ></textarea>
-                    </div>
-
+                    <input
+                        type="time"
+                        id="tijd"
+                    >
                 </div>
 
             </div>
 
 
-            <div class="modal-footer">
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="categorie">Categorie</label>
+
+                    <select id="categorie">
+                        <option value="">Geen categorie</option>
+                        <option value="Privé">Privé</option>
+                        <option value="Werk">Werk</option>
+                        <option value="Gezondheid">Gezondheid</option>
+                        <option value="Familie">Familie</option>
+                        <option value="Financiën">Financiën</option>
+                        <option value="Overig">Overig</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="prioriteit">Prioriteit</label>
+
+                    <select id="prioriteit">
+                        <option value="laag">Laag</option>
+                        <option value="normaal" selected>Normaal</option>
+                        <option value="hoog">Hoog</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <label for="herhaling">Herhaling</label>
+
+                <select id="herhaling">
+                    <option value="geen">Geen</option>
+                    <option value="dagelijks">Dagelijks</option>
+                    <option value="wekelijks">Wekelijks</option>
+                    <option value="maandelijks">Maandelijks</option>
+                    <option value="jaarlijks">Jaarlijks</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="notities">Notities</label>
+
+                <textarea
+                    id="notities"
+                    placeholder="Eventuele extra notities..."
+                ></textarea>
+            </div>
+
+
+            <div class="modal-actions">
 
                 <button
                     type="button"
-                    class="secondary-button"
-                    onclick="closeModal()"
-                >
-                    Annuleren
-                </button>
-
-                <button
-                    type="button"
-                    class="danger-button"
                     id="deleteButton"
+                    class="delete-btn"
                     onclick="deleteCurrentReminder()"
                     style="display:none;"
                 >
                     Verwijderen
                 </button>
 
-                <button
-                    type="submit"
-                    class="primary-button"
-                >
-                    Opslaan
-                </button>
+                <div style="margin-left:auto; display:flex; gap:8px;">
+                    <button
+                        type="button"
+                        class="small-btn"
+                        onclick="closeModal()"
+                    >
+                        Annuleren
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+                        Opslaan
+                    </button>
+                </div>
 
             </div>
 
@@ -1732,51 +873,34 @@
 </div>
 
 
-<div class="toast" id="toast"></div>
-
-
 <script>
 
-    /* ==========================================
-       SUPABASE
-    ========================================== */
+    /* SUPABASE */
 
     const SUPABASE_URL =
         "https://fqupzovqwzaqkatcfbka.supabase.co";
 
     const SUPABASE_KEY =
-        "sb_publishable_ahp4b1jbybZmcQDDkkdNrg_IvbVXZsY";
+        "PLAK_HIER_JOUW_BESTAANDE_PUBLISHABLE_KEY";
 
     const supabaseClient =
-        window.supabase.createClient(
+        supabase.createClient(
             SUPABASE_URL,
             SUPABASE_KEY
         );
 
 
+    /* DATA */
+
     let currentUser = null;
     let reminders = [];
     let currentFilter = "all";
-    let currentView = "all";
     let editingId = null;
 
 
-    /* ==========================================
-       START
-    ========================================== */
+    /* START */
 
     document.addEventListener("DOMContentLoaded", async () => {
-
-        document
-            .getElementById("searchInput")
-            .addEventListener("input", renderReminders);
-
-        await initializeDashboard();
-
-    });
-
-
-    async function initializeDashboard() {
 
         const {
             data: {
@@ -1784,86 +908,63 @@
             }
         } = await supabaseClient.auth.getSession();
 
-
         if (!session) {
-
-            window.location.href =
-                "inloggen.html";
-
+            window.location.href = "inloggen.html";
             return;
-
         }
-
 
         currentUser = session.user;
 
-        await loadUserProfile();
-
+        await loadProfile();
         await loadReminders();
 
-    }
+        document
+            .getElementById("searchInput")
+            .addEventListener("input", renderReminders);
+
+    });
 
 
-    /* ==========================================
-       PROFILE
-    ========================================== */
+    /* PROFILE */
 
-    async function loadUserProfile() {
+    async function loadProfile() {
 
         const {
             data,
             error
         } = await supabaseClient
             .from("profiles")
-            .select("naam,email")
+            .select("naam, email")
             .eq("id", currentUser.id)
             .maybeSingle();
 
+        if (error) {
+            console.error("Profiel laden mislukt:", error);
+        }
 
-        let name =
+        const naam =
             data?.naam ||
             currentUser.user_metadata?.naam ||
             currentUser.email?.split("@")[0] ||
             "Gebruiker";
 
-
-        document.getElementById("userName").textContent =
-            name;
-
-
-        document.getElementById("userAvatar").textContent =
-            name.charAt(0).toUpperCase();
-
-
-        const hour =
-            new Date().getHours();
-
-
-        let greeting = "Goedemorgen";
-
-        if (hour >= 12 && hour < 18) {
-            greeting = "Goedemiddag";
-        }
-
-        if (hour >= 18) {
-            greeting = "Goedenavond";
-        }
-
+        const firstName =
+            naam.trim().split(" ")[0] ||
+            naam;
 
         document.getElementById("welcomeTitle").textContent =
-            greeting + ", " + name;
+            `Goedendag, ${firstName}`;
 
+        document.getElementById("sidebarName").textContent =
+            naam;
 
-        if (error) {
-            console.log(error);
-        }
+        document.getElementById("sidebarAvatar").textContent =
+            naam.charAt(0).toUpperCase();
 
     }
 
 
-    /* ==========================================
-       LOAD REMINDERS
-    ========================================== */
+    /* REMINDERS LADEN */
 
     async function loadReminders() {
 
@@ -1874,143 +975,61 @@
             .from("reminders")
             .select("*")
             .eq("user_id", currentUser.id)
-            .order("datum", {
-                ascending: true
-            })
-            .order("tijd", {
-                ascending: true
-            });
-
+            .order("datum", { ascending: true })
+            .order("tijd", { ascending: true });
 
         if (error) {
 
             console.error(error);
 
-            showToast(
-                "Herinneringen konden niet worden geladen."
-            );
+            document.getElementById("remindersList").innerHTML =
+                `<div class="empty">
+                    Er ging iets mis bij het laden van je herinneringen.
+                </div>`;
 
             return;
-
         }
-
 
         reminders = data || [];
 
         updateStats();
-
         renderReminders();
-
-        renderSideLists();
-
-    }
-
-
-    /* ==========================================
-       DATE HELPERS
-    ========================================== */
-
-    function getTodayString() {
-
-        const date = new Date();
-
-        const year =
-            date.getFullYear();
-
-        const month =
-            String(date.getMonth() + 1).padStart(2, "0");
-
-        const day =
-            String(date.getDate()).padStart(2, "0");
-
-
-        return `${year}-${month}-${day}`;
+        renderUpcoming();
 
     }
 
 
-    function formatDate(dateString) {
-
-        if (!dateString) {
-            return "Geen datum";
-        }
-
-
-        const date =
-            new Date(dateString + "T00:00:00");
-
-
-        return date.toLocaleDateString(
-            "nl-NL",
-            {
-                day: "2-digit",
-                month: "short"
-            }
-        );
-
-    }
-
-
-    function isToday(reminder) {
-
-        return reminder.datum ===
-            getTodayString();
-
-    }
-
-
-    function isUpcoming(reminder) {
-
-        if (!reminder.datum) {
-            return false;
-        }
-
-
-        return (
-            reminder.datum > getTodayString() &&
-            !reminder.afgerond
-        );
-
-    }
-
-
-    /* ==========================================
-       STATS
-    ========================================== */
+    /* STATS */
 
     function updateStats() {
+
+        const today =
+            new Date().toISOString().split("T")[0];
 
         const total =
             reminders.length;
 
+        const completed =
+            reminders.filter(r => r.afgerond).length;
 
-        const today =
+        const todayCount =
             reminders.filter(
-                reminder =>
-                    isToday(reminder) &&
-                    !reminder.afgerond
+                r => r.datum === today && !r.afgerond
             ).length;
-
 
         const upcoming =
             reminders.filter(
-                reminder =>
-                    isUpcoming(reminder)
+                r =>
+                    r.datum &&
+                    r.datum > today &&
+                    !r.afgerond
             ).length;
-
-
-        const completed =
-            reminders.filter(
-                reminder =>
-                    reminder.afgerond
-            ).length;
-
 
         document.getElementById("totalCount").textContent =
             total;
 
         document.getElementById("todayCount").textContent =
-            today;
+            todayCount;
 
         document.getElementById("upcomingCount").textContent =
             upcoming;
@@ -2018,218 +1037,100 @@
         document.getElementById("completedCount").textContent =
             completed;
 
-
-        document.getElementById("todaySideCount").textContent =
-            today;
-
-        document.getElementById("upcomingSideCount").textContent =
-            upcoming;
-
-
-        const open =
-            total - completed;
-
-
-        let message =
-            "Elke herinnering die je afrondt, is weer een stap vooruit.";
-
-
-        if (open === 0 && total > 0) {
-            message =
-                "Alles is afgerond. Je hebt je overzicht helemaal op orde.";
-        } else if (today > 0) {
-            message =
-                "Je hebt vandaag " +
-                today +
-                " herinnering" +
-                (today === 1 ? "" : "en") +
-                ".";
-        }
-
-
-        document.getElementById("encouragementText").textContent =
-            message;
-
-
-        document.getElementById("bottomNote").textContent =
-            open === 0
-                ? "Alle herinneringen zijn afgerond."
-                : "Je hebt nog " +
-                  open +
-                  " openstaande herinnering" +
-                  (open === 1 ? "" : "en") +
-                  ".";
-
     }
 
 
-    /* ==========================================
-       FILTERS / VIEWS
-    ========================================== */
+    /* FILTER */
 
-    function setFilter(filter) {
+    function setFilter(filter, button = null) {
 
         currentFilter = filter;
 
-        currentView = "all";
-
-
         document
-            .querySelectorAll(".filter-button")
-            .forEach(button => {
+            .querySelectorAll(".filter")
+            .forEach(btn => btn.classList.remove("active"));
 
-                button.classList.toggle(
-                    "active",
-                    button.dataset.filter === filter
-                );
-
-            });
-
+        if (button) {
+            button.classList.add("active");
+        }
 
         renderReminders();
-
     }
 
 
-    function setView(view) {
-
-        currentView = view;
-
-
-        if (view === "today") {
-            currentFilter = "all";
-        }
-
-        if (view === "upcoming") {
-            currentFilter = "open";
-        }
-
-        if (view === "completed") {
-            currentFilter = "completed";
-        }
-
-
-        document
-            .querySelectorAll(".filter-button")
-            .forEach(button => {
-
-                button.classList.toggle(
-                    "active",
-                    button.dataset.filter === currentFilter
-                );
-
-            });
-
-
-        renderReminders();
-
-        window.scrollTo({
-            top: 300,
-            behavior: "smooth"
-        });
-
-    }
-
-
-    /* ==========================================
-       RENDER REMINDERS
-    ========================================== */
+    /* REMINDERS WEERGEVEN */
 
     function renderReminders() {
 
         const container =
-            document.getElementById("reminderList");
-
+            document.getElementById("remindersList");
 
         const search =
             document
                 .getElementById("searchInput")
                 .value
-                .trim()
-                .toLowerCase();
+                .toLowerCase()
+                .trim();
 
+        const today =
+            new Date().toISOString().split("T")[0];
 
-        let list =
+        let filtered =
             [...reminders];
-
-
-        /* Filter */
 
         if (currentFilter === "open") {
 
-            list =
-                list.filter(
-                    reminder =>
-                        !reminder.afgerond
-                );
+            filtered =
+                filtered.filter(r => !r.afgerond);
 
         }
-
 
         if (currentFilter === "completed") {
 
-            list =
-                list.filter(
-                    reminder =>
-                        reminder.afgerond
+            filtered =
+                filtered.filter(r => r.afgerond);
+
+        }
+
+        if (currentFilter === "today") {
+
+            filtered =
+                filtered.filter(
+                    r =>
+                        r.datum === today &&
+                        !r.afgerond
                 );
 
         }
 
+        if (currentFilter === "upcoming") {
 
-        /* View */
-
-        if (currentView === "today") {
-
-            list =
-                list.filter(
-                    reminder =>
-                        isToday(reminder)
+            filtered =
+                filtered.filter(
+                    r =>
+                        r.datum &&
+                        r.datum > today &&
+                        !r.afgerond
                 );
 
         }
-
-
-        if (currentView === "upcoming") {
-
-            list =
-                list.filter(
-                    reminder =>
-                        isUpcoming(reminder)
-                );
-
-        }
-
-
-        if (currentView === "completed") {
-
-            list =
-                list.filter(
-                    reminder =>
-                        reminder.afgerond
-                );
-
-        }
-
-
-        /* Search */
 
         if (search) {
 
-            list =
-                list.filter(reminder => {
+            filtered =
+                filtered.filter(r => {
 
-                    const text =
-                        [
-                            reminder.titel,
-                            reminder.beschrijving,
-                            reminder.categorie,
-                            reminder.notities
-                        ]
-                        .filter(Boolean)
-                        .join(" ")
-                        .toLowerCase();
+                    const text = [
 
+                        r.titel,
+                        r.beschrijving,
+                        r.categorie,
+                        r.notities
+
+                    ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
 
                     return text.includes(search);
 
@@ -2238,628 +1139,397 @@
         }
 
 
-        /* Sort */
+        if (!filtered.length) {
 
-        const sort =
-            document.getElementById("sortSelect").value;
-
-
-        if (sort === "title") {
-
-            list.sort(
-                (a, b) =>
-                    (a.titel || "")
-                        .localeCompare(
-                            b.titel || "",
-                            "nl"
-                        )
-            );
-
-        } else if (sort === "priority") {
-
-            const priorities = {
-                hoog: 1,
-                normaal: 2,
-                laag: 3
-            };
-
-
-            list.sort(
-                (a, b) =>
-                    (priorities[a.prioriteit] || 2) -
-                    (priorities[b.prioriteit] || 2)
-            );
-
-        } else {
-
-            list.sort(
-                (a, b) => {
-
-                    const aDate =
-                        `${a.datum || "9999-99-99"} ${a.tijd || "99:99"}`;
-
-                    const bDate =
-                        `${b.datum || "9999-99-99"} ${b.tijd || "99:99"}`;
-
-                    return aDate.localeCompare(bDate);
-
-                }
-            );
-
-        }
-
-
-        if (!list.length) {
-
-            container.innerHTML = `
-                <div class="empty-state">
-                    <h3>Geen herinneringen gevonden</h3>
-                    <p>Pas je filter aan of maak een nieuwe herinnering.</p>
-                </div>
-            `;
+            container.innerHTML =
+                `<div class="empty">
+                    Geen herinneringen gevonden.
+                </div>`;
 
             return;
-
         }
 
 
         container.innerHTML =
-            list.map(createReminderHTML).join("");
+            filtered.map(createReminderHTML).join("");
 
     }
 
 
-    /* ==========================================
-       REMINDER HTML
-    ========================================== */
+    /* HTML HERINNERING */
 
     function createReminderHTML(reminder) {
 
-        const iconClass =
-            getIconClass(reminder.categorie);
-
-
-        const icon =
-            getIcon(reminder.categorie);
-
-
         const priorityClass =
-            "priority-" +
-            (reminder.prioriteit || "normaal");
-
-
-        const category =
-            reminder.categorie ||
-            "Overig";
-
+            reminder.prioriteit === "hoog"
+                ? "priority-high"
+                : reminder.prioriteit === "laag"
+                    ? "priority-low"
+                    : "";
 
         const dateText =
             reminder.datum
                 ? formatDate(reminder.datum)
-                : "Geen datum";
-
+                : "";
 
         const timeText =
-            reminder.tijd ||
-            "Geen tijd";
-
+            reminder.tijd
+                ? reminder.tijd.substring(0, 5)
+                : "";
 
         return `
-            <div class="reminder ${reminder.afgerond ? "completed" : ""}">
+
+            <div class="reminder">
 
                 <button
-                    class="check ${reminder.afgerond ? "completed" : ""}"
-                    onclick="toggleComplete(${reminder.id})"
-                    title="Afronden"
-                >
-                    ${reminder.afgerond ? "✓" : ""}
-                </button>
-
-
-                <div class="reminder-icon ${iconClass}">
-                    ${icon}
-                </div>
-
+                    class="check ${reminder.afgerond ? "done" : ""}"
+                    onclick="toggleComplete(${reminder.id}, ${!reminder.afgerond})"
+                    aria-label="Voltooien"
+                ></button>
 
                 <div class="reminder-main">
 
-                    <div class="reminder-title">
-                        ${escapeHtml(reminder.titel)}
+                    <div
+                        class="reminder-title ${reminder.afgerond ? "done" : ""}"
+                    >
+                        ${escapeHTML(reminder.titel)}
                     </div>
 
-                    <div class="reminder-description">
-                        ${escapeHtml(
-                            reminder.beschrijving ||
-                            "Geen beschrijving"
-                        )}
-                    </div>
+                    ${
+                        reminder.beschrijving
+                            ? `<div class="reminder-description">
+                                ${escapeHTML(reminder.beschrijving)}
+                            </div>`
+                            : ""
+                    }
 
-                    <div class="tags">
+                    <div class="reminder-meta">
 
-                        <span class="tag tag-category">
-                            ${escapeHtml(category)}
-                        </span>
+                        ${
+                            dateText
+                                ? `<span class="tag">${dateText}</span>`
+                                : ""
+                        }
 
-                        <span class="tag ${priorityClass}">
-                            ${capitalize(
-                                reminder.prioriteit || "normaal"
-                            )}
-                        </span>
+                        ${
+                            timeText
+                                ? `<span class="tag">${timeText}</span>`
+                                : ""
+                        }
+
+                        ${
+                            reminder.categorie
+                                ? `<span class="tag">
+                                    ${escapeHTML(reminder.categorie)}
+                                </span>`
+                                : ""
+                        }
+
+                        ${
+                            reminder.prioriteit
+                                ? `<span class="tag ${priorityClass}">
+                                    ${escapeHTML(reminder.prioriteit)}
+                                </span>`
+                                : ""
+                        }
+
+                        ${
+                            reminder.herhaling &&
+                            reminder.herhaling !== "geen"
+                                ? `<span class="tag">
+                                    ${escapeHTML(reminder.herhaling)}
+                                </span>`
+                                : ""
+                        }
 
                     </div>
 
                 </div>
 
+                <div class="reminder-actions">
 
-                <div class="reminder-date">
-
-                    <div class="date-line">
-                        <span>□</span>
-                        <span>${escapeHtml(dateText)}</span>
-                    </div>
-
-                    <div class="date-line">
-                        <span>◷</span>
-                        <span>${escapeHtml(timeText)}</span>
-                    </div>
+                    <button
+                        class="small-btn"
+                        onclick="editReminder(${reminder.id})"
+                    >
+                        Bewerken
+                    </button>
 
                 </div>
-
-
-                <button
-                    class="more-button"
-                    onclick="openEditModal(${reminder.id})"
-                    title="Bewerken"
-                >
-                    ⋮
-                </button>
 
             </div>
+
         `;
 
     }
 
 
-    /* ==========================================
-       SIDE LISTS
-    ========================================== */
+    /* UPCOMING */
 
-    function renderSideLists() {
+    function renderUpcoming() {
 
-        const todayList =
-            document.getElementById("todayList");
-
-
-        const upcomingList =
+        const container =
             document.getElementById("upcomingList");
 
-
         const today =
-            reminders
-                .filter(
-                    reminder =>
-                        isToday(reminder) &&
-                        !reminder.afgerond
-                )
-                .sort(sortByTime)
-                .slice(0, 4);
-
+            new Date().toISOString().split("T")[0];
 
         const upcoming =
             reminders
                 .filter(
-                    reminder =>
-                        isUpcoming(reminder)
+                    r =>
+                        !r.afgerond &&
+                        r.datum &&
+                        r.datum >= today
                 )
-                .sort(sortByDate)
-                .slice(0, 4);
+                .sort((a, b) => {
 
+                    const aValue =
+                        `${a.datum} ${a.tijd || ""}`;
 
-        if (!today.length) {
+                    const bValue =
+                        `${b.datum} ${b.tijd || ""}`;
 
-            todayList.innerHTML =
-                `<div style="color:#8792a3;font-size:12px;padding:8px 0;">
-                    Geen openstaande herinneringen voor vandaag.
-                </div>`;
+                    return aValue.localeCompare(bValue);
 
-        } else {
-
-            todayList.innerHTML =
-                today.map(createMiniHTML).join("");
-
-        }
+                })
+                .slice(0, 5);
 
 
         if (!upcoming.length) {
 
-            upcomingList.innerHTML =
-                `<div style="color:#8792a3;font-size:12px;padding:8px 0;">
+            container.innerHTML =
+                `<div class="empty">
                     Geen aankomende herinneringen.
                 </div>`;
 
-        } else {
-
-            upcomingList.innerHTML =
-                upcoming.map(createMiniHTML).join("");
-
+            return;
         }
 
-    }
 
+        container.innerHTML =
+            upcoming.map(r => `
 
-    function createMiniHTML(reminder) {
+                <div class="upcoming-item">
 
-        const iconClass =
-            getIconClass(reminder.categorie);
-
-
-        const icon =
-            getIcon(reminder.categorie);
-
-
-        return `
-            <div class="mini-item">
-
-                <div class="mini-icon ${iconClass}">
-                    ${icon}
-                </div>
-
-                <div class="mini-content">
-
-                    <div class="mini-title">
-                        ${escapeHtml(reminder.titel)}
+                    <div class="upcoming-date">
+                        ${formatDate(r.datum)}
+                        ${r.tijd ? " · " + r.tijd.substring(0,5) : ""}
                     </div>
 
-                    <div class="mini-date">
-                        ${
-                            reminder.datum
-                                ? formatDate(reminder.datum)
-                                : "Geen datum"
-                        }
-                        ${
-                            reminder.tijd
-                                ? " · " + escapeHtml(reminder.tijd)
-                                : ""
-                        }
+                    <div class="upcoming-title">
+                        ${escapeHTML(r.titel)}
                     </div>
 
                 </div>
 
-            </div>
-        `;
+            `).join("");
 
     }
 
 
-    /* ==========================================
-       SORT
-    ========================================== */
+    /* NIEUWE HERINNERING */
 
-    function sortByDate(a, b) {
-
-        return (
-            `${a.datum || "9999-99-99"} ${a.tijd || ""}`
-        ).localeCompare(
-            `${b.datum || "9999-99-99"} ${b.tijd || ""}`
-        );
-
-    }
-
-
-    function sortByTime(a, b) {
-
-        return (
-            a.tijd || "99:99"
-        ).localeCompare(
-            b.tijd || "99:99"
-        );
-
-    }
-
-
-    /* ==========================================
-       MODAL
-    ========================================== */
-
-    function openCreateModal() {
+    function openNewReminder() {
 
         editingId = null;
 
         document.getElementById("modalTitle").textContent =
             "Nieuwe herinnering";
 
-
-        document.getElementById("reminderForm").reset();
-
-
-        document.getElementById("priority").value =
-            "normaal";
-
-
-        document.getElementById("repeat").value =
-            "geen";
-
-
         document.getElementById("deleteButton").style.display =
             "none";
 
+        document.getElementById("reminderForm").reset();
+
+        document.getElementById("prioriteit").value =
+            "normaal";
+
+        document.getElementById("herhaling").value =
+            "geen";
 
         document
-            .getElementById("modalBackdrop")
+            .getElementById("modalOverlay")
             .classList.add("show");
-
-
-        setTimeout(() => {
-
-            document.getElementById("title").focus();
-
-        }, 100);
 
     }
 
 
-    function openEditModal(id) {
+    /* BEWERKEN */
+
+    function editReminder(id) {
 
         const reminder =
-            reminders.find(
-                item => item.id === id
-            );
+            reminders.find(r => r.id === id);
 
-
-        if (!reminder) {
-            return;
-        }
-
+        if (!reminder) return;
 
         editingId = id;
-
 
         document.getElementById("modalTitle").textContent =
             "Herinnering bewerken";
 
-
-        document.getElementById("title").value =
-            reminder.titel || "";
-
-
-        document.getElementById("description").value =
-            reminder.beschrijving || "";
-
-
-        document.getElementById("date").value =
-            reminder.datum || "";
-
-
-        document.getElementById("time").value =
-            reminder.tijd || "";
-
-
-        document.getElementById("category").value =
-            reminder.categorie || "";
-
-
-        document.getElementById("priority").value =
-            reminder.prioriteit || "normaal";
-
-
-        document.getElementById("repeat").value =
-            reminder.herhaling || "geen";
-
-
-        document.getElementById("notes").value =
-            reminder.notities || "";
-
-
         document.getElementById("deleteButton").style.display =
             "block";
 
+        document.getElementById("titel").value =
+            reminder.titel || "";
+
+        document.getElementById("beschrijving").value =
+            reminder.beschrijving || "";
+
+        document.getElementById("datum").value =
+            reminder.datum || "";
+
+        document.getElementById("tijd").value =
+            reminder.tijd
+                ? reminder.tijd.substring(0, 5)
+                : "";
+
+        document.getElementById("categorie").value =
+            reminder.categorie || "";
+
+        document.getElementById("prioriteit").value =
+            reminder.prioriteit || "normaal";
+
+        document.getElementById("herhaling").value =
+            reminder.herhaling || "geen";
+
+        document.getElementById("notities").value =
+            reminder.notities || "";
 
         document
-            .getElementById("modalBackdrop")
+            .getElementById("modalOverlay")
             .classList.add("show");
 
     }
 
 
-    function closeModal() {
-
-        document
-            .getElementById("modalBackdrop")
-            .classList.remove("show");
-
-        editingId = null;
-
-    }
-
-
-    /* ==========================================
-       SAVE
-    ========================================== */
+    /* OPSLAAN */
 
     document
         .getElementById("reminderForm")
-        .addEventListener(
-            "submit",
-            async event => {
+        .addEventListener("submit", async event => {
 
-                event.preventDefault();
+            event.preventDefault();
 
+            const payload = {
 
-                const reminderData = {
+                titel:
+                    document.getElementById("titel").value.trim(),
 
-                    titel:
-                        document.getElementById("title").value.trim(),
+                beschrijving:
+                    document.getElementById("beschrijving").value.trim() || null,
 
-                    beschrijving:
-                        document
-                            .getElementById("description")
-                            .value
-                            .trim() || null,
+                datum:
+                    document.getElementById("datum").value || null,
 
-                    datum:
-                        document.getElementById("date").value ||
-                        null,
+                tijd:
+                    document.getElementById("tijd").value || null,
 
-                    tijd:
-                        document.getElementById("time").value ||
-                        null,
+                categorie:
+                    document.getElementById("categorie").value || null,
 
-                    categorie:
-                        document.getElementById("category").value ||
-                        null,
+                prioriteit:
+                    document.getElementById("prioriteit").value,
 
-                    prioriteit:
-                        document.getElementById("priority").value,
+                herhaling:
+                    document.getElementById("herhaling").value,
 
-                    herhaling:
-                        document.getElementById("repeat").value,
+                notities:
+                    document.getElementById("notities").value.trim() || null
 
-                    notities:
-                        document
-                            .getElementById("notes")
-                            .value
-                            .trim() || null
-
-                };
+            };
 
 
-                if (!reminderData.titel) {
-
-                    showToast(
-                        "Vul eerst een titel in."
-                    );
-
-                    return;
-
-                }
+            let error;
 
 
-                let result;
+            if (editingId) {
 
+                const result =
+                    await supabaseClient
+                        .from("reminders")
+                        .update(payload)
+                        .eq("id", editingId)
+                        .eq("user_id", currentUser.id);
 
-                if (editingId) {
+                error = result.error;
 
-                    result =
-                        await supabaseClient
-                            .from("reminders")
-                            .update(reminderData)
-                            .eq("id", editingId)
-                            .eq("user_id", currentUser.id);
+            } else {
 
-                } else {
+                const result =
+                    await supabaseClient
+                        .from("reminders")
+                        .insert({
+                            ...payload,
+                            user_id: currentUser.id
+                        });
 
-                    result =
-                        await supabaseClient
-                            .from("reminders")
-                            .insert({
-                                ...reminderData,
-                                user_id: currentUser.id
-                            });
-
-                }
-
-
-                if (result.error) {
-
-                    console.error(result.error);
-
-                    showToast(
-                        "Opslaan is niet gelukt."
-                    );
-
-                    return;
-
-                }
-
-
-                closeModal();
-
-                await loadReminders();
-
-
-                showToast(
-                    editingId
-                        ? "Herinnering bijgewerkt."
-                        : "Herinnering toegevoegd."
-                );
+                error = result.error;
 
             }
-        );
 
 
-    /* ==========================================
-       COMPLETE
-    ========================================== */
+            if (error) {
 
-    async function toggleComplete(id) {
+                console.error(error);
 
-        const reminder =
-            reminders.find(
-                item => item.id === id
-            );
+                alert(
+                    "Opslaan is niet gelukt. Controleer je verbinding en probeer opnieuw."
+                );
+
+                return;
+            }
 
 
-        if (!reminder) {
-            return;
-        }
+            closeModal();
 
+            await loadReminders();
+
+        });
+
+
+    /* VOLTOOIEN */
+
+    async function toggleComplete(id, completed) {
 
         const {
             error
         } = await supabaseClient
             .from("reminders")
             .update({
-                afgerond: !reminder.afgerond
+                afgerond: completed
             })
             .eq("id", id)
             .eq("user_id", currentUser.id);
-
 
         if (error) {
 
             console.error(error);
 
-            showToast(
-                "Kon de herinnering niet wijzigen."
-            );
+            alert("De herinnering kon niet worden bijgewerkt.");
 
             return;
-
         }
 
-
         await loadReminders();
-
-
-        showToast(
-            reminder.afgerond
-                ? "Herinnering opnieuw geopend."
-                : "Herinnering afgerond."
-        );
 
     }
 
 
-    /* ==========================================
-       DELETE
-    ========================================== */
+    /* VERWIJDEREN */
 
     async function deleteCurrentReminder() {
 
-        if (!editingId) {
-            return;
-        }
-
+        if (!editingId) return;
 
         const confirmed =
             confirm(
                 "Weet je zeker dat je deze herinnering wilt verwijderen?"
             );
 
-
-        if (!confirmed) {
-            return;
-        }
+        if (!confirmed) return;
 
 
         const {
@@ -2875,12 +1545,11 @@
 
             console.error(error);
 
-            showToast(
-                "Verwijderen is niet gelukt."
+            alert(
+                "De herinnering kon niet worden verwijderd."
             );
 
             return;
-
         }
 
 
@@ -2888,196 +1557,70 @@
 
         await loadReminders();
 
+    }
 
-        showToast(
-            "Herinnering verwijderd."
+
+    /* MODAL SLUITEN */
+
+    function closeModal() {
+
+        document
+            .getElementById("modalOverlay")
+            .classList.remove("show");
+
+        editingId = null;
+
+    }
+
+
+    /* DATUM */
+
+    function formatDate(dateString) {
+
+        if (!dateString) return "";
+
+        const date =
+            new Date(dateString + "T00:00:00");
+
+        return date.toLocaleDateString(
+            "nl-NL",
+            {
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+            }
         );
 
     }
 
 
-    /* ==========================================
-       CATEGORY INFO
-    ========================================== */
+    /* HTML VEILIG MAKEN */
 
-    function showCategoryInfo() {
-
-        showToast(
-            "Categorieën worden binnenkort uitgebreid."
-        );
-
-    }
-
-
-    /* ==========================================
-       LOGOUT
-    ========================================== */
-
-    async function logout() {
-
-        await supabaseClient.auth.signOut();
-
-        window.location.href =
-            "inloggen.html";
-
-    }
-
-
-    /* ==========================================
-       ICONS
-    ========================================== */
-
-    function getIconClass(category) {
-
-        switch (category) {
-
-            case "Afspraken":
-                return "icon-pink";
-
-            case "Privé":
-                return "icon-blue";
-
-            case "Werk":
-                return "icon-orange";
-
-            case "Gezondheid":
-                return "icon-pink";
-
-            case "Thuis":
-                return "icon-purple";
-
-            default:
-                return "icon-green";
-
-        }
-
-    }
-
-
-    function getIcon(category) {
-
-        switch (category) {
-
-            case "Afspraken":
-                return "□";
-
-            case "Privé":
-                return "◇";
-
-            case "Werk":
-                return "▣";
-
-            case "Gezondheid":
-                return "+";
-
-            case "Thuis":
-                return "⌂";
-
-            default:
-                return "✓";
-
-        }
-
-    }
-
-
-    /* ==========================================
-       HELPERS
-    ========================================== */
-
-    function capitalize(text) {
-
-        if (!text) {
-            return "";
-        }
-
-
-        return text.charAt(0).toUpperCase() +
-            text.slice(1);
-
-    }
-
-
-    function escapeHtml(value) {
-
-        if (value === null || value === undefined) {
-            return "";
-        }
-
+    function escapeHTML(value) {
 
         return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
 
     }
 
 
-    function showToast(message) {
-
-        const toast =
-            document.getElementById("toast");
-
-
-        toast.textContent =
-            message;
-
-
-        toast.classList.add("show");
-
-
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        }, 2800);
-
-    }
-
-
-    /* ==========================================
-       CLOSE MODAL ON BACKDROP
-    ========================================== */
+    /* MODAL SLUITEN BIJ KLIK ERBUITEN */
 
     document
-        .getElementById("modalBackdrop")
-        .addEventListener(
-            "click",
-            event => {
-
-                if (
-                    event.target.id ===
-                    "modalBackdrop"
-                ) {
-                    closeModal();
-                }
-
-            }
-        );
-
-
-    /* ESC TO CLOSE */
-
-    document.addEventListener(
-        "keydown",
-        event => {
+        .getElementById("modalOverlay")
+        .addEventListener("click", event => {
 
             if (
-                event.key === "Escape" &&
-                document
-                    .getElementById("modalBackdrop")
-                    .classList
-                    .contains("show")
+                event.target.id === "modalOverlay"
             ) {
-
                 closeModal();
-
             }
 
-        }
-    );
+        });
 
 </script>
 
