@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nooit Meer Vergeten - Instellingen</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --navy: #172542;
+            --navy-light: #26385f;
+            --blue: #4d79d8;
+            --blue-soft: #eaf2ff;
+
+            --green: #45a878;
+            --green-soft: #e9f8f0;
+
+            --purple: #8868d9;
+            --purple-soft: #f1ecff;
+
+            --orange: #e7a33a;
+            --orange-soft: #fff5df;
+
+            --cream: #faf8f4;
+            --white: #ffffff;
+
+            --text: #1e2d4b;
+            --text-light: #71809a;
+            --border: #e8eaf0;
+
+            --shadow: 0 8px 30px rgba(31, 48, 78, 0.07);
+            --radius: 22px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* SIDEBAR */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(
+                180deg,
+                #172542 0%,
+                #1d2b4a 100%
+            );
+            color: white;
+            padding: 25px 17px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px 30px;
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            background: #eef2ff;
+            color: #426ac0;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .brand-text {
+            font-size: 18px;
+            font-weight: 750;
+            line-height: 1.05;
+        }
+
+        .brand-text span {
+            display: block;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 14px;
+            border-radius: 13px;
+            color: #dbe2f1;
+            font-size: 14px;
+            font-weight: 550;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: rgba(113, 143, 216, 0.38);
+            color: white;
+        }
+
+        .nav-icon {
+            width: 21px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.15);
+            margin: 17px 7px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .logout-button {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: #dbe2f1;
+            padding: 12px 14px;
+            border-radius: 13px;
+            text-align: left;
+            display: flex;
+            gap: 13px;
+            align-items: center;
+        }
+
+        .logout-button:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 78px;
+            background: rgba(255,255,255,0.94);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 35px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(12px);
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #203760;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        .content {
+            padding: 35px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            font-size: 31px;
+            letter-spacing: -0.8px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 15px;
+        }
+
+        /* GRID */
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card.full {
+            grid-column: 1 / -1;
+        }
+
+        .card-header {
+            padding: 22px 23px 17px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #eef0f4;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .icon-blue {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+
+        .icon-purple {
+            background: var(--purple-soft);
+            color: var(--purple);
+        }
+
+        .icon-green {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+
+        .icon-orange {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .card-header p {
+            margin: 4px 0 0;
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .card-body {
+            padding: 23px;
+        }
+
+        /* PROFILE */
+
+        .profile-preview {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 15px;
+            background: #f7f9fc;
+            border-radius: 15px;
+            margin-bottom: 21px;
+        }
+
+        .large-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #203760;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .profile-preview strong {
+            display: block;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .profile-preview span {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        /* FORM */
+
+        .field {
+            margin-bottom: 17px;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #52627c;
+            margin-bottom: 7px;
+        }
+
+        .field input {
+            width: 100%;
+            border: 1px solid #dfe3ea;
+            border-radius: 11px;
+            padding: 12px;
+            outline: none;
+            background: #fbfcfd;
+            color: var(--text);
+            transition: 0.2s;
+        }
+
+        .field input:focus {
+            background: white;
+            border-color: #9ab3ea;
+            box-shadow:
+                0 0 0 4px rgba(77,121,216,0.07);
+        }
+
+        .field input:disabled {
+            color: #8a95a7;
+            background: #f3f5f8;
+            cursor: not-allowed;
+        }
+
+        .password-help {
+            color: var(--text-light);
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        /* BUTTON */
+
+        .save-button {
+            border: 0;
+            background: var(--navy);
+            color: white;
+            border-radius: 11px;
+            padding: 11px 17px;
+            font-size: 13px;
+            font-weight: 650;
+            transition: 0.2s;
+        }
+
+        .save-button:hover {
+            background: #26385f;
+            transform: translateY(-1px);
+        }
+
+        .save-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
+        }
+
+        /* ACCOUNT */
+
+        .account-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 14px 0;
+            border-bottom: 1px solid #eef0f4;
+        }
+
+        .account-row:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .account-row:first-child {
+            padding-top: 0;
+        }
+
+        .account-label {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .account-value {
+            font-size: 13px;
+            font-weight: 650;
+            text-align: right;
+        }
+
+        .logout-large {
+            width: 100%;
+            border: 1px solid #e8d2d0;
+            background: #fff7f6;
+            color: #c65d58;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 650;
+            margin-top: 18px;
+        }
+
+        .logout-large:hover {
+            background: #fff0ef;
+        }
+
+        /* APP INFO */
+
+        .info-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px;
+            border-radius: 14px;
+            background: #f8fafc;
+            margin-bottom: 10px;
+        }
+
+        .info-box:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-number {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue);
+            font-weight: 750;
+            font-size: 13px;
+        }
+
+        .info-text strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .info-text span {
+            color: var(--text-light);
+            font-size: 11px;
+        }
+
+        /* TOAST */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: #172542;
+            color: white;
+            padding: 13px 17px;
+            border-radius: 12px;
+            font-size: 13px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: 0.25s;
+            z-index: 200;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* MOBILE */
+
+        .mobile-header {
+            display: none;
+        }
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mobile-header {
+                height: 64px;
+                background: var(--navy);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 18px;
+            }
+
+            .mobile-brand {
+                font-size: 16px;
+                font-weight: 750;
+            }
+
+            .topbar {
+                height: 70px;
+                padding: 0 18px;
+            }
+
+            .content {
+                padding: 25px 18px 40px;
+            }
+
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card.full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+            .card-header {
+                padding: 19px;
+            }
+
+            .card-body {
+                padding: 19px;
+            }
+
+            .account-row {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .account-value {
+                text-align: left;
+            }
+        }
+    
+        /* =========================================================
+           EXTRA MOBILE REDESIGN — telefoonvriendelijk
+           ========================================================= */
+        @media (max-width: 850px) {
+            html, body {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            body {
+                background:
+                    radial-gradient(circle at 100% 0%, rgba(77,121,216,.10), transparent 32%),
+                    radial-gradient(circle at 0% 24%, rgba(69,168,120,.07), transparent 28%),
+                    var(--cream);
+            }
+
+            .app,
+            .main {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            .main {
+                margin-left: 0 !important;
+            }
+
+            .sidebar {
+                display: none !important;
+            }
+
+            .mobile-header {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                height: 68px;
+                padding:
+                    max(8px, env(safe-area-inset-top))
+                    14px
+                    8px;
+                display: grid !important;
+                grid-template-columns: 42px minmax(0, 1fr) 42px;
+                align-items: center;
+                gap: 10px;
+                background: rgba(23,37,66,.97);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                box-shadow: 0 8px 26px rgba(23,37,66,.14);
+            }
+
+            .mobile-brand {
+                min-width: 0;
+                text-align: center;
+                font-size: 16px !important;
+                font-weight: 800 !important;
+                letter-spacing: -.25px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .mobile-dashboard-link,
+            .mobile-logout-button {
+                width: 42px;
+                height: 42px;
+                border-radius: 13px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(255,255,255,.10);
+                background: rgba(255,255,255,.08);
+                color: #fff;
+                text-decoration: none;
+                font-size: 19px;
+                padding: 0;
+            }
+
+            .topbar {
+                display: none !important;
+            }
+
+            .content {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 22px 14px calc(34px + env(safe-area-inset-bottom)) !important;
+                margin: 0 !important;
+            }
+
+            .page-header {
+                margin-bottom: 18px !important;
+                padding: 18px;
+                border-radius: 20px;
+                background:
+                    radial-gradient(circle at 95% 10%, rgba(77,121,216,.12), transparent 30%),
+                    #fff;
+                border: 1px solid #e9edf3;
+                box-shadow: 0 8px 26px rgba(31,48,78,.055);
+            }
+
+            .page-header h1 {
+                font-size: clamp(27px, 8vw, 34px) !important;
+                line-height: 1.08;
+                margin-bottom: 7px !important;
+            }
+
+            .page-header p {
+                font-size: 13px !important;
+                line-height: 1.55;
+            }
+
+            .settings-grid {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 14px !important;
+                width: 100%;
+                min-width: 0;
+            }
+
+            .card,
+            .card.full {
+                width: 100%;
+                min-width: 0;
+                grid-column: auto !important;
+                border-radius: 20px !important;
+                box-shadow: 0 9px 28px rgba(31,48,78,.055) !important;
+            }
+
+            .card-header {
+                padding: 17px 16px 14px !important;
+                gap: 11px !important;
+            }
+
+            .card-icon {
+                width: 42px !important;
+                height: 42px !important;
+                border-radius: 13px !important;
+                flex: 0 0 auto;
+            }
+
+            .card-header > div:last-child {
+                min-width: 0;
+            }
+
+            .card-header h2 {
+                font-size: 17px !important;
+                line-height: 1.25;
+            }
+
+            .card-header p {
+                font-size: 11px !important;
+                line-height: 1.45;
+            }
+
+            .card-body {
+                padding: 16px !important;
+            }
+
+            .profile-preview {
+                padding: 14px !important;
+                gap: 13px !important;
+                border-radius: 15px !important;
+                margin-bottom: 18px !important;
+                min-width: 0;
+            }
+
+            .profile-preview > div:last-child {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .large-avatar {
+                width: 54px !important;
+                height: 54px !important;
+                flex: 0 0 54px;
+            }
+
+            .profile-preview strong,
+            .profile-preview span {
+                overflow-wrap: anywhere;
+                word-break: break-word;
+            }
+
+            .field {
+                margin-bottom: 15px !important;
+            }
+
+            .field label {
+                font-size: 12px !important;
+                margin-bottom: 7px !important;
+            }
+
+            .field input {
+                min-height: 48px;
+                padding: 12px 13px !important;
+                border-radius: 13px !important;
+                font-size: 16px !important; /* voorkomt iPhone auto-zoom */
+            }
+
+            .save-button,
+            .logout-large {
+                width: 100%;
+                min-height: 48px;
+                border-radius: 13px !important;
+                font-size: 14px !important;
+            }
+
+            .password-help {
+                font-size: 11px !important;
+                line-height: 1.5;
+            }
+
+            .account-row {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 5px !important;
+                padding: 13px 0 !important;
+                min-width: 0;
+            }
+
+            .account-label {
+                font-size: 11px !important;
+            }
+
+            .account-value {
+                width: 100%;
+                text-align: left !important;
+                font-size: 13px !important;
+                overflow-wrap: anywhere;
+                word-break: break-word;
+            }
+
+            .info-box {
+                align-items: flex-start !important;
+                padding: 14px !important;
+                gap: 12px !important;
+                border-radius: 14px !important;
+            }
+
+            .info-number {
+                flex: 0 0 38px;
+            }
+
+            .info-text {
+                min-width: 0;
+            }
+
+            .info-text strong {
+                font-size: 13px !important;
+            }
+
+            .info-text span {
+                display: block;
+                font-size: 11px !important;
+                line-height: 1.5;
+                overflow-wrap: anywhere;
+            }
+
+            .toast {
+                left: 14px !important;
+                right: 14px !important;
+                bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+                width: auto !important;
+                max-width: none !important;
+                text-align: center;
+                border-radius: 14px !important;
+                font-size: 12px !important;
+                padding: 13px 15px !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .content {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+
+            .page-header {
+                padding: 16px !important;
+            }
+
+            .card-header,
+            .card-body {
+                padding-left: 14px !important;
+                padding-right: 14px !important;
+            }
+
+            .mobile-brand {
+                font-size: 14px !important;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">✓</div>
+
+            <div class="brand-text">
+                <span>Nooit Meer</span>
+                <span>Vergeten</span>
+            </div>
+        </div>
+
+
+        <nav class="nav">
+
+            <a href="dashboard.html" class="nav-link">
+                <span class="nav-icon">⌂</span>
+                <span>Overzicht</span>
+            </a>
+
+            <a
+                href="dashboard.html"
+                class="nav-link"
+            >
+                <span class="nav-icon">□</span>
+                <span>Vandaag</span>
+            </a>
+
+            <a
+                href="dashboard.html"
+                class="nav-link"
+            >
+                <span class="nav-icon">◷</span>
+                <span>Aankomend</span>
+            </a>
+
+            <a
+                href="dashboard.html"
+                class="nav-link"
+            >
+                <span class="nav-icon">✓</span>
+                <span>Voltooid</span>
+            </a>
+
+
+            <div class="nav-divider"></div>
+
+
+            <a href="dashboard.html" class="nav-link">
+                <span class="nav-icon">◇</span>
+                <span>Categorieën</span>
+            </a>
+
+
+            <a
+                href="instellingen.html"
+                class="nav-link active"
+            >
+                <span class="nav-icon">⚙</span>
+                <span>Instellingen</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="logout-button"
+                onclick="logout()"
+            >
+                <span class="nav-icon">↪</span>
+                <span>Uitloggen</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MOBILE -->
+    <div class="mobile-header">
+
+        <a
+            href="dashboard.html"
+            class="mobile-dashboard-link"
+            aria-label="Terug naar overzicht"
+            title="Terug naar overzicht"
+        >
+            ←
+        </a>
+
+        <div class="mobile-brand">
+            Nooit Meer Vergeten
+        </div>
+
+        <button
+            type="button"
+            class="mobile-logout-button"
+            onclick="logout()"
+            aria-label="Uitloggen"
+            title="Uitloggen"
+        >
+            ↪
+        </button>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="user-area">
+
+                <div
+                    class="user-avatar"
+                    id="userAvatar"
+                >
+                    G
+                </div>
+
+                <div
+                    class="user-name"
+                    id="userName"
+                >
+                    Gebruiker
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="content">
+
+            <!-- HEADER -->
+
+            <div class="page-header">
+
+                <h1>Instellingen</h1>
+
+                <p>
+                    Beheer je profiel en account van Nooit Meer Vergeten.
+                </p>
+
+            </div>
+
+
+            <div class="settings-grid">
+
+
+                <!-- PROFIEL -->
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon icon-blue">
+                            ◯
+                        </div>
+
+                        <div>
+                            <h2>Mijn profiel</h2>
+                            <p>
+                                Pas je persoonlijke gegevens aan.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="profile-preview">
+
+                            <div
+                                class="large-avatar"
+                                id="largeAvatar"
+                            >
+                                G
+                            </div>
+
+                            <div>
+
+                                <strong id="previewName">
+                                    Gebruiker
+                                </strong>
+
+                                <span id="previewEmail">
+                                    -
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <form id="profileForm">
+
+                            <div class="field">
+
+                                <label for="name">
+                                    Naam
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    placeholder="Je naam"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <label for="email">
+                                    E-mailadres
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    disabled
+                                >
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="save-button"
+                                id="profileButton"
+                            >
+                                Profiel opslaan
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+
+                <!-- WACHTWOORD -->
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon icon-purple">
+                            #
+                        </div>
+
+                        <div>
+
+                            <h2>Wachtwoord</h2>
+
+                            <p>
+                                Kies een nieuw wachtwoord.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <form id="passwordForm">
+
+                            <div class="field">
+
+                                <label for="newPassword">
+                                    Nieuw wachtwoord
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="newPassword"
+                                    minlength="6"
+                                    placeholder="Minimaal 6 tekens"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <label for="repeatPassword">
+                                    Herhaal wachtwoord
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="repeatPassword"
+                                    minlength="6"
+                                    placeholder="Nogmaals je wachtwoord"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="password-help">
+                                Gebruik minimaal 6 tekens.
+                            </div>
+
+
+                            <br>
+
+
+                            <button
+                                type="submit"
+                                class="save-button"
+                                id="passwordButton"
+                            >
+                                Wachtwoord wijzigen
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ACCOUNT -->
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon icon-green">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h2>Account</h2>
+
+                            <p>
+                                Informatie over je account.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="account-row">
+
+                            <div class="account-label">
+                                Accountstatus
+                            </div>
+
+                            <div class="account-value">
+                                Actief
+                            </div>
+
+                        </div>
+
+
+                        <div class="account-row">
+
+                            <div class="account-label">
+                                E-mailadres
+                            </div>
+
+                            <div
+                                class="account-value"
+                                id="accountEmail"
+                            >
+                                -
+                            </div>
+
+                        </div>
+
+
+                        <div class="account-row">
+
+                            <div class="account-label">
+                                Account aangemaakt
+                            </div>
+
+                            <div
+                                class="account-value"
+                                id="accountCreated"
+                            >
+                                -
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="logout-large"
+                            onclick="logout()"
+                        >
+                            Uitloggen
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- APP INFO -->
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-icon icon-orange">
+                            i
+                        </div>
+
+                        <div>
+
+                            <h2>Over Nooit Meer Vergeten</h2>
+
+                            <p>
+                                Je persoonlijke overzicht.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="info-box">
+
+                            <div class="info-number">
+                                1.0
+                            </div>
+
+                            <div class="info-text">
+
+                                <strong>
+                                    Versie
+                                </strong>
+
+                                <span>
+                                    Nooit Meer Vergeten
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-number">
+                                ✓
+                            </div>
+
+                            <div class="info-text">
+
+                                <strong>
+                                    Je gegevens
+                                </strong>
+
+                                <span>
+                                    Je herinneringen zijn gekoppeld aan je eigen account.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-number">
+                                +
+                            </div>
+
+                            <div class="info-text">
+
+                                <strong>
+                                    Blijf overzicht houden
+                                </strong>
+
+                                <span>
+                                    Voeg herinneringen toe wanneer je ze nodig hebt.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+    /* ==========================================
+       SUPABASE
+    ========================================== */
+
+    const SUPABASE_URL =
+        "https://fqupzovqwzaqkatcfbka.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_ahp4b1jbybZmcQDDkkdNrg_IvbVXZsY";
+
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    let currentUser = null;
+
+
+    /* ==========================================
+       START
+    ========================================== */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeSettings
+    );
+
+
+    async function initializeSettings() {
+
+        const {
+            data: {
+                session
+            }
+        } = await supabaseClient.auth.getSession();
+
+
+        if (!session) {
+
+            window.location.href =
+                "inloggen.html";
+
+            return;
+
+        }
+
+
+        currentUser =
+            session.user;
+
+
+        await loadProfile();
+
+    }
+
+
+    /* ==========================================
+       PROFILE
+    ========================================== */
+
+    async function loadProfile() {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("profiles")
+            .select("naam,email,created_at")
+            .eq("id", currentUser.id)
+            .maybeSingle();
+
+
+        if (error) {
+
+            console.error(error);
+
+        }
+
+
+        const name =
+            data?.naam ||
+            currentUser.user_metadata?.naam ||
+            currentUser.email?.split("@")[0] ||
+            "Gebruiker";
+
+
+        const email =
+            currentUser.email ||
+            data?.email ||
+            "";
+
+
+        document.getElementById("name").value =
+            name;
+
+
+        document.getElementById("email").value =
+            email;
+
+
+        document.getElementById("previewName").textContent =
+            name;
+
+
+        document.getElementById("previewEmail").textContent =
+            email;
+
+
+        document.getElementById("userName").textContent =
+            name;
+
+
+        document.getElementById("userAvatar").textContent =
+            name.charAt(0).toUpperCase();
+
+
+        document.getElementById("largeAvatar").textContent =
+            name.charAt(0).toUpperCase();
+
+
+        document.getElementById("accountEmail").textContent =
+            email;
+
+
+        document.getElementById("accountCreated").textContent =
+            formatDate(
+                data?.created_at ||
+                currentUser.created_at
+            );
+
+    }
+
+
+    /* ==========================================
+       PROFILE UPDATE
+    ========================================== */
+
+    document
+        .getElementById("profileForm")
+        .addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+
+                const button =
+                    document.getElementById(
+                        "profileButton"
+                    );
+
+
+                const name =
+                    document
+                        .getElementById("name")
+                        .value
+                        .trim();
+
+
+                if (!name) {
+
+                    showToast(
+                        "Vul je naam in."
+                    );
+
+                    return;
+
+                }
+
+
+                button.disabled = true;
+
+                button.textContent =
+                    "Opslaan...";
+
+
+                const {
+                    error
+                } = await supabaseClient
+                    .from("profiles")
+                    .upsert(
+                        {
+                            id: currentUser.id,
+                            naam: name,
+                            email: currentUser.email
+                        },
+                        {
+                            onConflict: "id"
+                        }
+                    );
+
+
+                if (error) {
+
+                    console.error(error);
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "Profiel opslaan";
+
+                    showToast(
+                        "Profiel kon niet worden opgeslagen."
+                    );
+
+                    return;
+
+                }
+
+
+                const {
+                    error: authError
+                } = await supabaseClient.auth.updateUser({
+                    data: {
+                        naam: name
+                    }
+                });
+
+
+                if (authError) {
+
+                    console.error(authError);
+
+                }
+
+
+                document.getElementById(
+                    "previewName"
+                ).textContent = name;
+
+
+                document.getElementById(
+                    "userName"
+                ).textContent = name;
+
+
+                document.getElementById(
+                    "userAvatar"
+                ).textContent =
+                    name.charAt(0).toUpperCase();
+
+
+                document.getElementById(
+                    "largeAvatar"
+                ).textContent =
+                    name.charAt(0).toUpperCase();
+
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Profiel opslaan";
+
+
+                showToast(
+                    "Profiel opgeslagen."
+                );
+
+            }
+        );
+
+
+    /* ==========================================
+       PASSWORD
+    ========================================== */
+
+    document
+        .getElementById("passwordForm")
+        .addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+
+                const button =
+                    document.getElementById(
+                        "passwordButton"
+                    );
+
+
+                const password =
+                    document
+                        .getElementById("newPassword")
+                        .value;
+
+
+                const repeat =
+                    document
+                        .getElementById("repeatPassword")
+                        .value;
+
+
+                if (password.length < 6) {
+
+                    showToast(
+                        "Je wachtwoord moet minimaal 6 tekens bevatten."
+                    );
+
+                    return;
+
+                }
+
+
+                if (password !== repeat) {
+
+                    showToast(
+                        "De wachtwoorden zijn niet hetzelfde."
+                    );
+
+                    return;
+
+                }
+
+
+                button.disabled = true;
+
+                button.textContent =
+                    "Wijzigen...";
+
+
+                const {
+                    error
+                } = await supabaseClient.auth.updateUser({
+                    password: password
+                });
+
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Wachtwoord wijzigen";
+
+
+                if (error) {
+
+                    console.error(error);
+
+                    showToast(
+                        "Wachtwoord kon niet worden gewijzigd."
+                    );
+
+                    return;
+
+                }
+
+
+                document
+                    .getElementById("passwordForm")
+                    .reset();
+
+
+                showToast(
+                    "Wachtwoord succesvol gewijzigd."
+                );
+
+            }
+        );
+
+
+    /* ==========================================
+       LOGOUT
+    ========================================== */
+
+    async function logout() {
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href =
+            "inloggen.html";
+
+    }
+
+
+    /* ==========================================
+       DATE
+    ========================================== */
+
+    function formatDate(value) {
+
+        if (!value) {
+            return "-";
+        }
+
+
+        const date =
+            new Date(value);
+
+
+        return date.toLocaleDateString(
+            "nl-NL",
+            {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    /* ==========================================
+       TOAST
+    ========================================== */
+
+    function showToast(message) {
+
+        const toast =
+            document.getElementById("toast");
+
+
+        toast.textContent =
+            message;
+
+
+        toast.classList.add("show");
+
+
+        setTimeout(
+            () => {
+                toast.classList.remove("show");
+            },
+            2800
+        );
+
+    }
+
+</script>
+
+</body>
+</html>
