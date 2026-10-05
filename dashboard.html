@@ -1,552 +1,617 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Nooit Meer Vergeten</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Inter, Arial, sans-serif;
-            background: #f5f7fa;
-            color: #17202a;
-            min-height: 100vh;
-        }
-
-        button,
-        input,
-        textarea,
-        select {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* SIDEBAR */
-
-        .sidebar {
-            width: 250px;
-            background: #111827;
-            color: white;
-            padding: 28px 18px;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-        }
-
-        .logo {
-            padding: 0 14px 32px;
-        }
-
-        .logo h1 {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .logo p {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #9ca3af;
-        }
-
-        .menu-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #6b7280;
-            padding: 0 14px;
-            margin-bottom: 10px;
-        }
-
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .menu button {
-            width: 100%;
-            border: none;
-            background: transparent;
-            color: #cbd5e1;
-            text-align: left;
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .menu button:hover,
-        .menu button.active {
-            background: #1f2937;
-            color: white;
-        }
-
-        .sidebar-bottom {
-            margin-top: auto;
-        }
-
-        .logout {
-            width: 100%;
-            border: 1px solid #374151;
-            background: transparent;
-            color: #d1d5db;
-            padding: 11px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .logout:hover {
-            background: #1f2937;
-        }
-
-        /* MAIN */
-
-        .main {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            min-height: 100vh;
-        }
-
-        .topbar {
-            height: 72px;
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 36px;
-        }
-
-        .search {
-            width: 340px;
-            position: relative;
-        }
-
-        .search input {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            outline: none;
-            background: #f9fafb;
-        }
-
-        .search input:focus {
-            border-color: #9ca3af;
-            background: white;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #111827;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .user-name {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .content {
-            padding: 36px;
-            max-width: 1500px;
-        }
-
-        .welcome {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 28px;
-        }
-
-        .welcome h2 {
-            font-size: 28px;
-            letter-spacing: -0.8px;
-        }
-
-        .welcome p {
-            color: #6b7280;
-            margin-top: 7px;
-            font-size: 14px;
-        }
-
-        .primary-button {
-            border: none;
-            background: #111827;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .primary-button:hover {
-            background: #1f2937;
-        }
-
-        /* CARDS */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .stat {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 22px;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: #6b7280;
-        }
-
-        .stat-number {
-            font-size: 30px;
-            font-weight: 700;
-            margin-top: 8px;
-        }
-
-        /* CONTENT GRID */
-
-        .section {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .section-header {
-            padding: 20px 22px;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .section-header h3 {
-            font-size: 16px;
-        }
-
-        .filters {
-            display: flex;
-            gap: 8px;
-        }
-
-        .filter {
-            border: 1px solid #e5e7eb;
-            background: white;
-            padding: 8px 12px;
-            border-radius: 7px;
-            font-size: 13px;
-            color: #4b5563;
-        }
-
-        .filter.active {
-            background: #111827;
-            color: white;
-            border-color: #111827;
-        }
-
-        /* REMINDERS */
-
-        .reminder {
-            padding: 18px 22px;
-            border-bottom: 1px solid #f0f1f3;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .reminder:last-child {
-            border-bottom: none;
-        }
-
-        .reminder-main {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            min-width: 0;
-        }
-
-        .check {
-            width: 20px;
-            height: 20px;
-            border: 1px solid #cbd5e1;
-            border-radius: 5px;
-            background: white;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .check.done {
-            background: #111827;
-            border-color: #111827;
-            position: relative;
-        }
-
-        .check.done::after {
-            content: "✓";
-            color: white;
-            font-size: 12px;
-            position: absolute;
-            left: 4px;
-            top: 1px;
-        }
-
-        .reminder-title {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .reminder.done .reminder-title {
-            text-decoration: line-through;
-            color: #9ca3af;
-        }
-
-        .reminder-description {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 5px;
-        }
-
-        .reminder-meta {
-            display: flex;
-            gap: 8px;
-            margin-top: 9px;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 5px;
-            background: #f3f4f6;
-            color: #4b5563;
-        }
-
-        .reminder-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .action-button {
-            border: 1px solid #e5e7eb;
-            background: white;
-            color: #4b5563;
-            padding: 7px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-
-        .action-button:hover {
-            background: #f9fafb;
-        }
-
-        .delete-button:hover {
-            color: #b91c1c;
-        }
-
-        .empty {
-            padding: 55px 20px;
-            text-align: center;
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        /* MODAL */
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(17, 24, 39, 0.55);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        .modal {
-            width: 100%;
-            max-width: 540px;
-            background: white;
-            border-radius: 12px;
-            padding: 28px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .modal-header h3 {
-            font-size: 19px;
-        }
-
-        .close {
-            border: none;
-            background: transparent;
-            font-size: 22px;
-            color: #6b7280;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 7px;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            border: 1px solid #d1d5db;
-            border-radius: 7px;
-            padding: 11px 12px;
-            outline: none;
-            background: white;
-        }
-
-        .form-group textarea {
-            min-height: 90px;
-            resize: vertical;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 22px;
-        }
-
-        .secondary-button {
-            border: 1px solid #d1d5db;
-            background: white;
-            color: #374151;
-            padding: 11px 16px;
-            border-radius: 7px;
-        }
-
-        /* RESPONSIVE */
-
-        @media (max-width: 1000px) {
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .sidebar {
-                width: 210px;
-            }
-
-            .main {
-                margin-left: 210px;
-                width: calc(100% - 210px);
-            }
-        }
-
-        @media (max-width: 700px) {
-            .sidebar {
-                display: none;
-            }
-
-            .main {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .topbar {
-                padding: 0 18px;
-            }
-
-            .search {
-                width: 55%;
-            }
-
-            .content {
-                padding: 20px;
-            }
-
-            .welcome {
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 18px;
-            }
-
-            .stats {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .reminder {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .reminder-actions {
-                margin-left: 34px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard | Nooit Meer Vergeten</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --dark: #111827;
+    --dark-light: #1f2937;
+    --background: #f5f7fa;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --text: #17202a;
+    --muted: #6b7280;
+    --light: #f9fafb;
+    --danger: #b91c1c;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* APP */
+
+.app {
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 250px;
+    background: var(--dark);
+    color: white;
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+}
+
+.logo {
+    padding: 0 14px 34px;
+}
+
+.logo h1 {
+    font-size: 20px;
+    letter-spacing: -.5px;
+}
+
+.logo p {
+    margin-top: 6px;
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.menu-title {
+    padding: 0 14px;
+    margin-bottom: 10px;
+    color: #6b7280;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.menu button {
+    border: 0;
+    background: transparent;
+    color: #cbd5e1;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.menu button:hover,
+.menu button.active {
+    background: var(--dark-light);
+    color: white;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+.logout {
+    width: 100%;
+    border: 1px solid #374151;
+    background: transparent;
+    color: #d1d5db;
+    padding: 11px;
+    border-radius: 8px;
+}
+
+.logout:hover {
+    background: var(--dark-light);
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 250px;
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 72px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 36px;
+}
+
+.search {
+    width: 380px;
+}
+
+.search input {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--light);
+    border-radius: 8px;
+    padding: 11px 14px;
+    outline: none;
+}
+
+.search input:focus {
+    border-color: #9ca3af;
+    background: white;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* CONTENT */
+
+.content {
+    max-width: 1450px;
+    padding: 36px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    letter-spacing: -.8px;
+}
+
+.page-header p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 7px;
+}
+
+.primary {
+    border: 0;
+    background: var(--dark);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.primary:hover {
+    background: #1f2937;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.stat-number {
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+/* PANEL */
+
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.panel-header h3 {
+    font-size: 16px;
+}
+
+.filters {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.filter {
+    border: 1px solid var(--border);
+    background: white;
+    color: #4b5563;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+}
+
+.filter.active {
+    background: var(--dark);
+    color: white;
+    border-color: var(--dark);
+}
+
+/* REMINDERS */
+
+.reminder {
+    padding: 19px 22px;
+    border-bottom: 1px solid #f0f1f3;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.reminder:last-child {
+    border-bottom: 0;
+}
+
+.reminder-left {
+    display: flex;
+    gap: 14px;
+    min-width: 0;
+}
+
+.check {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    background: white;
+    margin-top: 2px;
+}
+
+.check.done {
+    background: var(--dark);
+    border-color: var(--dark);
+}
+
+.reminder-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.reminder.done .reminder-title {
+    text-decoration: line-through;
+    color: #9ca3af;
+}
+
+.reminder-description {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 9px;
+}
+
+.badge {
+    background: #f3f4f6;
+    color: #4b5563;
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-size: 11px;
+}
+
+.badge.high {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge.medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge.low {
+    background: #ecfdf5;
+    color: #166534;
+}
+
+.actions {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.action {
+    border: 1px solid var(--border);
+    background: white;
+    color: #4b5563;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+}
+
+.action:hover {
+    background: var(--light);
+}
+
+.action.delete:hover {
+    color: var(--danger);
+}
+
+.empty {
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* MODAL */
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, .55);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.modal {
+    width: 100%;
+    max-width: 570px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 25px 60px rgba(0,0,0,.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-header h3 {
+    font-size: 20px;
+}
+
+.close {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    padding: 11px 12px;
+    outline: none;
+    background: white;
+}
+
+.form-group textarea {
+    min-height: 85px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #6b7280;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 22px;
+}
+
+.secondary {
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    padding: 11px 16px;
+    border-radius: 7px;
+}
+
+/* MOBILE */
+
+@media (max-width: 1000px) {
+
+    .sidebar {
+        width: 215px;
+    }
+
+    .main {
+        margin-left: 215px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .search {
+        width: 300px;
+    }
+}
+
+@media (max-width: 720px) {
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        padding: 18px;
+    }
+
+    .app {
+        display: block;
+    }
+
+    .logo {
+        padding-bottom: 18px;
+    }
+
+    .menu-title {
+        display: none;
+    }
+
+    .menu {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .menu button {
+        white-space: nowrap;
+    }
+
+    .sidebar-bottom {
+        margin-top: 12px;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .topbar {
+        padding: 15px 20px;
+        height: auto;
+        gap: 15px;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .reminder {
+        flex-direction: column;
+    }
+
+    .actions {
+        margin-left: 34px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -560,28 +625,30 @@
             <p>Persoonlijk overzicht</p>
         </div>
 
-        <div class="menu-title">Menu</div>
+        <div class="menu-title">Navigatie</div>
 
         <nav class="menu">
-            <button class="active" onclick="showSection('overzicht')">
+
+            <button class="active" onclick="changeView('all', this)">
                 Overzicht
             </button>
 
-            <button onclick="showSection('vandaag')">
+            <button onclick="changeView('today', this)">
                 Vandaag
             </button>
 
-            <button onclick="showSection('aankomend')">
+            <button onclick="changeView('upcoming', this)">
                 Aankomend
             </button>
 
-            <button onclick="showSection('voltooid')">
+            <button onclick="changeView('completed', this)">
                 Voltooid
             </button>
 
             <button onclick="openModal()">
                 Nieuwe herinnering
             </button>
+
         </nav>
 
         <div class="sidebar-bottom">
@@ -592,75 +659,125 @@
 
     </aside>
 
+
     <main class="main">
 
         <header class="topbar">
 
             <div class="search">
                 <input
+                    id="search"
                     type="text"
-                    id="searchInput"
-                    placeholder="Zoek in herinneringen..."
-                    oninput="renderReminders()"
+                    placeholder="Zoek herinneringen..."
+                    oninput="render()"
                 >
             </div>
 
-            <div class="user-info">
-                <div class="avatar" id="avatar">?</div>
+            <div class="user">
+
+                <div class="avatar" id="avatar">
+                    ?
+                </div>
 
                 <div class="user-name" id="userName">
                     Gebruiker
                 </div>
+
             </div>
 
         </header>
 
+
         <section class="content">
 
-            <div class="welcome">
+            <div class="page-header">
 
                 <div>
-                    <h2 id="welcomeTitle">Overzicht</h2>
-                    <p id="welcomeText">
-                        Hier staat je persoonlijke overzicht.
+
+                    <h2 id="pageTitle">
+                        Overzicht
+                    </h2>
+
+                    <p id="pageDescription">
+                        Beheer hier al je herinneringen.
                     </p>
+
                 </div>
 
-                <button class="primary-button" onclick="openModal()">
+                <button
+                    class="primary"
+                    onclick="openModal()">
+
                     Nieuwe herinnering
+
                 </button>
 
             </div>
 
+
             <div class="stats">
 
                 <div class="stat">
-                    <div class="stat-label">Totaal</div>
-                    <div class="stat-number" id="totalCount">0</div>
+                    <div class="stat-label">
+                        Totaal
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="total">
+                        0
+                    </div>
                 </div>
 
-                <div class="stat">
-                    <div class="stat-label">Vandaag</div>
-                    <div class="stat-number" id="todayCount">0</div>
-                </div>
 
                 <div class="stat">
-                    <div class="stat-label">Aankomend</div>
-                    <div class="stat-number" id="upcomingCount">0</div>
+                    <div class="stat-label">
+                        Vandaag
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="today">
+                        0
+                    </div>
                 </div>
 
+
                 <div class="stat">
-                    <div class="stat-label">Voltooid</div>
-                    <div class="stat-number" id="completedCount">0</div>
+                    <div class="stat-label">
+                        Aankomend
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="upcoming">
+                        0
+                    </div>
+                </div>
+
+
+                <div class="stat">
+                    <div class="stat-label">
+                        Voltooid
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="completed">
+                        0
+                    </div>
                 </div>
 
             </div>
 
-            <div class="section">
 
-                <div class="section-header">
+            <div class="panel">
 
-                    <h3 id="sectionTitle">Herinneringen</h3>
+                <div class="panel-header">
+
+                    <h3>
+                        Herinneringen
+                    </h3>
 
                     <div class="filters">
 
@@ -686,7 +803,7 @@
 
                 </div>
 
-                <div id="reminderList"></div>
+                <div id="list"></div>
 
             </div>
 
@@ -699,7 +816,9 @@
 
 <!-- MODAL -->
 
-<div class="modal-overlay" id="modal">
+<div
+    class="overlay"
+    id="overlay">
 
     <div class="modal">
 
@@ -709,13 +828,16 @@
                 Nieuwe herinnering
             </h3>
 
-            <button class="close" onclick="closeModal()">
+            <button
+                class="close"
+                onclick="closeModal()">
                 ×
             </button>
 
         </div>
 
-        <form id="reminderForm">
+
+        <form id="form">
 
             <div class="form-group">
 
@@ -724,13 +846,14 @@
                 </label>
 
                 <input
-                    type="text"
                     id="title"
+                    type="text"
                     placeholder="Bijvoorbeeld: Tandartsafspraak"
                     required
                 >
 
             </div>
+
 
             <div class="form-group">
 
@@ -745,6 +868,7 @@
 
             </div>
 
+
             <div class="form-row">
 
                 <div class="form-group">
@@ -754,11 +878,12 @@
                     </label>
 
                     <input
-                        type="date"
                         id="date"
+                        type="date"
                     >
 
                 </div>
+
 
                 <div class="form-group">
 
@@ -767,26 +892,150 @@
                     </label>
 
                     <input
-                        type="time"
                         id="time"
+                        type="time"
                     >
 
                 </div>
 
             </div>
 
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Categorie
+                    </label>
+
+                    <select id="category">
+
+                        <option value="">
+                            Geen categorie
+                        </option>
+
+                        <option value="Persoonlijk">
+                            Persoonlijk
+                        </option>
+
+                        <option value="Werk">
+                            Werk
+                        </option>
+
+                        <option value="Privé">
+                            Privé
+                        </option>
+
+                        <option value="Financiën">
+                            Financiën
+                        </option>
+
+                        <option value="Gezondheid">
+                            Gezondheid
+                        </option>
+
+                        <option value="Afspraken">
+                            Afspraken
+                        </option>
+
+                        <option value="Overig">
+                            Overig
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="priority">
+                        Prioriteit
+                    </label>
+
+                    <select id="priority">
+
+                        <option value="laag">
+                            Laag
+                        </option>
+
+                        <option
+                            value="normaal"
+                            selected>
+                            Normaal
+                        </option>
+
+                        <option value="hoog">
+                            Hoog
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="repeat">
+                    Herhaling
+                </label>
+
+                <select id="repeat">
+
+                    <option value="geen">
+                        Geen herhaling
+                    </option>
+
+                    <option value="dagelijks">
+                        Dagelijks
+                    </option>
+
+                    <option value="wekelijks">
+                        Wekelijks
+                    </option>
+
+                    <option value="maandelijks">
+                        Maandelijks
+                    </option>
+
+                    <option value="jaarlijks">
+                        Jaarlijks
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="notes">
+                    Notities
+                </label>
+
+                <textarea
+                    id="notes"
+                    placeholder="Extra informatie, locatie of instructies..."
+                ></textarea>
+
+            </div>
+
+
             <div class="modal-footer">
 
                 <button
                     type="button"
-                    class="secondary-button"
+                    class="secondary"
                     onclick="closeModal()">
                     Annuleren
                 </button>
 
                 <button
                     type="submit"
-                    class="primary-button">
+                    class="primary">
                     Opslaan
                 </button>
 
@@ -801,6 +1050,10 @@
 
 <script>
 
+/* =========================
+   SUPABASE
+========================= */
+
 const SUPABASE_URL =
     "https://fqupzovqwzaqkatcfbka.supabase.co";
 
@@ -814,13 +1067,20 @@ const supabaseClient =
     );
 
 
+/* =========================
+   VARIABELEN
+========================= */
+
 let currentUser = null;
 let reminders = [];
-let currentFilter = "all";
+let filter = "all";
+let view = "all";
 let editingId = null;
 
 
-/* START */
+/* =========================
+   START
+========================= */
 
 async function init() {
 
@@ -837,21 +1097,24 @@ async function init() {
 
     currentUser = session.user;
 
-    const naam =
+    const name =
         currentUser.user_metadata?.naam ||
         currentUser.email?.split("@")[0] ||
         "Gebruiker";
 
-    document.getElementById("userName").textContent = naam;
+    document.getElementById("userName").textContent =
+        name;
 
     document.getElementById("avatar").textContent =
-        naam.charAt(0).toUpperCase();
+        name.charAt(0).toUpperCase();
 
     await loadReminders();
 }
 
 
-/* REMINDERS LADEN */
+/* =========================
+   DATA LADEN
+========================= */
 
 async function loadReminders() {
 
@@ -862,101 +1125,160 @@ async function loadReminders() {
         .from("reminders")
         .select("*")
         .eq("user_id", currentUser.id)
-        .order("datum", { ascending: true })
-        .order("tijd", { ascending: true });
+        .order("datum", {
+            ascending: true
+        })
+        .order("tijd", {
+            ascending: true
+        });
 
     if (error) {
+
         console.error(error);
+
+        alert(
+            "De herinneringen konden niet worden geladen."
+        );
+
         return;
     }
 
     reminders = data || [];
 
     updateStats();
-    renderReminders();
+    render();
 }
 
 
-/* STATISTIEKEN */
+/* =========================
+   STATISTIEKEN
+========================= */
 
 function updateStats() {
 
     const today =
-        new Date().toISOString().split("T")[0];
+        new Date()
+            .toISOString()
+            .split("T")[0];
 
     const total =
         reminders.length;
 
     const completed =
-        reminders.filter(r => r.afgerond).length;
-
-    const todayItems =
-        reminders.filter(r =>
-            r.datum === today &&
-            !r.afgerond
+        reminders.filter(
+            reminder => reminder.afgerond
         ).length;
 
-    const upcoming =
-        reminders.filter(r =>
-            r.datum &&
-            r.datum > today &&
-            !r.afgerond
+    const todayCount =
+        reminders.filter(
+            reminder =>
+                reminder.datum === today &&
+                !reminder.afgerond
         ).length;
 
-    document.getElementById("totalCount").textContent =
+    const upcomingCount =
+        reminders.filter(
+            reminder =>
+                reminder.datum &&
+                reminder.datum > today &&
+                !reminder.afgerond
+        ).length;
+
+    document.getElementById("total").textContent =
         total;
 
-    document.getElementById("todayCount").textContent =
-        todayItems;
+    document.getElementById("today").textContent =
+        todayCount;
 
-    document.getElementById("upcomingCount").textContent =
-        upcoming;
+    document.getElementById("upcoming").textContent =
+        upcomingCount;
 
-    document.getElementById("completedCount").textContent =
+    document.getElementById("completed").textContent =
         completed;
 }
 
 
-/* LIJST */
+/* =========================
+   RENDER
+========================= */
 
-function renderReminders() {
+function render() {
 
     const list =
-        document.getElementById("reminderList");
+        document.getElementById("list");
 
     const search =
         document
-            .getElementById("searchInput")
+            .getElementById("search")
             .value
-            .toLowerCase();
+            .toLowerCase()
+            .trim();
 
-    let filtered =
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+    let result =
         reminders.filter(reminder => {
 
-            const matchesSearch =
-                reminder.titel
-                    .toLowerCase()
-                    .includes(search) ||
+            const title =
+                (reminder.titel || "")
+                    .toLowerCase();
+
+            const description =
                 (reminder.beschrijving || "")
-                    .toLowerCase()
-                    .includes(search);
+                    .toLowerCase();
+
+            const category =
+                (reminder.categorie || "")
+                    .toLowerCase();
+
+            const matchesSearch =
+                title.includes(search) ||
+                description.includes(search) ||
+                category.includes(search);
 
             if (!matchesSearch) {
                 return false;
             }
 
-            if (currentFilter === "open") {
-                return !reminder.afgerond;
+            if (filter === "open" &&
+                reminder.afgerond) {
+                return false;
             }
 
-            if (currentFilter === "done") {
+            if (filter === "done" &&
+                !reminder.afgerond) {
+                return false;
+            }
+
+            if (view === "today") {
+
+                return (
+                    reminder.datum === today &&
+                    !reminder.afgerond
+                );
+            }
+
+            if (view === "upcoming") {
+
+                return (
+                    reminder.datum &&
+                    reminder.datum > today &&
+                    !reminder.afgerond
+                );
+            }
+
+            if (view === "completed") {
                 return reminder.afgerond;
             }
 
             return true;
         });
 
-    if (!filtered.length) {
+
+    if (!result.length) {
 
         list.innerHTML = `
             <div class="empty">
@@ -967,113 +1289,239 @@ function renderReminders() {
         return;
     }
 
+
     list.innerHTML =
-        filtered.map(reminder => {
+        result
+            .map(reminder => createReminderHtml(reminder))
+            .join("");
+}
 
-            const dateText =
-                reminder.datum
-                    ? formatDate(reminder.datum)
-                    : "Geen datum";
 
-            const timeText =
-                reminder.tijd
-                    ? reminder.tijd.substring(0, 5)
-                    : "";
+/* =========================
+   HERINNERING HTML
+========================= */
 
-            return `
-                <div class="reminder ${reminder.afgerond ? "done" : ""}">
+function createReminderHtml(reminder) {
 
-                    <div class="reminder-main">
+    const date =
+        reminder.datum
+            ? formatDate(reminder.datum)
+            : "Geen datum";
 
-                        <button
-                            class="check ${reminder.afgerond ? "done" : ""}"
-                            onclick="toggleComplete(${reminder.id}, ${!reminder.afgerond})">
-                        </button>
+    const time =
+        reminder.tijd
+            ? reminder.tijd.substring(0, 5)
+            : "";
 
-                        <div>
+    let priorityClass = "";
 
-                            <div class="reminder-title">
-                                ${escapeHtml(reminder.titel)}
-                            </div>
+    if (reminder.prioriteit === "hoog") {
+        priorityClass = "high";
+    }
 
-                            ${
-                                reminder.beschrijving
-                                ? `
-                                    <div class="reminder-description">
-                                        ${escapeHtml(reminder.beschrijving)}
-                                    </div>
-                                  `
-                                : ""
-                            }
+    if (reminder.prioriteit === "normaal") {
+        priorityClass = "medium";
+    }
 
-                            <div class="reminder-meta">
+    if (reminder.prioriteit === "laag") {
+        priorityClass = "low";
+    }
 
-                                <span class="badge">
-                                    ${dateText}
-                                </span>
 
-                                ${
-                                    timeText
-                                    ? `
-                                        <span class="badge">
-                                            ${timeText}
-                                        </span>
-                                      `
-                                    : ""
-                                }
+    return `
+        <div class="reminder ${reminder.afgerond ? "done" : ""}">
 
-                                <span class="badge">
-                                    ${reminder.afgerond ? "Voltooid" : "Openstaand"}
-                                </span>
+            <div class="reminder-left">
 
-                            </div>
+                <button
+                    class="check ${reminder.afgerond ? "done" : ""}"
+                    onclick="toggleComplete(
+                        ${reminder.id},
+                        ${!reminder.afgerond}
+                    )">
+                </button>
 
-                        </div>
 
+                <div>
+
+                    <div class="reminder-title">
+                        ${escapeHtml(reminder.titel)}
                     </div>
 
-                    <div class="reminder-actions">
 
-                        <button
-                            class="action-button"
-                            onclick="editReminder(${reminder.id})">
-                            Bewerken
-                        </button>
+                    ${
+                        reminder.beschrijving
+                        ? `
+                            <div class="reminder-description">
+                                ${escapeHtml(
+                                    reminder.beschrijving
+                                )}
+                            </div>
+                        `
+                        : ""
+                    }
 
-                        <button
-                            class="action-button delete-button"
-                            onclick="deleteReminder(${reminder.id})">
-                            Verwijderen
-                        </button>
+
+                    <div class="meta">
+
+                        <span class="badge">
+                            ${date}
+                        </span>
+
+                        ${
+                            time
+                            ? `
+                                <span class="badge">
+                                    ${time}
+                                </span>
+                            `
+                            : ""
+                        }
+
+
+                        ${
+                            reminder.categorie
+                            ? `
+                                <span class="badge">
+                                    ${escapeHtml(
+                                        reminder.categorie
+                                    )}
+                                </span>
+                            `
+                            : ""
+                        }
+
+
+                        ${
+                            reminder.prioriteit
+                            ? `
+                                <span class="badge ${priorityClass}">
+                                    Prioriteit:
+                                    ${escapeHtml(
+                                        reminder.prioriteit
+                                    )}
+                                </span>
+                            `
+                            : ""
+                        }
+
+
+                        ${
+                            reminder.herhaling &&
+                            reminder.herhaling !== "geen"
+                            ? `
+                                <span class="badge">
+                                    ${escapeHtml(
+                                        reminder.herhaling
+                                    )}
+                                </span>
+                            `
+                            : ""
+                        }
 
                     </div>
 
                 </div>
-            `;
 
-        }).join("");
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="action"
+                    onclick="editReminder(${reminder.id})">
+                    Bewerken
+                </button>
+
+                <button
+                    class="action delete"
+                    onclick="deleteReminder(${reminder.id})">
+                    Verwijderen
+                </button>
+
+            </div>
+
+        </div>
+    `;
 }
 
 
-/* FILTER */
+/* =========================
+   FILTER
+========================= */
 
-function setFilter(filter, button) {
+function setFilter(value, button) {
 
-    currentFilter = filter;
+    filter = value;
 
     document
         .querySelectorAll(".filter")
-        .forEach(btn =>
-            btn.classList.remove("active")
+        .forEach(element =>
+            element.classList.remove("active")
         );
 
     button.classList.add("active");
 
-    renderReminders();
+    render();
 }
 
 
-/* MODAL */
+/* =========================
+   MENU
+========================= */
+
+function changeView(value, button) {
+
+    view = value;
+
+    document
+        .querySelectorAll(".menu button")
+        .forEach(element =>
+            element.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+
+    const titles = {
+
+        all: [
+            "Overzicht",
+            "Beheer hier al je herinneringen."
+        ],
+
+        today: [
+            "Vandaag",
+            "Bekijk wat er vandaag gepland staat."
+        ],
+
+        upcoming: [
+            "Aankomend",
+            "Bekijk je komende herinneringen."
+        ],
+
+        completed: [
+            "Voltooid",
+            "Bekijk je afgeronde herinneringen."
+        ]
+    };
+
+
+    document.getElementById("pageTitle").textContent =
+        titles[value][0];
+
+    document.getElementById("pageDescription").textContent =
+        titles[value][1];
+
+
+    render();
+}
+
+
+/* =========================
+   MODAL
+========================= */
 
 function openModal() {
 
@@ -1082,10 +1530,16 @@ function openModal() {
     document.getElementById("modalTitle").textContent =
         "Nieuwe herinnering";
 
-    document.getElementById("reminderForm").reset();
+    document.getElementById("form").reset();
+
+    document.getElementById("priority").value =
+        "normaal";
+
+    document.getElementById("repeat").value =
+        "geen";
 
     document
-        .getElementById("modal")
+        .getElementById("overlay")
         .classList.add("show");
 }
 
@@ -1093,127 +1547,202 @@ function openModal() {
 function closeModal() {
 
     document
-        .getElementById("modal")
+        .getElementById("overlay")
         .classList.remove("show");
 
     editingId = null;
 }
 
 
-/* TOEVOEGEN / BEWERKEN */
+/* =========================
+   OPSLAAN
+========================= */
 
 document
-    .getElementById("reminderForm")
-    .addEventListener("submit", async function(event) {
+    .getElementById("form")
+    .addEventListener(
+        "submit",
+        async function(event) {
 
-        event.preventDefault();
-
-        const reminder = {
-
-            titel:
-                document.getElementById("title").value.trim(),
-
-            beschrijving:
-                document.getElementById("description").value.trim() ||
-                null,
-
-            datum:
-                document.getElementById("date").value ||
-                null,
-
-            tijd:
-                document.getElementById("time").value ||
-                null
-        };
+            event.preventDefault();
 
 
-        if (!reminder.titel) {
-            return;
-        }
+            const reminder = {
+
+                titel:
+                    document
+                        .getElementById("title")
+                        .value
+                        .trim(),
+
+                beschrijving:
+                    document
+                        .getElementById("description")
+                        .value
+                        .trim() || null,
+
+                datum:
+                    document
+                        .getElementById("date")
+                        .value || null,
+
+                tijd:
+                    document
+                        .getElementById("time")
+                        .value || null,
+
+                categorie:
+                    document
+                        .getElementById("category")
+                        .value || null,
+
+                prioriteit:
+                    document
+                        .getElementById("priority")
+                        .value || "normaal",
+
+                herhaling:
+                    document
+                        .getElementById("repeat")
+                        .value || "geen",
+
+                notities:
+                    document
+                        .getElementById("notes")
+                        .value
+                        .trim() || null
+            };
 
 
-        if (editingId) {
-
-            const {
-                error
-            } = await supabaseClient
-                .from("reminders")
-                .update(reminder)
-                .eq("id", editingId)
-                .eq("user_id", currentUser.id);
-
-            if (error) {
-                alert("De herinnering kon niet worden aangepast.");
-                console.error(error);
+            if (!reminder.titel) {
                 return;
             }
 
-        } else {
 
-            const {
-                error
-            } = await supabaseClient
-                .from("reminders")
-                .insert({
-                    ...reminder,
-                    user_id: currentUser.id,
-                    afgerond: false
-                });
+            let error;
+
+
+            if (editingId) {
+
+                const result =
+                    await supabaseClient
+                        .from("reminders")
+                        .update(reminder)
+                        .eq("id", editingId)
+                        .eq(
+                            "user_id",
+                            currentUser.id
+                        );
+
+                error = result.error;
+
+            } else {
+
+                const result =
+                    await supabaseClient
+                        .from("reminders")
+                        .insert({
+                            ...reminder,
+                            user_id:
+                                currentUser.id,
+                            afgerond:
+                                false
+                        });
+
+                error = result.error;
+            }
+
 
             if (error) {
-                alert("De herinnering kon niet worden opgeslagen.");
+
                 console.error(error);
+
+                alert(
+                    "De herinnering kon niet worden opgeslagen."
+                );
+
                 return;
             }
+
+
+            closeModal();
+
+            await loadReminders();
         }
+    );
 
 
-        closeModal();
-
-        await loadReminders();
-
-    });
-
-
-/* BEWERKEN */
+/* =========================
+   BEWERKEN
+========================= */
 
 function editReminder(id) {
 
     const reminder =
-        reminders.find(r => r.id === id);
+        reminders.find(
+            item => item.id === id
+        );
 
     if (!reminder) {
         return;
     }
 
+
     editingId = id;
+
 
     document.getElementById("modalTitle").textContent =
         "Herinnering bewerken";
 
+
     document.getElementById("title").value =
         reminder.titel || "";
+
 
     document.getElementById("description").value =
         reminder.beschrijving || "";
 
+
     document.getElementById("date").value =
         reminder.datum || "";
+
 
     document.getElementById("time").value =
         reminder.tijd
             ? reminder.tijd.substring(0, 5)
             : "";
 
+
+    document.getElementById("category").value =
+        reminder.categorie || "";
+
+
+    document.getElementById("priority").value =
+        reminder.prioriteit || "normaal";
+
+
+    document.getElementById("repeat").value =
+        reminder.herhaling || "geen";
+
+
+    document.getElementById("notes").value =
+        reminder.notities || "";
+
+
     document
-        .getElementById("modal")
+        .getElementById("overlay")
         .classList.add("show");
 }
 
 
-/* VOLTOOIEN */
+/* =========================
+   VOLTOOIEN
+========================= */
 
-async function toggleComplete(id, completed) {
+async function toggleComplete(
+    id,
+    completed
+) {
 
     const {
         error
@@ -1223,36 +1752,48 @@ async function toggleComplete(id, completed) {
             afgerond: completed
         })
         .eq("id", id)
-        .eq("user_id", currentUser.id);
+        .eq(
+            "user_id",
+            currentUser.id
+        );
+
 
     if (error) {
+
         console.error(error);
+
         return;
     }
+
 
     await loadReminders();
 }
 
 
-/* VERWIJDEREN */
+/* =========================
+   VERWIJDEREN
+========================= */
 
 async function deleteReminder(id) {
 
     const reminder =
-        reminders.find(r => r.id === id);
+        reminders.find(
+            item => item.id === id
+        );
 
     if (!reminder) {
         return;
     }
 
-    const confirmed =
-        confirm(
-            `Weet je zeker dat je "${reminder.titel}" wilt verwijderen?`
-        );
 
-    if (!confirmed) {
+    if (
+        !confirm(
+            `Weet je zeker dat je "${reminder.titel}" wilt verwijderen?`
+        )
+    ) {
         return;
     }
+
 
     const {
         error
@@ -1260,239 +1801,54 @@ async function deleteReminder(id) {
         .from("reminders")
         .delete()
         .eq("id", id)
-        .eq("user_id", currentUser.id);
+        .eq(
+            "user_id",
+            currentUser.id
+        );
+
 
     if (error) {
+
         console.error(error);
+
+        alert(
+            "De herinnering kon niet worden verwijderd."
+        );
+
         return;
     }
+
 
     await loadReminders();
 }
 
 
-/* MENU */
-
-function showSection(section) {
-
-    document
-        .querySelectorAll(".menu button")
-        .forEach(btn =>
-            btn.classList.remove("active")
-        );
-
-    const titles = {
-
-        overzicht: [
-            "Overzicht",
-            "Hier staat je persoonlijke overzicht."
-        ],
-
-        vandaag: [
-            "Vandaag",
-            "Herinneringen die vandaag gepland staan."
-        ],
-
-        aankomend: [
-            "Aankomend",
-            "Je komende herinneringen."
-        ],
-
-        voltooid: [
-            "Voltooid",
-            "Herinneringen die je hebt afgerond."
-        ]
-    };
-
-    if (!titles[section]) {
-        return;
-    }
-
-    document.getElementById("welcomeTitle").textContent =
-        titles[section][0];
-
-    document.getElementById("welcomeText").textContent =
-        titles[section][1];
-
-
-    const today =
-        new Date().toISOString().split("T")[0];
-
-
-    if (section === "vandaag") {
-
-        currentFilter = "today";
-
-    } else if (section === "aankomend") {
-
-        currentFilter = "upcoming";
-
-    } else if (section === "voltooid") {
-
-        currentFilter = "done";
-
-    } else {
-
-        currentFilter = "all";
-
-    }
-
-    renderSpecialSection();
-}
-
-
-function renderSpecialSection() {
-
-    const list =
-        document.getElementById("reminderList");
-
-    const today =
-        new Date().toISOString().split("T")[0];
-
-    let filtered = reminders;
-
-    if (currentFilter === "today") {
-
-        filtered =
-            reminders.filter(r =>
-                r.datum === today &&
-                !r.afgerond
-            );
-
-    }
-
-    if (currentFilter === "upcoming") {
-
-        filtered =
-            reminders.filter(r =>
-                r.datum &&
-                r.datum > today &&
-                !r.afgerond
-            );
-
-    }
-
-    if (currentFilter === "done") {
-
-        filtered =
-            reminders.filter(r =>
-                r.afgerond
-            );
-
-    }
-
-    if (!filtered.length) {
-
-        list.innerHTML = `
-            <div class="empty">
-                Geen herinneringen gevonden.
-            </div>
-        `;
-
-        return;
-    }
-
-    const searchInput =
-        document.getElementById("searchInput");
-
-    searchInput.value = "";
-
-    list.innerHTML =
-        filtered.map(reminder => {
-
-            const dateText =
-                reminder.datum
-                    ? formatDate(reminder.datum)
-                    : "Geen datum";
-
-            const timeText =
-                reminder.tijd
-                    ? reminder.tijd.substring(0, 5)
-                    : "";
-
-            return `
-                <div class="reminder ${reminder.afgerond ? "done" : ""}">
-
-                    <div class="reminder-main">
-
-                        <button
-                            class="check ${reminder.afgerond ? "done" : ""}"
-                            onclick="toggleComplete(${reminder.id}, ${!reminder.afgerond})">
-                        </button>
-
-                        <div>
-
-                            <div class="reminder-title">
-                                ${escapeHtml(reminder.titel)}
-                            </div>
-
-                            ${
-                                reminder.beschrijving
-                                ? `
-                                    <div class="reminder-description">
-                                        ${escapeHtml(reminder.beschrijving)}
-                                    </div>
-                                  `
-                                : ""
-                            }
-
-                            <div class="reminder-meta">
-
-                                <span class="badge">
-                                    ${dateText}
-                                </span>
-
-                                ${
-                                    timeText
-                                    ? `
-                                        <span class="badge">
-                                            ${timeText}
-                                        </span>
-                                      `
-                                    : ""
-                                }
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="reminder-actions">
-
-                        <button
-                            class="action-button"
-                            onclick="editReminder(${reminder.id})">
-                            Bewerken
-                        </button>
-
-                        <button
-                            class="action-button delete-button"
-                            onclick="deleteReminder(${reminder.id})">
-                            Verwijderen
-                        </button>
-
-                    </div>
-
-                </div>
-            `;
-
-        }).join("");
-}
-
-
-/* DATUM */
+/* =========================
+   DATUM
+========================= */
 
 function formatDate(date) {
 
     const parts =
         date.split("-");
 
-    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    if (parts.length !== 3) {
+        return date;
+    }
+
+    return (
+        parts[2] +
+        "-" +
+        parts[1] +
+        "-" +
+        parts[0]
+    );
 }
 
 
-/* VEILIG HTML */
+/* =========================
+   HTML VEILIG MAKEN
+========================= */
 
 function escapeHtml(value) {
 
@@ -1505,7 +1861,9 @@ function escapeHtml(value) {
 }
 
 
-/* UITLOGGEN */
+/* =========================
+   UITLOGGEN
+========================= */
 
 async function logout() {
 
@@ -1516,7 +1874,9 @@ async function logout() {
 }
 
 
-/* STARTEN */
+/* =========================
+   START
+========================= */
 
 init();
 
