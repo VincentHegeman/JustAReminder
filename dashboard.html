@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dashboard – Nooit Meer Vergeten</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #1f2937;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 18px 25px;
+    }
+
+    .header-inner {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .logout {
+      background: #ef4444;
+      color: white;
+      border: 0;
+      padding: 10px 16px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout:hover {
+      background: #dc2626;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .welcome {
+      margin-bottom: 30px;
+    }
+
+    .welcome h1 {
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      color: #6b7280;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .add-button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 13px;
+      border: 0;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .add-button:hover {
+      background: #1d4ed8;
+    }
+
+    .add-button:disabled {
+      opacity: 0.6;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 9px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .reminder {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .reminder.completed {
+      opacity: 0.6;
+    }
+
+    .reminder-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .reminder-description {
+      color: #6b7280;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+    }
+
+    .reminder-date {
+      font-size: 14px;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .actions button {
+      border: 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .complete {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .delete {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .empty {
+      text-align: center;
+      color: #6b7280;
+      padding: 30px 10px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #6b7280;
+      padding: 20px;
+    }
+
+    @media (max-width: 750px) {
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .logout {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="header-inner">
+
+    <div class="logo">
+      🧠 Nooit Meer Vergeten
+    </div>
+
+    <button class="logout" onclick="logout()">
+      Uitloggen
+    </button>
+
+  </div>
+
+</header>
+
+
+<div class="container">
+
+  <div class="welcome">
+
+    <h1 id="welcomeTitle">
+      Mijn herinneringen
+    </h1>
+
+    <p>
+      Voeg iets toe zodat je het nooit meer vergeet.
+    </p>
+
+  </div>
+
+
+  <div class="grid">
+
+
+    <!-- NIEUWE HERINNERING -->
+
+    <div class="card">
+
+      <h2>➕ Nieuwe herinnering</h2>
+
+      <label for="titel">
+        Titel
+      </label>
+
+      <input
+        type="text"
+        id="titel"
+        placeholder="Bijvoorbeeld: Verjaardag mama"
+      >
+
+
+      <label for="beschrijving">
+        Beschrijving
+      </label>
+
+      <textarea
+        id="beschrijving"
+        placeholder="Eventuele extra informatie..."
+      ></textarea>
+
+
+      <label for="datum">
+        Datum
+      </label>
+
+      <input
+        type="date"
+        id="datum"
+      >
+
+
+      <label for="tijd">
+        Tijd
+      </label>
+
+      <input
+        type="time"
+        id="tijd"
+      >
+
+
+      <button
+        class="add-button"
+        id="addButton"
+        onclick="addReminder()"
+      >
+        Herinnering toevoegen
+      </button>
+
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+    </div>
+
+
+    <!-- HERINNERINGEN -->
+
+    <div class="card">
+
+      <h2>📋 Mijn herinneringen</h2>
+
+      <div id="reminders">
+
+        <div class="loading">
+          Herinneringen laden...
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://fqupzovqwzaqkatcfbka.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_ahp4b1jbybZmcQDDkkdNrg_IvbVXZsY";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+let currentUser = null;
+
+
+/* =========================
+   BERICHT
+========================= */
+
+function showMessage(text, type) {
+
+  const message =
+    document.getElementById("message");
+
+  message.textContent = text;
+
+  message.className =
+    "message " + type;
+
+  message.style.display = "block";
+}
+
+
+/* =========================
+   CONTROLEREN OF INGELOGD
+========================= */
+
+async function checkUser() {
+
+  const {
+    data: {
+      session
+    }
+  } = await supabaseClient.auth.getSession();
+
+
+  if (!session) {
+
+    window.location.href =
+      "/inloggen.html";
+
+    return;
+  }
+
+
+  currentUser =
+    session.user;
+
+
+  const naam =
+    currentUser.user_metadata?.naam;
+
+
+  if (naam) {
+
+    document.getElementById(
+      "welcomeTitle"
+    ).textContent =
+      "Welkom, " + naam + " 👋";
+
+  }
+
+
+  loadReminders();
+}
+
+
+/* =========================
+   HERINNERING TOEVOEGEN
+========================= */
+
+async function addReminder() {
+
+  const titel =
+    document.getElementById("titel").value.trim();
+
+  const beschrijving =
+    document.getElementById("beschrijving").value.trim();
+
+  const datum =
+    document.getElementById("datum").value;
+
+  const tijd =
+    document.getElementById("tijd").value;
+
+
+  if (!titel) {
+
+    showMessage(
+      "Vul een titel in.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const button =
+    document.getElementById("addButton");
+
+  button.disabled = true;
+
+  button.textContent =
+    "Toevoegen...";
+
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+
+    .from("reminders")
+
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      titel:
+        titel,
+
+      beschrijving:
+        beschrijving || null,
+
+      datum:
+        datum || null,
+
+      tijd:
+        tijd || null
+
+    })
+
+    .select();
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Herinnering toevoegen mislukt: " +
+      error.message,
+      "error"
+    );
+
+    button.disabled = false;
+
+    button.textContent =
+      "Herinnering toevoegen";
+
+    return;
+  }
+
+
+  showMessage(
+    "Herinnering toegevoegd! 🎉",
+    "success"
+  );
+
+
+  document.getElementById(
+    "titel"
+  ).value = "";
+
+  document.getElementById(
+    "beschrijving"
+  ).value = "";
+
+  document.getElementById(
+    "datum"
+  ).value = "";
+
+  document.getElementById(
+    "tijd"
+  ).value = "";
+
+
+  button.disabled = false;
+
+  button.textContent =
+    "Herinnering toevoegen";
+
+
+  loadReminders();
+}
+
+
+/* =========================
+   HERINNERINGEN LADEN
+========================= */
+
+async function loadReminders() {
+
+  const container =
+    document.getElementById("reminders");
+
+
+  container.innerHTML =
+    '<div class="loading">Laden...</div>';
+
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+
+    .from("reminders")
+
+    .select("*")
+
+    .eq(
+      "user_id",
+      currentUser.id
+    )
+
+    .order(
+      "datum",
+      {
+        ascending: true,
+        nullsFirst: false
+      }
+    );
+
+
+  if (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="empty">Herinneringen konden niet worden geladen.</div>';
+
+    return;
+  }
+
+
+  if (!data || data.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">Je hebt nog geen herinneringen.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(function(reminder) {
+
+    const div =
+      document.createElement("div");
+
+
+    div.className =
+      "reminder" +
+      (reminder.afgerond
+        ? " completed"
+        : "");
+
+
+    let dateText = "";
+
+
+    if (reminder.datum) {
+
+      dateText +=
+        "📅 " +
+        formatDate(reminder.datum);
+
+    }
+
+
+    if (reminder.tijd) {
+
+      dateText +=
+        "  ⏰ " +
+        reminder.tijd.substring(0, 5);
+
+    }
+
+
+    div.innerHTML = `
+
+      <div class="reminder-title">
+        ${escapeHtml(reminder.titel)}
+      </div>
+
+      ${
+        reminder.beschrijving
+          ? `<div class="reminder-description">
+              ${escapeHtml(reminder.beschrijving)}
+             </div>`
+          : ""
+      }
+
+      ${
+        dateText
+          ? `<div class="reminder-date">
+              ${dateText}
+             </div>`
+          : ""
+      }
+
+      <div class="actions">
+
+        <button
+          class="complete"
+          onclick="toggleReminder(${reminder.id}, ${reminder.afgerond})"
+        >
+          ${
+            reminder.afgerond
+              ? "↩️ Openmaken"
+              : "✅ Afronden"
+          }
+        </button>
+
+        <button
+          class="delete"
+          onclick="deleteReminder(${reminder.id})"
+        >
+          🗑️ Verwijderen
+        </button>
+
+      </div>
+
+    `;
+
+
+    container.appendChild(div);
+
+  });
+
+}
+
+
+/* =========================
+   AFRONDEN / OPENMAKEN
+========================= */
+
+async function toggleReminder(
+  id,
+  currentStatus
+) {
+
+  const {
+    error
+  } = await supabaseClient
+
+    .from("reminders")
+
+    .update({
+      afgerond:
+        !currentStatus
+    })
+
+    .eq(
+      "id",
+      id
+    )
+
+    .eq(
+      "user_id",
+      currentUser.id
+    );
+
+
+  if (error) {
+
+    alert(
+      "Kon herinnering niet aanpassen: " +
+      error.message
+    );
+
+    return;
+  }
+
+
+  loadReminders();
+}
+
+
+/* =========================
+   VERWIJDEREN
+========================= */
+
+async function deleteReminder(id) {
+
+  const bevestiging =
+    confirm(
+      "Weet je zeker dat je deze herinnering wilt verwijderen?"
+    );
+
+
+  if (!bevestiging) {
+    return;
+  }
+
+
+  const {
+    error
+  } = await supabaseClient
+
+    .from("reminders")
+
+    .delete()
+
+    .eq(
+      "id",
+      id
+    )
+
+    .eq(
+      "user_id",
+      currentUser.id
+    );
+
+
+  if (error) {
+
+    alert(
+      "Kon herinnering niet verwijderen: " +
+      error.message
+    );
+
+    return;
+  }
+
+
+  loadReminders();
+}
+
+
+/* =========================
+   UITLOGGEN
+========================= */
+
+async function logout() {
+
+  await supabaseClient.auth.signOut();
+
+  window.location.href =
+    "/inloggen.html";
+}
+
+
+/* =========================
+   DATUM
+========================= */
+
+function formatDate(dateString) {
+
+  const parts =
+    dateString.split("-");
+
+
+  return (
+    parts[2] +
+    "-" +
+    parts[1] +
+    "-" +
+    parts[0]
+  );
+}
+
+
+/* =========================
+   VEILIG TEKST WEERGEVEN
+========================= */
+
+function escapeHtml(text) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    text;
+
+  return div.innerHTML;
+}
+
+
+/* =========================
+   START
+========================= */
+
+checkUser();
+
+</script>
+
+</body>
+</html>
