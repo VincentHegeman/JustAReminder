@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Account aanmaken – Nooit Meer Vergeten</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 430px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .login {
+      text-align: center;
+      margin-top: 22px;
+    }
+
+    .login a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .password-info {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <h1>Account aanmaken 🚀</h1>
+
+    <p class="subtitle">
+      Maak gratis een account aan bij Nooit Meer Vergeten.
+    </p>
+
+    <label for="naam">
+      Naam
+    </label>
+
+    <input
+      type="text"
+      id="naam"
+      placeholder="Je naam"
+      autocomplete="name"
+    >
+
+    <label for="email">
+      E-mailadres
+    </label>
+
+    <input
+      type="email"
+      id="email"
+      placeholder="jouw@email.nl"
+      autocomplete="email"
+    >
+
+    <label for="password">
+      Wachtwoord
+    </label>
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Minimaal 6 tekens"
+      autocomplete="new-password"
+    >
+
+    <div class="password-info">
+      Gebruik minimaal 6 tekens.
+    </div>
+
+    <button id="registerButton" onclick="register()">
+      Account aanmaken
+    </button>
+
+    <div id="message" class="message"></div>
+
+    <div class="login">
+      Heb je al een account?
+      <a href="/inloggen.html">Inloggen</a>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://fqupzovqwzaqkatcfbka.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_ahp4b1jbybZmcQDDkkdNrg_IvbVXZsY";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+function showMessage(text, type) {
+
+  const message =
+    document.getElementById("message");
+
+  message.textContent = text;
+
+  message.className =
+    "message " + type;
+
+  message.style.display = "block";
+}
+
+
+async function register() {
+
+  const naam =
+    document.getElementById("naam").value.trim();
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+
+  if (!naam || !email || !password) {
+
+    showMessage(
+      "Vul alle velden in.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (password.length < 6) {
+
+    showMessage(
+      "Je wachtwoord moet minimaal 6 tekens bevatten.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const button =
+    document.getElementById("registerButton");
+
+  button.disabled = true;
+
+  button.textContent =
+    "Account wordt aangemaakt...";
+
+
+  const { data, error } =
+    await supabaseClient.auth.signUp({
+
+      email: email,
+
+      password: password,
+
+      options: {
+
+        data: {
+          naam: naam
+        },
+
+        emailRedirectTo:
+          window.location.origin +
+          "/inloggen.html"
+
+      }
+
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Account aanmaken mislukt: " +
+      error.message,
+      "error"
+    );
+
+    button.disabled = false;
+
+    button.textContent =
+      "Account aanmaken";
+
+    return;
+  }
+
+
+  if (data.user) {
+
+    showMessage(
+      "Account aangemaakt! Controleer je e-mail om je account te bevestigen.",
+      "success"
+    );
+
+    button.textContent =
+      "Account aangemaakt";
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
