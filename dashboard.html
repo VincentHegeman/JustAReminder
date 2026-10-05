@@ -4,21 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dashboard — Nooit Meer Vergeten</title>
+    <title>Nooit Meer Vergeten - Dashboard</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        :root {
+            --navy: #172542;
+            --navy-light: #26385f;
+            --blue: #4d79d8;
+            --blue-soft: #eaf2ff;
+
+            --green: #45a878;
+            --green-soft: #e9f8f0;
+
+            --purple: #8868d9;
+            --purple-soft: #f1ecff;
+
+            --pink: #e987a8;
+            --pink-soft: #fff0f5;
+
+            --orange: #e7a33a;
+            --orange-soft: #fff5df;
+
+            --cream: #faf8f4;
+            --white: #ffffff;
+
+            --text: #1e2d4b;
+            --text-light: #71809a;
+            --border: #e8eaf0;
+
+            --shadow: 0 8px 30px rgba(31, 48, 78, 0.07);
+            --radius: 22px;
+        }
+
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         body {
-            font-family: Inter, Arial, sans-serif;
-            background: #f7f4ef;
-            color: #202020;
+            margin: 0;
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            background: var(--cream);
+            color: var(--text);
         }
 
         button,
@@ -32,18 +65,25 @@
             cursor: pointer;
         }
 
-        .app {
-            min-height: 100vh;
-            display: flex;
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
-        /* SIDEBAR */
+        /* =========================
+           LAYOUT
+        ========================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
 
         .sidebar {
             width: 250px;
-            background: #20201f;
+            background: linear-gradient(180deg, #172542 0%, #1d2b4a 100%);
             color: white;
-            padding: 26px 18px;
+            padding: 25px 17px;
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -53,486 +93,1038 @@
             z-index: 20;
         }
 
-        .logo {
-            padding: 4px 10px 30px;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px 30px;
         }
 
-        .logo h1 {
-            font-size: 20px;
-            letter-spacing: -0.5px;
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            background: #eef2ff;
+            color: #426ac0;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
         }
 
-        .logo p {
-            color: #aaa;
-            font-size: 12px;
-            margin-top: 5px;
+        .brand-text {
+            font-size: 18px;
+            font-weight: 750;
+            line-height: 1.05;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-text span {
+            display: block;
         }
 
         .nav {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 7px;
         }
 
-        .nav a {
-            color: #cfcfcf;
-            text-decoration: none;
-            padding: 12px 13px;
-            border-radius: 10px;
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 14px;
+            border-radius: 13px;
+            color: #dbe2f1;
             font-size: 14px;
-            transition: 0.2s;
+            font-weight: 550;
+            transition: 0.2s ease;
         }
 
-        .nav a:hover,
-        .nav a.active {
-            background: #353533;
+        .nav-link:hover {
+            background: rgba(255,255,255,0.08);
             color: white;
+        }
+
+        .nav-link.active {
+            background: rgba(113, 143, 216, 0.38);
+            color: white;
+        }
+
+        .nav-icon {
+            width: 21px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.15);
+            margin: 17px 7px;
         }
 
         .sidebar-bottom {
             margin-top: auto;
         }
 
-        .profile-mini {
+        .logout-button {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: #dbe2f1;
+            padding: 12px 14px;
+            border-radius: 13px;
+            text-align: left;
             display: flex;
+            gap: 13px;
             align-items: center;
-            gap: 10px;
-            padding: 13px 10px;
-            border-top: 1px solid #3a3a38;
+            transition: 0.2s;
+        }
+
+        .logout-button:hover {
+            background: rgba(255,255,255,0.08);
             color: white;
-            text-decoration: none;
         }
 
-        .avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #d9c7aa;
-            color: #26231f;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .profile-mini strong {
-            display: block;
-            font-size: 13px;
-        }
-
-        .profile-mini span {
-            display: block;
-            color: #999;
-            font-size: 11px;
-            margin-top: 2px;
-        }
-
-        /* MAIN */
+        /* =========================
+           MAIN
+        ========================= */
 
         .main {
             margin-left: 250px;
             width: calc(100% - 250px);
-            padding: 34px;
+            min-height: 100vh;
         }
 
         .topbar {
+            height: 78px;
+            background: rgba(255,255,255,0.94);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 30px;
+            padding: 0 35px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(12px);
         }
 
-        .welcome h2 {
-            font-size: 27px;
-            letter-spacing: -0.7px;
+        .search-box {
+            width: min(450px, 55%);
+            position: relative;
         }
 
-        .welcome p {
-            color: #777;
-            margin-top: 5px;
-            font-size: 14px;
+        .search-box span {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #78859c;
+            font-size: 18px;
         }
 
-        .top-actions {
+        .search-box input {
+            width: 100%;
+            height: 43px;
+            border: 1px solid #e4e7ee;
+            border-radius: 14px;
+            padding: 0 17px 0 44px;
+            outline: none;
+            color: var(--text);
+            background: #fbfbfc;
+            transition: 0.2s;
+        }
+
+        .search-box input:focus {
+            background: white;
+            border-color: #9bb4ed;
+            box-shadow: 0 0 0 4px rgba(77,121,216,0.08);
+        }
+
+        .user-area {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .search {
-            width: 250px;
-            background: white;
-            border: 1px solid #e5e0d8;
-            border-radius: 11px;
-            padding: 11px 13px;
-            outline: none;
-        }
-
-        .search:focus {
-            border-color: #aaa;
-        }
-
-        .primary-btn {
-            border: none;
-            background: #20201f;
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #203760;
             color: white;
-            border-radius: 11px;
-            padding: 11px 16px;
-            font-weight: 600;
-        }
-
-        .primary-btn:hover {
-            background: #363634;
-        }
-
-        /* PAGE TITLE */
-
-        .page-heading {
-            margin-bottom: 18px;
-        }
-
-        .page-heading h3 {
-            font-size: 20px;
-            letter-spacing: -0.3px;
-        }
-
-        .page-heading p {
-            color: #888;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        /* STATS */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat {
-            background: white;
-            border: 1px solid #ebe6df;
-            border-radius: 15px;
-            padding: 20px;
-        }
-
-        .stat-label {
-            color: #777;
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
-
-        .stat-value {
-            font-size: 27px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 700;
         }
 
-        /* CONTENT */
+        .user-name {
+            font-size: 14px;
+            font-weight: 650;
+        }
 
-        .content-grid {
+        .user-arrow {
+            color: #8a96a9;
+            font-size: 12px;
+        }
+
+        .content {
+            padding: 34px 36px 50px;
+            max-width: 1550px;
+            margin: 0 auto;
+        }
+
+        /* =========================
+           WELCOME
+        ========================= */
+
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            min-height: 115px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .welcome-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome h1 {
+            font-size: 32px;
+            line-height: 1.15;
+            margin: 0 0 8px;
+            letter-spacing: -1px;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 15px;
+        }
+
+        .welcome-decoration {
+            width: 260px;
+            height: 120px;
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .sun {
+            position: absolute;
+            right: 50px;
+            top: 8px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #ffd56a;
+        }
+
+        .hill {
+            position: absolute;
+            right: 0;
+            bottom: 5px;
+            width: 190px;
+            height: 55px;
+            background: #8bc59d;
+            border-radius: 100% 100% 0 0;
+            transform: rotate(-4deg);
+        }
+
+        .hill.second {
+            right: 65px;
+            bottom: 0;
+            width: 160px;
+            height: 43px;
+            background: #6eab83;
+            transform: rotate(5deg);
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats {
             display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr) 1.35fr;
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+
+        .stat-card {
+            min-height: 135px;
+            border-radius: 20px;
+            padding: 19px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+
+        .stat-card.blue {
+            background: #edf5ff;
+            border-color: #dcecff;
+        }
+
+        .stat-card.green {
+            background: #edf9f2;
+            border-color: #d9f0e3;
+        }
+
+        .stat-card.purple {
+            background: #f3efff;
+            border-color: #e7defe;
+        }
+
+        .stat-card.teal {
+            background: #edf8f7;
+            border-color: #d9efec;
+        }
+
+        .stat-card.orange {
+            background: #fff6e3;
+            border-color: #f8e8c1;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .blue .stat-icon {
+            background: #d9eaff;
+            color: #3570cb;
+        }
+
+        .green .stat-icon {
+            background: #d5f1df;
+            color: #359566;
+        }
+
+        .purple .stat-icon {
+            background: #e4d9ff;
+            color: #7654c8;
+        }
+
+        .teal .stat-icon {
+            background: #d4efeb;
+            color: #388c84;
+        }
+
+        .orange .stat-icon {
+            background: #ffe8b5;
+            color: #d8891d;
+        }
+
+        .stat-title {
+            color: #64738e;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .stat-number {
+            font-size: 25px;
+            font-weight: 750;
+            letter-spacing: -0.5px;
+        }
+
+        .stat-sub {
+            color: #7b879c;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .encouragement {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .encouragement h3 {
+            margin: 0 0 7px;
+            font-size: 17px;
+        }
+
+        .encouragement p {
+            margin: 0;
+            color: #69768a;
+            font-size: 13px;
+            line-height: 1.5;
+            max-width: 220px;
+        }
+
+        /* =========================
+           MAIN GRID
+        ========================= */
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 275px;
+            gap: 22px;
         }
 
         .card {
             background: white;
-            border: 1px solid #ebe6df;
-            border-radius: 16px;
-            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .reminders-card {
+            overflow: hidden;
         }
 
         .card-header {
+            padding: 23px 24px 17px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 18px;
+            gap: 15px;
         }
 
-        .card-header h3 {
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .card-title-icon {
+            width: 37px;
+            height: 37px;
+            background: var(--blue-soft);
+            color: var(--blue);
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 17px;
+        }
+
+        .card-title h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .add-button {
+            border: 0;
+            background: var(--navy);
+            color: white;
+            border-radius: 12px;
+            padding: 10px 15px;
+            font-weight: 650;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .add-button:hover {
+            background: #26385f;
+            transform: translateY(-1px);
         }
 
         .filters {
             display: flex;
-            gap: 6px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px 17px;
+            border-bottom: 1px solid #eef0f4;
+            gap: 10px;
         }
 
-        .filter {
-            border: 1px solid #e4dfd7;
-            background: #faf8f5;
-            padding: 7px 11px;
-            border-radius: 8px;
+        .filter-buttons {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            border: 0;
+            background: #f5f6f8;
+            color: #68768d;
+            border-radius: 20px;
+            padding: 8px 13px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .filter-button.active {
+            background: var(--navy);
+            color: white;
+        }
+
+        .sort-select {
+            border: 1px solid #e5e7ec;
+            border-radius: 10px;
+            padding: 8px 10px;
+            color: #68768d;
+            background: white;
+            outline: none;
             font-size: 12px;
         }
 
-        .filter.active {
-            background: #20201f;
-            color: white;
-            border-color: #20201f;
-        }
+        /* =========================
+           REMINDER LIST
+        ========================= */
 
-        /* REMINDERS */
-
-        .reminders {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
+        .reminder-list {
+            padding: 0 20px;
         }
 
         .reminder {
-            border: 1px solid #ebe6df;
-            border-radius: 12px;
-            padding: 14px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            transition: 0.15s;
+            display: grid;
+            grid-template-columns: 27px 48px minmax(0,1fr) 150px 32px;
+            gap: 13px;
+            align-items: center;
+            min-height: 94px;
+            border-bottom: 1px solid #eef0f4;
+            padding: 12px 4px;
+            transition: 0.2s;
+        }
+
+        .reminder:last-child {
+            border-bottom: 0;
         }
 
         .reminder:hover {
-            border-color: #d7d0c6;
+            background: #fbfcfe;
         }
 
         .check {
             width: 20px;
             height: 20px;
-            border: 1px solid #bbb;
+            border: 2px solid #cbd3df;
             border-radius: 6px;
             background: white;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
-        .check.done {
-            background: #20201f;
-            border-color: #20201f;
-            position: relative;
-        }
-
-        .check.done::after {
-            content: "✓";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
             color: white;
-            font-size: 13px;
-            position: absolute;
-            left: 3px;
-            top: 0;
+            font-size: 11px;
+        }
+
+        .check.completed {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .reminder-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 750;
+            font-size: 16px;
+        }
+
+        .icon-pink {
+            background: var(--pink-soft);
+            color: #d96289;
+        }
+
+        .icon-green {
+            background: var(--green-soft);
+            color: #389768;
+        }
+
+        .icon-purple {
+            background: var(--purple-soft);
+            color: #7654c8;
+        }
+
+        .icon-orange {
+            background: var(--orange-soft);
+            color: #d78a1e;
+        }
+
+        .icon-blue {
+            background: var(--blue-soft);
+            color: #3971c9;
         }
 
         .reminder-main {
-            flex: 1;
             min-width: 0;
         }
 
         .reminder-title {
-            font-weight: 600;
             font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .reminder-title.done {
+        .reminder.completed .reminder-title {
             text-decoration: line-through;
-            color: #999;
+            color: #8a95a7;
         }
 
         .reminder-description {
-            color: #777;
+            color: #7b8799;
             font-size: 12px;
-            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 7px;
         }
 
-        .reminder-meta {
+        .tags {
             display: flex;
+            gap: 5px;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
         }
 
         .tag {
-            background: #f2eee8;
-            color: #665f55;
-            border-radius: 6px;
-            padding: 4px 7px;
+            display: inline-flex;
+            border-radius: 20px;
+            padding: 4px 8px;
             font-size: 10px;
+            font-weight: 700;
         }
 
-        .priority-high {
-            background: #eee0da;
-            color: #8b4937;
+        .tag-category {
+            background: #edf1f8;
+            color: #5e6e87;
+        }
+                .priority-high {
+            background: #ffe8e7;
+            color: #d76561;
+        }
+
+        .priority-normal {
+            background: #fff2cf;
+            color: #a97916;
         }
 
         .priority-low {
-            background: #e5eee7;
-            color: #47634f;
+            background: #e8f6ed;
+            color: #39855e;
         }
 
-        .reminder-actions {
+        .reminder-date {
+            color: #687790;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .date-line {
             display: flex;
-            gap: 5px;
+            align-items: center;
+            gap: 6px;
         }
 
-        .small-btn {
-            border: 1px solid #e5e0d8;
-            background: #faf8f5;
-            border-radius: 7px;
-            padding: 6px 8px;
-            font-size: 11px;
+        .more-button {
+            border: 0;
+            background: transparent;
+            color: #8b96a7;
+            font-size: 20px;
+            padding: 4px;
         }
 
-        .empty {
+        .more-button:hover {
+            color: var(--navy);
+        }
+
+        .empty-state {
+            padding: 60px 20px;
             text-align: center;
-            padding: 45px 15px;
-            color: #888;
-            font-size: 13px;
+            color: #7a8799;
         }
 
-        /* UPCOMING */
-
-        .upcoming-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #eee9e2;
+        .empty-state h3 {
+            color: var(--text);
+            margin-bottom: 7px;
         }
 
-        .upcoming-item:last-child {
-            border-bottom: none;
+        .bottom-note {
+            margin: 12px 20px 20px;
+            padding: 12px 15px;
+            background: #f6f8fa;
+            border-radius: 12px;
+            color: #7b8798;
+            font-size: 12px;
         }
 
-        .upcoming-date {
-            color: #9a7f59;
+        /* =========================
+           SIDE CARDS
+        ========================= */
+
+        .side-column {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .side-card {
+            padding: 19px;
+        }
+
+        .side-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .side-card-header h3 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .count {
+            min-width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--blue-soft);
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 11px;
-            margin-bottom: 4px;
+            font-weight: 750;
         }
 
-        .upcoming-title {
+        .mini-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 0;
+            border-bottom: 1px solid #eef0f4;
+        }
+
+        .mini-item:last-child {
+            border-bottom: 0;
+        }
+
+        .mini-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 13px;
-            font-weight: 600;
+            flex-shrink: 0;
         }
 
-        /* MODAL */
+        .mini-content {
+            min-width: 0;
+        }
 
-        .modal-overlay {
+        .mini-title {
+            font-size: 12px;
+            font-weight: 650;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .mini-date {
+            color: #8792a3;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .view-all {
+            display: block;
+            text-align: center;
+            border: 1px solid #e5e8ee;
+            border-radius: 10px;
+            padding: 9px;
+            margin-top: 13px;
+            font-size: 11px;
+            font-weight: 650;
+            color: #52627d;
+        }
+
+        .view-all:hover {
+            background: #f8f9fb;
+        }
+
+        .plant-card {
+            min-height: 160px;
+            background: linear-gradient(145deg, #eff9f3, #f7fbf7);
+            border: 1px solid #dfeee5;
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+            padding: 22px;
+        }
+
+        .plant-card h3 {
+            margin: 0 0 6px;
+            font-size: 16px;
+        }
+
+        .plant-card p {
+            color: #718077;
+            font-size: 12px;
+            line-height: 1.5;
+            max-width: 155px;
+            margin: 0;
+        }
+
+        .plant {
+            position: absolute;
+            right: 20px;
+            bottom: -4px;
+            width: 55px;
+            height: 75px;
+        }
+
+        .plant-stem {
+            position: absolute;
+            width: 4px;
+            height: 55px;
+            background: #559c6d;
+            left: 27px;
+            bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 25px;
+            height: 14px;
+            background: #68b27e;
+            border-radius: 100% 0 100% 0;
+        }
+
+        .leaf.one {
+            left: 4px;
+            top: 27px;
+            transform: rotate(-30deg);
+        }
+
+        .leaf.two {
+            right: 2px;
+            top: 16px;
+            transform: rotate(30deg);
+        }
+
+        .leaf.three {
+            left: 7px;
+            top: 5px;
+            transform: rotate(-20deg);
+        }
+
+        .pot {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            width: 38px;
+            height: 22px;
+            background: #c59c84;
+            border-radius: 3px 3px 10px 10px;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal-backdrop {
+            display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.45);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background: rgba(15, 27, 48, 0.5);
             z-index: 100;
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
         }
 
-        .modal-overlay.show {
+        .modal-backdrop.show {
             display: flex;
         }
 
         .modal {
             background: white;
-            width: 100%;
-            max-width: 600px;
-            max-height: 90vh;
+            width: min(650px, 100%);
+            max-height: 92vh;
             overflow-y: auto;
-            border-radius: 18px;
-            padding: 25px;
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(15, 27, 48, 0.25);
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .modal-header h3 {
+        .modal-header h2 {
+            margin: 0;
             font-size: 20px;
         }
 
-        .close {
-            border: none;
-            background: #f2eee8;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+        .close-button {
+            border: 0;
+            background: #f3f5f8;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            color: #68768a;
+            font-size: 18px;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        .modal-body {
+            padding: 23px 24px;
         }
 
-        .form-group label {
-            display: block;
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
             font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 6px;
+            font-weight: 700;
+            color: #52627c;
         }
 
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .field input,
+        .field textarea,
+        .field select {
             width: 100%;
-            border: 1px solid #ded8cf;
-            border-radius: 9px;
-            padding: 10px;
+            border: 1px solid #dfe3ea;
+            border-radius: 11px;
+            padding: 11px 12px;
             outline: none;
-            background: white;
+            background: #fbfcfd;
+            color: var(--text);
         }
 
-        .form-group textarea {
+        .field textarea {
             min-height: 85px;
             resize: vertical;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            background: white;
+            border-color: #9ab3ea;
+            box-shadow: 0 0 0 4px rgba(77,121,216,0.07);
         }
 
-        .modal-actions {
+        .modal-footer {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            justify-content: flex-end;
+            gap: 9px;
+            padding: 17px 24px;
+            border-top: 1px solid var(--border);
         }
 
-        .delete-btn {
-            border: none;
-            background: #f4e6e2;
-            color: #8b4937;
-            padding: 10px 13px;
-            border-radius: 9px;
+        .secondary-button,
+        .primary-button,
+        .danger-button {
+            border: 0;
+            border-radius: 11px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 650;
         }
 
-        .save-btn {
-            border: none;
-            background: #20201f;
+        .secondary-button {
+            background: #f1f3f6;
+            color: #5d6a7f;
+        }
+
+        .primary-button {
+            background: var(--navy);
             color: white;
-            padding: 10px 18px;
-            border-radius: 9px;
-            font-weight: 600;
         }
 
-        /* MOBILE */
+        .danger-button {
+            background: #fff0ef;
+            color: #c95652;
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: #172542;
+            color: white;
+            padding: 13px 17px;
+            border-radius: 12px;
+            font-size: 13px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: 0.25s;
+            z-index: 200;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
 
         .mobile-header {
             display: none;
         }
 
-        @media (max-width: 1050px) {
-
+        @media (max-width: 1150px) {
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .content-grid {
+            .encouragement {
+                grid-column: span 2;
+            }
+
+            .dashboard-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .side-column {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .plant-card {
+                grid-column: span 2;
             }
         }
 
-        @media (max-width: 800px) {
-
+        @media (max-width: 850px) {
             .sidebar {
                 display: none;
             }
@@ -540,71 +1132,141 @@
             .main {
                 margin-left: 0;
                 width: 100%;
-                padding: 20px;
             }
 
             .mobile-header {
+                height: 64px;
+                background: var(--navy);
+                color: white;
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
-                margin-bottom: 25px;
+                justify-content: space-between;
+                padding: 0 18px;
             }
 
-            .mobile-header strong {
-                font-size: 18px;
-            }
-
-            .mobile-header a {
-                text-decoration: none;
-                color: #20201f;
-                background: white;
-                border: 1px solid #e5e0d8;
-                border-radius: 9px;
-                padding: 8px 10px;
-                font-size: 12px;
+            .mobile-brand {
+                font-size: 16px;
+                font-weight: 750;
             }
 
             .topbar {
-                display: block;
+                top: 64px;
+                padding: 0 18px;
+                height: 70px;
             }
 
-            .top-actions {
-                margin-top: 15px;
+            .content {
+                padding: 25px 18px 40px;
             }
 
-            .search {
-                width: 100%;
+            .welcome-decoration {
+                display: none;
+            }
+
+            .welcome h1 {
+                font-size: 27px;
+            }
+
+            .reminder {
+                grid-template-columns: 25px 43px minmax(0,1fr) 30px;
+            }
+
+            .reminder-date {
+                display: none;
+            }
+
+            .more-button {
+                grid-column: 4;
             }
         }
 
-        @media (max-width: 550px) {
+        @media (max-width: 600px) {
+            .search-box {
+                width: 100%;
+            }
+
+            .user-area {
+                display: none;
+            }
 
             .stats {
                 grid-template-columns: 1fr 1fr;
+                gap: 10px;
             }
 
-            .stat {
+            .stat-card {
+                min-height: 125px;
                 padding: 15px;
             }
 
-            .stat-value {
-                font-size: 23px;
+            .encouragement {
+                grid-column: span 2;
             }
 
-            .card {
-                padding: 15px;
+            .dashboard-grid {
+                display: block;
+            }
+
+            .side-column {
+                display: block;
+                margin-top: 18px;
+            }
+
+            .side-card {
+                margin-bottom: 18px;
+            }
+
+            .plant-card {
+                min-height: 145px;
+            }
+
+            .card-header {
+                align-items: flex-start;
+                flex-direction: column;
             }
 
             .filters {
-                flex-wrap: wrap;
+                align-items: flex-start;
+                flex-direction: column;
             }
 
-            .form-row {
+            .sort-select {
+                width: 100%;
+            }
+
+            .reminder {
+                grid-template-columns: 23px 40px minmax(0,1fr) 28px;
+                gap: 8px;
+                min-height: 85px;
+            }
+
+            .reminder-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .reminder-title {
+                font-size: 13px;
+            }
+
+            .reminder-description {
+                font-size: 11px;
+            }
+
+            .form-grid {
                 grid-template-columns: 1fr;
             }
 
-            .reminder-actions {
-                flex-direction: column;
+            .field.full {
+                grid-column: auto;
+            }
+
+            .modal-footer {
+                flex-direction: column-reverse;
+            }
+
+            .modal-footer button {
+                width: 100%;
             }
         }
     </style>
@@ -615,276 +1277,307 @@
 <div class="app">
 
     <!-- SIDEBAR -->
-
     <aside class="sidebar">
 
-        <div class="logo">
-            <h1>Nooit Meer Vergeten</h1>
-            <p>Jouw persoonlijke overzicht</p>
+        <div class="brand">
+            <div class="brand-icon">✓</div>
+            <div class="brand-text">
+                <span>Nooit Meer</span>
+                <span>Vergeten</span>
+            </div>
         </div>
 
         <nav class="nav">
 
-            <a href="#" data-page="all" onclick="showPage('all'); return false;">
-                Overzicht
+            <a href="dashboard.html" class="nav-link active">
+                <span class="nav-icon">⌂</span>
+                <span>Overzicht</span>
             </a>
 
-            <a href="#" data-page="today" onclick="showPage('today'); return false;">
-                Vandaag
+            <a href="#" class="nav-link" onclick="setView('today'); return false;">
+                <span class="nav-icon">□</span>
+                <span>Vandaag</span>
             </a>
 
-            <a href="#" data-page="upcoming" onclick="showPage('upcoming'); return false;">
-                Aankomend
+            <a href="#" class="nav-link" onclick="setView('upcoming'); return false;">
+                <span class="nav-icon">◷</span>
+                <span>Aankomend</span>
             </a>
 
-            <a href="#" data-page="completed" onclick="showPage('completed'); return false;">
-                Voltooid
+            <a href="#" class="nav-link" onclick="setView('completed'); return false;">
+                <span class="nav-icon">✓</span>
+                <span>Voltooid</span>
             </a>
 
-            <a href="#" onclick="openNewReminder(); return false;">
-                Nieuwe herinnering
+            <div class="nav-divider"></div>
+
+            <a href="#" class="nav-link" onclick="showCategoryInfo(); return false;">
+                <span class="nav-icon">◇</span>
+                <span>Categorieën</span>
+            </a>
+
+            <a href="instellingen.html" class="nav-link">
+                <span class="nav-icon">⚙</span>
+                <span>Instellingen</span>
             </a>
 
         </nav>
 
         <div class="sidebar-bottom">
-
-            <a href="instellingen.html" class="profile-mini">
-
-                <div class="avatar" id="sidebarAvatar">
-                    V
-                </div>
-
-                <div>
-                    <strong id="sidebarName">
-                        Laden...
-                    </strong>
-
-                    <span>
-                        Instellingen
-                    </span>
-                </div>
-
-            </a>
-
+            <button class="logout-button" onclick="logout()">
+                <span class="nav-icon">↪</span>
+                <span>Uitloggen</span>
+            </button>
         </div>
 
     </aside>
 
 
-    <!-- MAIN -->
+    <!-- MOBILE HEADER -->
+    <div class="mobile-header">
+        <div class="mobile-brand">Nooit Meer Vergeten</div>
+        <button
+            onclick="logout()"
+            style="background:none;border:0;color:white;font-size:20px;"
+        >
+            ↪
+        </button>
+    </div>
 
+
+    <!-- MAIN -->
     <main class="main">
 
-        <div class="mobile-header">
+        <!-- TOPBAR -->
+        <header class="topbar">
 
-            <strong>
-                Nooit Meer Vergeten
-            </strong>
-
-            <a href="instellingen.html">
-                Instellingen
-            </a>
-
-        </div>
-
-
-        <div class="topbar">
-
-            <div class="welcome">
-
-                <h2 id="welcomeTitle">
-                    Goedendag
-                </h2>
-
-                <p>
-                    Hier staat je persoonlijke overzicht.
-                </p>
-
-            </div>
-
-
-            <div class="top-actions">
-
+            <div class="search-box">
+                <span>⌕</span>
                 <input
-                    type="search"
+                    type="text"
                     id="searchInput"
-                    class="search"
-                    placeholder="Zoeken..."
+                    placeholder="Zoek herinneringen..."
+                    autocomplete="off"
                 >
-
-                <button
-                    class="primary-btn"
-                    onclick="openNewReminder()"
-                >
-                    + Nieuwe
-                </button>
-
             </div>
 
-        </div>
-
-
-        <!-- PAGE TITLE -->
-
-        <div class="page-heading">
-
-            <h3 id="pageTitle">
-                Overzicht
-            </h3>
-
-            <p id="pageDescription">
-                Al je herinneringen op één plek.
-            </p>
-
-        </div>
-
-
-        <!-- STATS -->
-
-        <section class="stats">
-
-            <div class="stat">
-
-                <div class="stat-label">
-                    Totaal
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="totalCount"
-                >
-                    0
-                </div>
-
+            <div class="user-area">
+                <div class="user-avatar" id="userAvatar">G</div>
+                <div class="user-name" id="userName">Gebruiker</div>
+                <div class="user-arrow">⌄</div>
             </div>
 
-
-            <div class="stat">
-
-                <div class="stat-label">
-                    Vandaag
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="todayCount"
-                >
-                    0
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-label">
-                    Aankomend
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="upcomingCount"
-                >
-                    0
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-label">
-                    Voltooid
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="completedCount"
-                >
-                    0
-                </div>
-
-            </div>
-
-        </section>
+        </header>
 
 
         <!-- CONTENT -->
+        <div class="content">
 
-        <div class="content-grid">
+            <!-- WELCOME -->
+            <section class="welcome">
 
-            <section class="card">
-
-                <div class="card-header">
-
-                    <h3 id="listTitle">
-                        Herinneringen
-                    </h3>
-
-
-                    <div class="filters">
-
-                        <button
-                            class="filter active"
-                            onclick="setQuickFilter('all', this)"
-                        >
-                            Alles
-                        </button>
-
-                        <button
-                            class="filter"
-                            onclick="setQuickFilter('open', this)"
-                        >
-                            Openstaand
-                        </button>
-
-                        <button
-                            class="filter"
-                            onclick="setQuickFilter('completed', this)"
-                        >
-                            Voltooid
-                        </button>
-
-                    </div>
-
+                <div class="welcome-text">
+                    <h1 id="welcomeTitle">Goedemorgen</h1>
+                    <p>Hier is een overzicht van je herinneringen.</p>
                 </div>
 
-
-                <div
-                    id="remindersList"
-                    class="reminders"
-                >
-                    <div class="empty">
-                        Herinneringen laden...
-                    </div>
+                <div class="welcome-decoration">
+                    <div class="sun"></div>
+                    <div class="hill"></div>
+                    <div class="hill second"></div>
                 </div>
 
             </section>
 
 
-            <!-- UPCOMING -->
+            <!-- STATS -->
+            <section class="stats">
 
-            <aside class="card">
-
-                <div class="card-header">
-
-                    <h3>
-                        Aankomend
-                    </h3>
-
+                <div class="stat-card blue">
+                    <div class="stat-icon">□</div>
+                    <div class="stat-title">Totaal</div>
+                    <div class="stat-number" id="totalCount">0</div>
+                    <div class="stat-sub">herinneringen</div>
                 </div>
 
+                <div class="stat-card green">
+                    <div class="stat-icon">✓</div>
+                    <div class="stat-title">Vandaag</div>
+                    <div class="stat-number" id="todayCount">0</div>
+                    <div class="stat-sub">herinneringen</div>
+                </div>
 
-                <div id="upcomingList">
+                <div class="stat-card purple">
+                    <div class="stat-icon">◷</div>
+                    <div class="stat-title">Aankomend</div>
+                    <div class="stat-number" id="upcomingCount">0</div>
+                    <div class="stat-sub">herinneringen</div>
+                </div>
 
-                    <div class="empty">
-                        Laden...
+                <div class="stat-card teal">
+                    <div class="stat-icon">✓</div>
+                    <div class="stat-title">Voltooid</div>
+                    <div class="stat-number" id="completedCount">0</div>
+                    <div class="stat-sub">herinneringen</div>
+                </div>
+
+                <div class="stat-card orange encouragement">
+                    <h3>Goed bezig</h3>
+                    <p id="encouragementText">
+                        Elke herinnering die je afrondt, is weer een stap vooruit.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- MAIN DASHBOARD GRID -->
+            <section class="dashboard-grid">
+
+                <!-- REMINDERS -->
+                <div class="card reminders-card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+                            <div class="card-title-icon">♧</div>
+                            <h2>Herinneringen</h2>
+                        </div>
+
+                        <button
+                            class="add-button"
+                            onclick="openCreateModal()"
+                        >
+                            + Nieuwe herinnering
+                        </button>
+
+                    </div>
+
+
+                    <div class="filters">
+
+                        <div class="filter-buttons">
+
+                            <button
+                                class="filter-button active"
+                                data-filter="all"
+                                onclick="setFilter('all')"
+                            >
+                                Alles
+                            </button>
+
+                            <button
+                                class="filter-button"
+                                data-filter="open"
+                                onclick="setFilter('open')"
+                            >
+                                Openstaand
+                            </button>
+
+                            <button
+                                class="filter-button"
+                                data-filter="completed"
+                                onclick="setFilter('completed')"
+                            >
+                                Voltooid
+                            </button>
+
+                        </div>
+
+                        <select
+                            class="sort-select"
+                            id="sortSelect"
+                            onchange="renderReminders()"
+                        >
+                            <option value="date">Sorteer op: Datum</option>
+                            <option value="title">Sorteer op: Naam</option>
+                            <option value="priority">Sorteer op: Prioriteit</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="reminder-list" id="reminderList">
+                        <div class="empty-state">
+                            <h3>Herinneringen laden...</h3>
+                            <p>Even geduld.</p>
+                        </div>
+                    </div>
+
+                    <div class="bottom-note" id="bottomNote">
+                        Je herinneringen worden veilig opgeslagen.
                     </div>
 
                 </div>
 
-            </aside>
+
+                <!-- RIGHT COLUMN -->
+                <div class="side-column">
+
+                    <!-- TODAY -->
+                    <div class="card side-card">
+
+                        <div class="side-card-header">
+                            <h3>Vandaag</h3>
+                            <div class="count" id="todaySideCount">0</div>
+                        </div>
+
+                        <div id="todayList"></div>
+
+                        <a
+                            href="#"
+                            class="view-all"
+                            onclick="setView('today'); return false;"
+                        >
+                            Bekijk vandaag
+                        </a>
+
+                    </div>
+
+
+                    <!-- UPCOMING -->
+                    <div class="card side-card">
+
+                        <div class="side-card-header">
+                            <h3>Aankomende herinneringen</h3>
+                            <div class="count" id="upcomingSideCount">0</div>
+                        </div>
+
+                        <div id="upcomingList"></div>
+
+                        <a
+                            href="#"
+                            class="view-all"
+                            onclick="setView('upcoming'); return false;"
+                        >
+                            Bekijk alles
+                        </a>
+
+                    </div>
+
+
+                    <!-- DECORATION -->
+                    <div class="plant-card">
+
+                        <h3>Een stap tegelijk</h3>
+
+                        <p>
+                            Kleine herinneringen helpen je om overzicht te houden.
+                        </p>
+
+                        <div class="plant">
+                            <div class="plant-stem"></div>
+                            <div class="leaf one"></div>
+                            <div class="leaf two"></div>
+                            <div class="leaf three"></div>
+                            <div class="pot"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
 
         </div>
 
@@ -894,22 +1587,16 @@
 
 
 <!-- MODAL -->
-
-<div
-    class="modal-overlay"
-    id="modalOverlay"
->
+<div class="modal-backdrop" id="modalBackdrop">
 
     <div class="modal">
 
         <div class="modal-header">
 
-            <h3 id="modalTitle">
-                Nieuwe herinnering
-            </h3>
+            <h2 id="modalTitle">Nieuwe herinnering</h2>
 
             <button
-                class="close"
+                class="close-button"
                 onclick="closeModal()"
             >
                 ×
@@ -920,225 +1607,120 @@
 
         <form id="reminderForm">
 
-            <div class="form-group">
+            <div class="modal-body">
 
-                <label for="titel">
-                    Titel
-                </label>
+                <div class="form-grid">
 
-                <input
-                    type="text"
-                    id="titel"
-                    required
-                    placeholder="Bijvoorbeeld: Tandartsafspraak"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="beschrijving">
-                    Beschrijving
-                </label>
-
-                <textarea
-                    id="beschrijving"
-                    placeholder="Extra informatie..."
-                ></textarea>
-
-            </div>
-
-
-            <div class="form-row">
-
-                <div class="form-group">
-
-                    <label for="datum">
-                        Datum
-                    </label>
-
-                    <input
-                        type="date"
-                        id="datum"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="tijd">
-                        Tijd
-                    </label>
-
-                    <input
-                        type="time"
-                        id="tijd"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="form-row">
-
-                <div class="form-group">
-
-                    <label for="categorie">
-                        Categorie
-                    </label>
-
-                    <select id="categorie">
-
-                        <option value="">
-                            Geen categorie
-                        </option>
-
-                        <option value="Privé">
-                            Privé
-                        </option>
-
-                        <option value="Werk">
-                            Werk
-                        </option>
-
-                        <option value="Gezondheid">
-                            Gezondheid
-                        </option>
-
-                        <option value="Familie">
-                            Familie
-                        </option>
-
-                        <option value="Financiën">
-                            Financiën
-                        </option>
-
-                        <option value="Overig">
-                            Overig
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="prioriteit">
-                        Prioriteit
-                    </label>
-
-                    <select id="prioriteit">
-
-                        <option value="laag">
-                            Laag
-                        </option>
-
-                        <option
-                            value="normaal"
-                            selected
+                    <div class="field full">
+                        <label for="title">Titel</label>
+                        <input
+                            type="text"
+                            id="title"
+                            placeholder="Bijvoorbeeld: Tandartsafspraak"
+                            required
                         >
-                            Normaal
-                        </option>
+                    </div>
 
-                        <option value="hoog">
-                            Hoog
-                        </option>
 
-                    </select>
+                    <div class="field full">
+                        <label for="description">Beschrijving</label>
+                        <textarea
+                            id="description"
+                            placeholder="Extra informatie..."
+                        ></textarea>
+                    </div>
+
+
+                    <div class="field">
+                        <label for="date">Datum</label>
+                        <input type="date" id="date">
+                    </div>
+
+
+                    <div class="field">
+                        <label for="time">Tijd</label>
+                        <input type="time" id="time">
+                    </div>
+
+
+                    <div class="field">
+                        <label for="category">Categorie</label>
+
+                        <select id="category">
+                            <option value="">Geen categorie</option>
+                            <option value="Privé">Privé</option>
+                            <option value="Werk">Werk</option>
+                            <option value="Gezondheid">Gezondheid</option>
+                            <option value="Thuis">Thuis</option>
+                            <option value="Afspraken">Afspraken</option>
+                            <option value="Overig">Overig</option>
+                        </select>
+                    </div>
+
+
+                    <div class="field">
+                        <label for="priority">Prioriteit</label>
+
+                        <select id="priority">
+                            <option value="laag">Laag</option>
+                            <option value="normaal" selected>Normaal</option>
+                            <option value="hoog">Hoog</option>
+                        </select>
+                    </div>
+
+
+                    <div class="field">
+                        <label for="repeat">Herhaling</label>
+
+                        <select id="repeat">
+                            <option value="geen">Geen herhaling</option>
+                            <option value="dagelijks">Dagelijks</option>
+                            <option value="wekelijks">Wekelijks</option>
+                            <option value="maandelijks">Maandelijks</option>
+                            <option value="jaarlijks">Jaarlijks</option>
+                        </select>
+                    </div>
+
+
+                    <div class="field full">
+                        <label for="notes">Notities</label>
+                        <textarea
+                            id="notes"
+                            placeholder="Eventuele extra notities..."
+                        ></textarea>
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <div class="form-group">
-
-                <label for="herhaling">
-                    Herhaling
-                </label>
-
-                <select id="herhaling">
-
-                    <option value="geen">
-                        Geen
-                    </option>
-
-                    <option value="dagelijks">
-                        Dagelijks
-                    </option>
-
-                    <option value="wekelijks">
-                        Wekelijks
-                    </option>
-
-                    <option value="maandelijks">
-                        Maandelijks
-                    </option>
-
-                    <option value="jaarlijks">
-                        Jaarlijks
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="notities">
-                    Notities
-                </label>
-
-                <textarea
-                    id="notities"
-                    placeholder="Eventuele extra notities..."
-                ></textarea>
-
-            </div>
-
-
-            <div class="modal-actions">
+            <div class="modal-footer">
 
                 <button
                     type="button"
+                    class="secondary-button"
+                    onclick="closeModal()"
+                >
+                    Annuleren
+                </button>
+
+                <button
+                    type="button"
+                    class="danger-button"
                     id="deleteButton"
-                    class="delete-btn"
                     onclick="deleteCurrentReminder()"
                     style="display:none;"
                 >
                     Verwijderen
                 </button>
 
-
-                <div
-                    style="
-                        margin-left:auto;
-                        display:flex;
-                        gap:8px;
-                    "
+                <button
+                    type="submit"
+                    class="primary-button"
                 >
-
-                    <button
-                        type="button"
-                        class="small-btn"
-                        onclick="closeModal()"
-                    >
-                        Annuleren
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="save-btn"
-                    >
-                        Opslaan
-                    </button>
-
-                </div>
+                    Opslaan
+                </button>
 
             </div>
 
@@ -1149,9 +1731,13 @@
 </div>
 
 
-<script>
+<div class="toast" id="toast"></div>
 
-    /* SUPABASE */
+
+<script>
+        /* ==========================================
+       SUPABASE
+    ========================================== */
 
     const SUPABASE_URL =
         "https://fqupzovqwzaqkatcfbka.supabase.co";
@@ -1160,127 +1746,122 @@
         "sb_publishable_ahp4b1jbybZmcQDDkkdNrg_IvbVXZsY";
 
     const supabaseClient =
-        supabase.createClient(
+        window.supabase.createClient(
             SUPABASE_URL,
             SUPABASE_KEY
         );
 
 
-    /* DATA */
-
     let currentUser = null;
-
     let reminders = [];
-
-    let currentPage = "all";
-
-    let quickFilter = "all";
-
+    let currentFilter = "all";
+    let currentView = "all";
     let editingId = null;
 
 
-    /* START */
+    /* ==========================================
+       START
+    ========================================== */
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        async () => {
+    document.addEventListener("DOMContentLoaded", async () => {
 
-            const {
-                data: {
-                    session
-                }
-            } = await supabaseClient.auth.getSession();
+        document
+            .getElementById("searchInput")
+            .addEventListener("input", renderReminders);
+
+        await initializeDashboard();
+
+    });
 
 
-            if (!session) {
+    async function initializeDashboard() {
 
-                window.location.href =
-                    "inloggen.html";
-
-                return;
-
+        const {
+            data: {
+                session
             }
+        } = await supabaseClient.auth.getSession();
 
 
-            currentUser =
-                session.user;
+        if (!session) {
 
+            window.location.href =
+                "inloggen.html";
 
-            await loadProfile();
-
-            await loadReminders();
-
-
-            document
-                .getElementById("searchInput")
-                .addEventListener(
-                    "input",
-                    renderReminders
-                );
+            return;
 
         }
-    );
 
 
-    /* PROFILE */
+        currentUser = session.user;
 
-    async function loadProfile() {
+        await loadUserProfile();
+
+        await loadReminders();
+
+    }
+
+
+    /* ==========================================
+       PROFILE
+    ========================================== */
+
+    async function loadUserProfile() {
 
         const {
             data,
             error
         } = await supabaseClient
             .from("profiles")
-            .select("naam, email")
+            .select("naam,email")
             .eq("id", currentUser.id)
             .maybeSingle();
 
 
-        if (error) {
-
-            console.error(
-                "Profiel laden mislukt:",
-                error
-            );
-
-        }
-
-
-        const naam =
+        let name =
             data?.naam ||
             currentUser.user_metadata?.naam ||
             currentUser.email?.split("@")[0] ||
             "Gebruiker";
 
 
-        const firstName =
-            naam.trim().split(" ")[0] ||
-            naam;
+        document.getElementById("userName").textContent =
+            name;
 
 
-        document
-            .getElementById("welcomeTitle")
-            .textContent =
-            `Goedendag, ${firstName}`;
+        document.getElementById("userAvatar").textContent =
+            name.charAt(0).toUpperCase();
 
 
-        document
-            .getElementById("sidebarName")
-            .textContent =
-            naam;
+        const hour =
+            new Date().getHours();
 
 
-        document
-            .getElementById("sidebarAvatar")
-            .textContent =
-            naam
-                .charAt(0)
-                .toUpperCase();
+        let greeting = "Goedemorgen";
+
+        if (hour >= 12 && hour < 18) {
+            greeting = "Goedemiddag";
+        }
+
+        if (hour >= 18) {
+            greeting = "Goedenavond";
+        }
+
+
+        document.getElementById("welcomeTitle").textContent =
+            greeting + ", " + name;
+
+
+        if (error) {
+            console.log(error);
+        }
 
     }
 
 
-    /* REMINDERS LADEN */
+    /* ==========================================
+       LOAD REMINDERS
+    ========================================== */
 
     async function loadReminders() {
 
@@ -1290,431 +1871,430 @@
         } = await supabaseClient
             .from("reminders")
             .select("*")
-            .eq(
-                "user_id",
-                currentUser.id
-            )
-            .order(
-                "datum",
-                {
-                    ascending: true
-                }
-            )
-            .order(
-                "tijd",
-                {
-                    ascending: true
-                }
-            );
+            .eq("user_id", currentUser.id)
+            .order("datum", {
+                ascending: true
+            })
+            .order("tijd", {
+                ascending: true
+            });
 
 
         if (error) {
 
             console.error(error);
 
-            document
-                .getElementById("remindersList")
-                .innerHTML =
-                `
-                    <div class="empty">
-                        Er ging iets mis bij het laden
-                        van je herinneringen.
-                    </div>
-                `;
+            showToast(
+                "Herinneringen konden niet worden geladen."
+            );
 
             return;
 
         }
 
 
-        reminders =
-            data || [];
-
+        reminders = data || [];
 
         updateStats();
 
         renderReminders();
 
-        renderUpcoming();
+        renderSideLists();
 
     }
 
 
-    /* STATISTIEKEN */
+    /* ==========================================
+       DATE HELPERS
+    ========================================== */
+
+    function getTodayString() {
+
+        const date = new Date();
+
+        const year =
+            date.getFullYear();
+
+        const month =
+            String(date.getMonth() + 1).padStart(2, "0");
+
+        const day =
+            String(date.getDate()).padStart(2, "0");
+
+
+        return `${year}-${month}-${day}`;
+
+    }
+
+
+    function formatDate(dateString) {
+
+        if (!dateString) {
+            return "Geen datum";
+        }
+
+
+        const date =
+            new Date(dateString + "T00:00:00");
+
+
+        return date.toLocaleDateString(
+            "nl-NL",
+            {
+                day: "2-digit",
+                month: "short"
+            }
+        );
+
+    }
+
+
+    function isToday(reminder) {
+
+        return reminder.datum ===
+            getTodayString();
+
+    }
+
+
+    function isUpcoming(reminder) {
+
+        if (!reminder.datum) {
+            return false;
+        }
+
+
+        return (
+            reminder.datum > getTodayString() &&
+            !reminder.afgerond
+        );
+
+    }
+
+
+    /* ==========================================
+       STATS
+    ========================================== */
 
     function updateStats() {
-
-        const today =
-            getToday();
-
 
         const total =
             reminders.length;
 
 
-        const completed =
+        const today =
             reminders.filter(
-                r => r.afgerond
-            ).length;
-
-
-        const todayCount =
-            reminders.filter(
-                r =>
-                    r.datum === today &&
-                    !r.afgerond
+                reminder =>
+                    isToday(reminder) &&
+                    !reminder.afgerond
             ).length;
 
 
         const upcoming =
             reminders.filter(
-                r =>
-                    r.datum &&
-                    r.datum > today &&
-                    !r.afgerond
+                reminder =>
+                    isUpcoming(reminder)
             ).length;
 
 
-        document
-            .getElementById("totalCount")
-            .textContent =
+        const completed =
+            reminders.filter(
+                reminder =>
+                    reminder.afgerond
+            ).length;
+
+
+        document.getElementById("totalCount").textContent =
             total;
 
+        document.getElementById("todayCount").textContent =
+            today;
 
-        document
-            .getElementById("todayCount")
-            .textContent =
-            todayCount;
+        document.getElementById("upcomingCount").textContent =
+            upcoming;
+
+        document.getElementById("completedCount").textContent =
+            completed;
 
 
-        document
-            .getElementById("upcomingCount")
-            .textContent =
+        document.getElementById("todaySideCount").textContent =
+            today;
+
+        document.getElementById("upcomingSideCount").textContent =
             upcoming;
 
 
-        document
-            .getElementById("completedCount")
-            .textContent =
-            completed;
+        const open =
+            total - completed;
+
+
+        let message =
+            "Elke herinnering die je afrondt, is weer een stap vooruit.";
+
+
+        if (open === 0 && total > 0) {
+            message =
+                "Alles is afgerond. Je hebt je overzicht helemaal op orde.";
+        } else if (today > 0) {
+            message =
+                "Je hebt vandaag " +
+                today +
+                " herinnering" +
+                (today === 1 ? "" : "en") +
+                ".";
+        }
+
+
+        document.getElementById("encouragementText").textContent =
+            message;
+
+
+        document.getElementById("bottomNote").textContent =
+            open === 0
+                ? "Alle herinneringen zijn afgerond."
+                : "Je hebt nog " +
+                  open +
+                  " openstaande herinnering" +
+                  (open === 1 ? "" : "en") +
+                  ".";
 
     }
 
 
-    /* PAGINA'S */
+    /* ==========================================
+       FILTERS / VIEWS
+    ========================================== */
 
-    function showPage(page) {
+    function setFilter(filter) {
 
-        currentPage =
-            page;
+        currentFilter = filter;
 
-        quickFilter =
-            "all";
+        currentView = "all";
 
 
         document
-            .querySelectorAll(".nav a[data-page]")
-            .forEach(link => {
+            .querySelectorAll(".filter-button")
+            .forEach(button => {
 
-                link.classList.toggle(
+                button.classList.toggle(
                     "active",
-                    link.dataset.page === page
+                    button.dataset.filter === filter
                 );
 
             });
 
 
-        const titles = {
-
-            all: {
-                title: "Overzicht",
-                description:
-                    "Al je herinneringen op één plek.",
-                list:
-                    "Herinneringen"
-            },
-
-            today: {
-                title: "Vandaag",
-                description:
-                    "Alles wat je vandaag niet wilt vergeten.",
-                list:
-                    "Herinneringen voor vandaag"
-            },
-
-            upcoming: {
-                title: "Aankomend",
-                description:
-                    "Een overzicht van wat er binnenkort gepland staat.",
-                list:
-                    "Aankomende herinneringen"
-            },
-
-            completed: {
-                title: "Voltooid",
-                description:
-                    "Herinneringen die je hebt afgerond.",
-                list:
-                    "Voltooide herinneringen"
-            }
-
-        };
-
-
-        const pageInfo =
-            titles[page];
-
-
-        document
-            .getElementById("pageTitle")
-            .textContent =
-            pageInfo.title;
-
-
-        document
-            .getElementById("pageDescription")
-            .textContent =
-            pageInfo.description;
-
-
-        document
-            .getElementById("listTitle")
-            .textContent =
-            pageInfo.list;
-
-
-        document
-            .querySelectorAll(".filter")
-            .forEach(
-                button =>
-                    button.classList.remove("active")
-            );
-
-
-        document
-            .querySelector(".filter")
-            .classList.add("active");
-
-
         renderReminders();
 
     }
 
 
-    /* SNELFILTERS */
+    function setView(view) {
 
-    function setQuickFilter(
-        filter,
-        button
-    ) {
-
-        quickFilter =
-            filter;
+        currentView = view;
 
 
-        document
-            .querySelectorAll(".filter")
-            .forEach(
-                item =>
-                    item.classList.remove("active")
-            );
+        if (view === "today") {
+            currentFilter = "all";
+        }
 
+        if (view === "upcoming") {
+            currentFilter = "open";
+        }
 
-        if (button) {
-
-            button.classList.add(
-                "active"
-            );
-
+        if (view === "completed") {
+            currentFilter = "completed";
         }
 
 
+        document
+            .querySelectorAll(".filter-button")
+            .forEach(button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.filter === currentFilter
+                );
+
+            });
+
+
         renderReminders();
+
+        window.scrollTo({
+            top: 300,
+            behavior: "smooth"
+        });
 
     }
 
 
-    /* HERINNERINGEN TONEN */
+    /* ==========================================
+       RENDER REMINDERS
+    ========================================== */
 
     function renderReminders() {
 
         const container =
-            document.getElementById(
-                "remindersList"
-            );
+            document.getElementById("reminderList");
 
 
         const search =
             document
-                .getElementById(
-                    "searchInput"
-                )
+                .getElementById("searchInput")
                 .value
-                .toLowerCase()
-                .trim();
+                .trim()
+                .toLowerCase();
 
 
-        const today =
-            getToday();
-
-
-        let filtered =
+        let list =
             [...reminders];
 
 
-        /* PAGINA */
+        /* Filter */
 
-        if (
-            currentPage ===
-            "today"
-        ) {
+        if (currentFilter === "open") {
 
-            filtered =
-                filtered.filter(
-                    r =>
-                        r.datum === today &&
-                        !r.afgerond
+            list =
+                list.filter(
+                    reminder =>
+                        !reminder.afgerond
                 );
 
         }
 
 
-        if (
-            currentPage ===
-            "upcoming"
-        ) {
+        if (currentFilter === "completed") {
 
-            filtered =
-                filtered.filter(
-                    r =>
-                        r.datum &&
-                        r.datum > today &&
-                        !r.afgerond
+            list =
+                list.filter(
+                    reminder =>
+                        reminder.afgerond
                 );
 
         }
 
 
-        if (
-            currentPage ===
-            "completed"
-        ) {
+        /* View */
 
-            filtered =
-                filtered.filter(
-                    r =>
-                        r.afgerond
+        if (currentView === "today") {
+
+            list =
+                list.filter(
+                    reminder =>
+                        isToday(reminder)
                 );
 
         }
 
 
-        /* SNELFILTER */
+        if (currentView === "upcoming") {
 
-        if (
-            quickFilter ===
-            "open"
-        ) {
-
-            filtered =
-                filtered.filter(
-                    r =>
-                        !r.afgerond
+            list =
+                list.filter(
+                    reminder =>
+                        isUpcoming(reminder)
                 );
 
         }
 
 
-        if (
-            quickFilter ===
-            "completed"
-        ) {
+        if (currentView === "completed") {
 
-            filtered =
-                filtered.filter(
-                    r =>
-                        r.afgerond
+            list =
+                list.filter(
+                    reminder =>
+                        reminder.afgerond
                 );
 
         }
 
 
-        /* ZOEKEN */
+        /* Search */
 
         if (search) {
 
-            filtered =
-                filtered.filter(
-                    r => {
+            list =
+                list.filter(reminder => {
 
-                        const text = [
-
-                            r.titel,
-                            r.beschrijving,
-                            r.categorie,
-                            r.notities
-
+                    const text =
+                        [
+                            reminder.titel,
+                            reminder.beschrijving,
+                            reminder.categorie,
+                            reminder.notities
                         ]
-                            .filter(Boolean)
-                            .join(" ")
-                            .toLowerCase();
+                        .filter(Boolean)
+                        .join(" ")
+                        .toLowerCase();
 
 
-                        return text.includes(
-                            search
-                        );
+                    return text.includes(search);
 
-                    }
-                );
+                });
 
         }
 
 
-        if (!filtered.length) {
+        /* Sort */
 
-            let message =
-                "Geen herinneringen gevonden.";
-
-
-            if (
-                currentPage ===
-                "today"
-            ) {
-
-                message =
-                    "Je hebt vandaag geen openstaande herinneringen.";
-
-            }
+        const sort =
+            document.getElementById("sortSelect").value;
 
 
-            if (
-                currentPage ===
-                "upcoming"
-            ) {
+        if (sort === "title") {
 
-                message =
-                    "Je hebt geen aankomende herinneringen.";
+            list.sort(
+                (a, b) =>
+                    (a.titel || "")
+                        .localeCompare(
+                            b.titel || "",
+                            "nl"
+                        )
+            );
 
-            }
+        } else if (sort === "priority") {
 
-
-            if (
-                currentPage ===
-                "completed"
-            ) {
-
-                message =
-                    "Je hebt nog geen herinneringen voltooid.";
-
-            }
+            const priorities = {
+                hoog: 1,
+                normaal: 2,
+                laag: 3
+            };
 
 
-            container.innerHTML =
-                `
-                    <div class="empty">
-                        ${message}
-                    </div>
-                `;
+            list.sort(
+                (a, b) =>
+                    (priorities[a.prioriteit] || 2) -
+                    (priorities[b.prioriteit] || 2)
+            );
+
+        } else {
+
+            list.sort(
+                (a, b) => {
+
+                    const aDate =
+                        `${a.datum || "9999-99-99"} ${a.tijd || "99:99"}`;
+
+                    const bDate =
+                        `${b.datum || "9999-99-99"} ${b.tijd || "99:99"}`;
+
+                    return aDate.localeCompare(bDate);
+
+                }
+            );
+
+        }
+
+
+        if (!list.length) {
+
+            container.innerHTML = `
+                <div class="empty-state">
+                    <h3>Geen herinneringen gevonden</h3>
+                    <p>Pas je filter aan of maak een nieuwe herinnering.</p>
+                </div>
+            `;
 
             return;
 
@@ -1722,370 +2302,305 @@
 
 
         container.innerHTML =
-            filtered
-                .map(
-                    createReminderHTML
-                )
-                .join("");
+            list.map(createReminderHTML).join("");
 
     }
 
 
-    /* HERINNERING HTML */
+    /* ==========================================
+       REMINDER HTML
+    ========================================== */
 
-    function createReminderHTML(
-        reminder
-    ) {
+    function createReminderHTML(reminder) {
+
+        const iconClass =
+            getIconClass(reminder.categorie);
+
+
+        const icon =
+            getIcon(reminder.categorie);
+
 
         const priorityClass =
-            reminder.prioriteit ===
-            "hoog"
+            "priority-" +
+            (reminder.prioriteit || "normaal");
 
-                ? "priority-high"
 
-                : reminder.prioriteit ===
-                  "laag"
-
-                    ? "priority-low"
-
-                    : "";
+        const category =
+            reminder.categorie ||
+            "Overig";
 
 
         const dateText =
             reminder.datum
-                ? formatDate(
-                    reminder.datum
-                )
-                : "";
+                ? formatDate(reminder.datum)
+                : "Geen datum";
 
 
         const timeText =
-            reminder.tijd
-                ? reminder.tijd.substring(
-                    0,
-                    5
-                )
-                : "";
+            reminder.tijd ||
+            "Geen tijd";
 
 
         return `
-
-            <div class="reminder">
+            <div class="reminder ${reminder.afgerond ? "completed" : ""}">
 
                 <button
-                    class="check ${
-                        reminder.afgerond
-                            ? "done"
-                            : ""
-                    }"
-                    onclick="toggleComplete(
-                        ${reminder.id},
-                        ${!reminder.afgerond}
-                    )"
-                    aria-label="Voltooien"
-                ></button>
+                    class="check ${reminder.afgerond ? "completed" : ""}"
+                    onclick="toggleComplete(${reminder.id})"
+                    title="Afronden"
+                >
+                    ${reminder.afgerond ? "✓" : ""}
+                </button>
+
+
+                <div class="reminder-icon ${iconClass}">
+                    ${icon}
+                </div>
 
 
                 <div class="reminder-main">
 
-                    <div
-                        class="reminder-title ${
-                            reminder.afgerond
-                                ? "done"
-                                : ""
-                        }"
-                    >
-                        ${
-                            escapeHTML(
-                                reminder.titel
-                            )
-                        }
+                    <div class="reminder-title">
+                        ${escapeHtml(reminder.titel)}
                     </div>
 
+                    <div class="reminder-description">
+                        ${escapeHtml(
+                            reminder.beschrijving ||
+                            "Geen beschrijving"
+                        )}
+                    </div>
 
-                    ${
-                        reminder.beschrijving
-                            ? `
-                                <div class="reminder-description">
-                                    ${
-                                        escapeHTML(
-                                            reminder.beschrijving
-                                        )
-                                    }
-                                </div>
-                            `
-                            : ""
-                    }
+                    <div class="tags">
 
+                        <span class="tag tag-category">
+                            ${escapeHtml(category)}
+                        </span>
 
-                    <div class="reminder-meta">
-
-                        ${
-                            dateText
-                                ? `
-                                    <span class="tag">
-                                        ${dateText}
-                                    </span>
-                                `
-                                : ""
-                        }
-
-
-                        ${
-                            timeText
-                                ? `
-                                    <span class="tag">
-                                        ${timeText}
-                                    </span>
-                                `
-                                : ""
-                        }
-
-
-                        ${
-                            reminder.categorie
-                                ? `
-                                    <span class="tag">
-                                        ${
-                                            escapeHTML(
-                                                reminder.categorie
-                                            )
-                                        }
-                                    </span>
-                                `
-                                : ""
-                        }
-
-
-                        ${
-                            reminder.prioriteit
-                                ? `
-                                    <span
-                                        class="tag ${priorityClass}"
-                                    >
-                                        ${
-                                            escapeHTML(
-                                                reminder.prioriteit
-                                            )
-                                        }
-                                    </span>
-                                `
-                                : ""
-                        }
-
-
-                        ${
-                            reminder.herhaling &&
-                            reminder.herhaling !==
-                                "geen"
-
-                                ? `
-                                    <span class="tag">
-                                        ${
-                                            escapeHTML(
-                                                reminder.herhaling
-                                            )
-                                        }
-                                    </span>
-                                `
-                                : ""
-                        }
+                        <span class="tag ${priorityClass}">
+                            ${capitalize(
+                                reminder.prioriteit || "normaal"
+                            )}
+                        </span>
 
                     </div>
 
                 </div>
 
 
-                <div class="reminder-actions">
+                <div class="reminder-date">
 
-                    <button
-                        class="small-btn"
-                        onclick="editReminder(
-                            ${reminder.id}
-                        )"
-                    >
-                        Bewerken
-                    </button>
+                    <div class="date-line">
+                        <span>□</span>
+                        <span>${escapeHtml(dateText)}</span>
+                    </div>
+
+                    <div class="date-line">
+                        <span>◷</span>
+                        <span>${escapeHtml(timeText)}</span>
+                    </div>
 
                 </div>
+
+
+                <button
+                    class="more-button"
+                    onclick="openEditModal(${reminder.id})"
+                    title="Bewerken"
+                >
+                    ⋮
+                </button>
 
             </div>
-
         `;
 
     }
 
 
-    /* AANKOMEND */
+    /* ==========================================
+       SIDE LISTS
+    ========================================== */
 
-    function renderUpcoming() {
+    function renderSideLists() {
 
-        const container =
-            document.getElementById(
-                "upcomingList"
-            );
+        const todayList =
+            document.getElementById("todayList");
+
+
+        const upcomingList =
+            document.getElementById("upcomingList");
 
 
         const today =
-            getToday();
+            reminders
+                .filter(
+                    reminder =>
+                        isToday(reminder) &&
+                        !reminder.afgerond
+                )
+                .sort(sortByTime)
+                .slice(0, 4);
 
 
         const upcoming =
             reminders
                 .filter(
-                    r =>
-                        !r.afgerond &&
-                        r.datum &&
-                        r.datum >= today
+                    reminder =>
+                        isUpcoming(reminder)
                 )
-                .sort(
-                    (a, b) => {
-
-                        const aValue =
-                            `${a.datum} ${
-                                a.tijd || ""
-                            }`;
-
-                        const bValue =
-                            `${b.datum} ${
-                                b.tijd || ""
-                            }`;
+                .sort(sortByDate)
+                .slice(0, 4);
 
 
-                        return aValue.localeCompare(
-                            bValue
-                        );
+        if (!today.length) {
 
-                    }
-                )
-                .slice(
-                    0,
-                    5
-                );
+            todayList.innerHTML =
+                `<div style="color:#8792a3;font-size:12px;padding:8px 0;">
+                    Geen openstaande herinneringen voor vandaag.
+                </div>`;
 
+        } else {
 
-        if (
-            !upcoming.length
-        ) {
-
-            container.innerHTML =
-                `
-                    <div class="empty">
-                        Geen aankomende herinneringen.
-                    </div>
-                `;
-
-            return;
+            todayList.innerHTML =
+                today.map(createMiniHTML).join("");
 
         }
 
 
-        container.innerHTML =
-            upcoming
-                .map(
-                    r => `
+        if (!upcoming.length) {
 
-                        <div class="upcoming-item">
+            upcomingList.innerHTML =
+                `<div style="color:#8792a3;font-size:12px;padding:8px 0;">
+                    Geen aankomende herinneringen.
+                </div>`;
 
-                            <div class="upcoming-date">
-                                ${formatDate(r.datum)}
-                                ${
-                                    r.tijd
-                                        ? " · " +
-                                          r.tijd.substring(
-                                              0,
-                                              5
-                                          )
-                                        : ""
-                                }
-                            </div>
+        } else {
 
+            upcomingList.innerHTML =
+                upcoming.map(createMiniHTML).join("");
 
-                            <div class="upcoming-title">
-                                ${
-                                    escapeHTML(
-                                        r.titel
-                                    )
-                                }
-                            </div>
-
-                        </div>
-
-                    `
-                )
-                .join("");
+        }
 
     }
 
 
-    /* NIEUWE HERINNERING */
+    function createMiniHTML(reminder) {
 
-    function openNewReminder() {
-
-        editingId =
-            null;
+        const iconClass =
+            getIconClass(reminder.categorie);
 
 
-        document
-            .getElementById(
-                "modalTitle"
-            )
-            .textContent =
+        const icon =
+            getIcon(reminder.categorie);
+
+
+        return `
+            <div class="mini-item">
+
+                <div class="mini-icon ${iconClass}">
+                    ${icon}
+                </div>
+
+                <div class="mini-content">
+
+                    <div class="mini-title">
+                        ${escapeHtml(reminder.titel)}
+                    </div>
+
+                    <div class="mini-date">
+                        ${
+                            reminder.datum
+                                ? formatDate(reminder.datum)
+                                : "Geen datum"
+                        }
+                        ${
+                            reminder.tijd
+                                ? " · " + escapeHtml(reminder.tijd)
+                                : ""
+                        }
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+    }
+
+
+    /* ==========================================
+       SORT
+    ========================================== */
+
+    function sortByDate(a, b) {
+
+        return (
+            `${a.datum || "9999-99-99"} ${a.tijd || ""}`
+        ).localeCompare(
+            `${b.datum || "9999-99-99"} ${b.tijd || ""}`
+        );
+
+    }
+
+
+    function sortByTime(a, b) {
+
+        return (
+            a.tijd || "99:99"
+        ).localeCompare(
+            b.tijd || "99:99"
+        );
+
+    }
+
+
+    /* ==========================================
+       MODAL
+    ========================================== */
+
+    function openCreateModal() {
+
+        editingId = null;
+
+        document.getElementById("modalTitle").textContent =
             "Nieuwe herinnering";
 
 
-        document
-            .getElementById(
-                "deleteButton"
-            )
-            .style.display =
+        document.getElementById("reminderForm").reset();
+
+
+        document.getElementById("priority").value =
+            "normaal";
+
+
+        document.getElementById("repeat").value =
+            "geen";
+
+
+        document.getElementById("deleteButton").style.display =
             "none";
 
 
         document
-            .getElementById(
-                "reminderForm"
-            )
-            .reset();
+            .getElementById("modalBackdrop")
+            .classList.add("show");
 
 
-        document
-            .getElementById(
-                "prioriteit"
-            )
-            .value =
-            "normaal";
+        setTimeout(() => {
 
+            document.getElementById("title").focus();
 
-        document
-            .getElementById(
-                "herhaling"
-            )
-            .value =
-            "geen";
-
-
-        document
-            .getElementById(
-                "modalOverlay"
-            )
-            .classList.add(
-                "show"
-            );
+        }, 100);
 
     }
 
 
-    /* BEWERKEN */
-
-    function editReminder(
-        id
-    ) {
+    function openEditModal(id) {
 
         const reminder =
             reminders.find(
-                r =>
-                    r.id === id
+                item => item.id === id
             );
 
 
@@ -2094,119 +2609,71 @@
         }
 
 
-        editingId =
-            id;
+        editingId = id;
 
 
-        document
-            .getElementById(
-                "modalTitle"
-            )
-            .textContent =
+        document.getElementById("modalTitle").textContent =
             "Herinnering bewerken";
 
 
-        document
-            .getElementById(
-                "deleteButton"
-            )
-            .style.display =
+        document.getElementById("title").value =
+            reminder.titel || "";
+
+
+        document.getElementById("description").value =
+            reminder.beschrijving || "";
+
+
+        document.getElementById("date").value =
+            reminder.datum || "";
+
+
+        document.getElementById("time").value =
+            reminder.tijd || "";
+
+
+        document.getElementById("category").value =
+            reminder.categorie || "";
+
+
+        document.getElementById("priority").value =
+            reminder.prioriteit || "normaal";
+
+
+        document.getElementById("repeat").value =
+            reminder.herhaling || "geen";
+
+
+        document.getElementById("notes").value =
+            reminder.notities || "";
+
+
+        document.getElementById("deleteButton").style.display =
             "block";
 
 
         document
-            .getElementById(
-                "titel"
-            )
-            .value =
-            reminder.titel ||
-            "";
-
-
-        document
-            .getElementById(
-                "beschrijving"
-            )
-            .value =
-            reminder.beschrijving ||
-            "";
-
-
-        document
-            .getElementById(
-                "datum"
-            )
-            .value =
-            reminder.datum ||
-            "";
-
-
-        document
-            .getElementById(
-                "tijd"
-            )
-            .value =
-            reminder.tijd
-                ? reminder.tijd.substring(
-                    0,
-                    5
-                )
-                : "";
-
-
-        document
-            .getElementById(
-                "categorie"
-            )
-            .value =
-            reminder.categorie ||
-            "";
-
-
-        document
-            .getElementById(
-                "prioriteit"
-            )
-            .value =
-            reminder.prioriteit ||
-            "normaal";
-
-
-        document
-            .getElementById(
-                "herhaling"
-            )
-            .value =
-            reminder.herhaling ||
-            "geen";
-
-
-        document
-            .getElementById(
-                "notities"
-            )
-            .value =
-            reminder.notities ||
-            "";
-
-
-        document
-            .getElementById(
-                "modalOverlay"
-            )
-            .classList.add(
-                "show"
-            );
+            .getElementById("modalBackdrop")
+            .classList.add("show");
 
     }
 
 
-    /* OPSLAAN */
+    function closeModal() {
+
+        document
+            .getElementById("modalBackdrop")
+            .classList.remove("show");
+
+        editingId = null;
+
+    }
+        /* ==========================================
+       SAVE
+    ========================================== */
 
     document
-        .getElementById(
-            "reminderForm"
-        )
+        .getElementById("reminderForm")
         .addEventListener(
             "submit",
             async event => {
@@ -2214,129 +2681,90 @@
                 event.preventDefault();
 
 
-                const payload = {
+                const wasEditing =
+                    Boolean(editingId);
+
+
+                const reminderData = {
 
                     titel:
-                        document
-                            .getElementById(
-                                "titel"
-                            )
-                            .value
-                            .trim(),
+                        document.getElementById("title").value.trim(),
 
                     beschrijving:
                         document
-                            .getElementById(
-                                "beschrijving"
-                            )
+                            .getElementById("description")
                             .value
-                            .trim() ||
-                        null,
+                            .trim() || null,
 
                     datum:
-                        document
-                            .getElementById(
-                                "datum"
-                            )
-                            .value ||
+                        document.getElementById("date").value ||
                         null,
 
                     tijd:
-                        document
-                            .getElementById(
-                                "tijd"
-                            )
-                            .value ||
+                        document.getElementById("time").value ||
                         null,
 
                     categorie:
-                        document
-                            .getElementById(
-                                "categorie"
-                            )
-                            .value ||
+                        document.getElementById("category").value ||
                         null,
 
                     prioriteit:
-                        document
-                            .getElementById(
-                                "prioriteit"
-                            )
-                            .value,
+                        document.getElementById("priority").value,
 
                     herhaling:
-                        document
-                            .getElementById(
-                                "herhaling"
-                            )
-                            .value,
+                        document.getElementById("repeat").value,
 
                     notities:
                         document
-                            .getElementById(
-                                "notities"
-                            )
+                            .getElementById("notes")
                             .value
-                            .trim() ||
-                        null
+                            .trim() || null
 
                 };
 
 
-                let error;
+                if (!reminderData.titel) {
 
+                    showToast(
+                        "Vul eerst een titel in."
+                    );
 
-                if (editingId) {
-
-                    const result =
-                        await supabaseClient
-                            .from(
-                                "reminders"
-                            )
-                            .update(
-                                payload
-                            )
-                            .eq(
-                                "id",
-                                editingId
-                            )
-                            .eq(
-                                "user_id",
-                                currentUser.id
-                            );
-
-
-                    error =
-                        result.error;
-
-                } else {
-
-                    const result =
-                        await supabaseClient
-                            .from(
-                                "reminders"
-                            )
-                            .insert({
-                                ...payload,
-                                user_id:
-                                    currentUser.id
-                            });
-
-
-                    error =
-                        result.error;
+                    return;
 
                 }
 
 
-                if (error) {
+                let result;
 
-                    console.error(
-                        error
-                    );
 
-                    alert(
-                        "Opslaan is niet gelukt. Controleer je verbinding en probeer opnieuw."
+                if (editingId) {
+
+                    result =
+                        await supabaseClient
+                            .from("reminders")
+                            .update(reminderData)
+                            .eq("id", editingId)
+                            .eq("user_id", currentUser.id);
+
+                } else {
+
+                    result =
+                        await supabaseClient
+                            .from("reminders")
+                            .insert({
+                                ...reminderData,
+                                user_id: currentUser.id
+                            });
+
+                }
+
+
+                if (result.error) {
+
+                    console.error(result.error);
+
+                    showToast(
+                        "Opslaan is niet gelukt."
                     );
 
                     return;
@@ -2348,46 +2776,51 @@
 
                 await loadReminders();
 
+
+                showToast(
+                    wasEditing
+                        ? "Herinnering bijgewerkt."
+                        : "Herinnering toegevoegd."
+                );
+
             }
         );
 
 
-    /* VOLTOOIEN */
+    /* ==========================================
+       COMPLETE
+    ========================================== */
 
-    async function toggleComplete(
-        id,
-        completed
-    ) {
+    async function toggleComplete(id) {
+
+        const reminder =
+            reminders.find(
+                item => item.id === id
+            );
+
+
+        if (!reminder) {
+            return;
+        }
+
 
         const {
             error
-        } =
-            await supabaseClient
-                .from(
-                    "reminders"
-                )
-                .update({
-                    afgerond:
-                        completed
-                })
-                .eq(
-                    "id",
-                    id
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
+        } = await supabaseClient
+            .from("reminders")
+            .update({
+                afgerond: !reminder.afgerond
+            })
+            .eq("id", id)
+            .eq("user_id", currentUser.id);
 
 
         if (error) {
 
-            console.error(
-                error
-            );
+            console.error(error);
 
-            alert(
-                "De herinnering kon niet worden bijgewerkt."
+            showToast(
+                "Kon de herinnering niet wijzigen."
             );
 
             return;
@@ -2397,10 +2830,19 @@
 
         await loadReminders();
 
+
+        showToast(
+            reminder.afgerond
+                ? "Herinnering opnieuw geopend."
+                : "Herinnering afgerond."
+        );
+
     }
 
 
-    /* VERWIJDEREN */
+    /* ==========================================
+       DELETE
+    ========================================== */
 
     async function deleteCurrentReminder() {
 
@@ -2420,32 +2862,25 @@
         }
 
 
+        const idToDelete =
+            editingId;
+
+
         const {
             error
-        } =
-            await supabaseClient
-                .from(
-                    "reminders"
-                )
-                .delete()
-                .eq(
-                    "id",
-                    editingId
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
+        } = await supabaseClient
+            .from("reminders")
+            .delete()
+            .eq("id", idToDelete)
+            .eq("user_id", currentUser.id);
 
 
         if (error) {
 
-            console.error(
-                error
-            );
+            console.error(error);
 
-            alert(
-                "De herinnering kon niet worden verwijderd."
+            showToast(
+                "Verwijderen is niet gelukt."
             );
 
             return;
@@ -2457,152 +2892,328 @@
 
         await loadReminders();
 
-    }
 
-
-    /* MODAL SLUITEN */
-
-    function closeModal() {
-
-        document
-            .getElementById(
-                "modalOverlay"
-            )
-            .classList.remove(
-                "show"
-            );
-
-
-        editingId =
-            null;
-
-    }
-
-
-    /* VANDAAG */
-
-    function getToday() {
-
-        const now =
-            new Date();
-
-
-        const year =
-            now.getFullYear();
-
-
-        const month =
-            String(
-                now.getMonth() + 1
-            ).padStart(
-                2,
-                "0"
-            );
-
-
-        const day =
-            String(
-                now.getDate()
-            ).padStart(
-                2,
-                "0"
-            );
-
-
-        return `${year}-${month}-${day}`;
-
-    }
-
-
-    /* DATUM */
-
-    function formatDate(
-        dateString
-    ) {
-
-        if (!dateString) {
-            return "";
-        }
-
-
-        const date =
-            new Date(
-                dateString +
-                "T00:00:00"
-            );
-
-
-        return date.toLocaleDateString(
-            "nl-NL",
-            {
-                day:
-                    "numeric",
-
-                month:
-                    "short",
-
-                year:
-                    "numeric"
-            }
+        showToast(
+            "Herinnering verwijderd."
         );
 
     }
 
 
-    /* HTML VEILIG MAKEN */
+    /* ==========================================
+       CATEGORY INFO
+    ========================================== */
 
-    function escapeHTML(
-        value
-    ) {
+    function showCategoryInfo() {
 
-        return String(
-            value
-        )
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
+        const categories = [
+            "Privé",
+            "Werk",
+            "Gezondheid",
+            "Thuis",
+            "Afspraken",
+            "Overig"
+        ];
+
+
+        const selected =
+            prompt(
+                "Kies een categorie:\n\n" +
+                categories.join("\n")
             );
+
+
+        if (!selected) {
+            return;
+        }
+
+
+        const cleanSelection =
+            selected.trim();
+
+
+        const matchedCategory =
+            categories.find(
+                category =>
+                    category.toLowerCase() ===
+                    cleanSelection.toLowerCase()
+            );
+
+
+        if (!matchedCategory) {
+
+            showToast(
+                "Deze categorie bestaat niet."
+            );
+
+            return;
+
+        }
+
+
+        currentFilter =
+            "all";
+
+        currentView =
+            "all";
+
+
+        document
+            .querySelectorAll(".filter-button")
+            .forEach(button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.filter === "all"
+                );
+
+            });
+
+
+        const searchInput =
+            document.getElementById("searchInput");
+
+
+        searchInput.value =
+            matchedCategory;
+
+
+        renderReminders();
+
+
+        window.scrollTo({
+            top: 300,
+            behavior: "smooth"
+        });
+
+
+        showToast(
+            "Categorie " +
+            matchedCategory +
+            " geselecteerd."
+        );
 
     }
 
 
-    /* MODAL BUITENKANT */
+    /* ==========================================
+       LOGOUT
+    ========================================== */
+
+    async function logout() {
+
+        const {
+            error
+        } =
+            await supabaseClient.auth.signOut();
+
+
+        if (error) {
+
+            console.error(error);
+
+            showToast(
+                "Uitloggen is niet gelukt."
+            );
+
+            return;
+
+        }
+
+
+        window.location.href =
+            "inloggen.html";
+
+    }
+
+
+    /* ==========================================
+       ICONS
+    ========================================== */
+
+    function getIconClass(category) {
+
+        switch (category) {
+
+            case "Afspraken":
+                return "icon-pink";
+
+            case "Privé":
+                return "icon-blue";
+
+            case "Werk":
+                return "icon-orange";
+
+            case "Gezondheid":
+                return "icon-pink";
+
+            case "Thuis":
+                return "icon-purple";
+
+            default:
+                return "icon-green";
+
+        }
+
+    }
+
+
+    function getIcon(category) {
+
+        switch (category) {
+
+            case "Afspraken":
+                return "□";
+
+            case "Privé":
+                return "◇";
+
+            case "Werk":
+                return "▣";
+
+            case "Gezondheid":
+                return "+";
+
+            case "Thuis":
+                return "⌂";
+
+            default:
+                return "✓";
+
+        }
+
+    }
+
+
+    /* ==========================================
+       HELPERS
+    ========================================== */
+
+    function capitalize(text) {
+
+        if (!text) {
+            return "";
+        }
+
+
+        return text.charAt(0).toUpperCase() +
+            text.slice(1);
+
+    }
+
+
+    function escapeHtml(value) {
+
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    let toastTimeout = null;
+
+
+    function showToast(message) {
+
+        const toast =
+            document.getElementById("toast");
+
+
+        toast.textContent =
+            message;
+
+
+        toast.classList.add("show");
+
+
+        if (toastTimeout) {
+            clearTimeout(toastTimeout);
+        }
+
+
+        toastTimeout =
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+            }, 2800);
+
+    }
+
+
+    /* ==========================================
+       CLOSE MODAL ON BACKDROP
+    ========================================== */
 
     document
-        .getElementById(
-            "modalOverlay"
-        )
+        .getElementById("modalBackdrop")
         .addEventListener(
             "click",
             event => {
 
                 if (
                     event.target.id ===
-                    "modalOverlay"
+                    "modalBackdrop"
                 ) {
-
                     closeModal();
-
                 }
 
             }
         );
+
+
+    /* ==========================================
+       ESC TO CLOSE
+    ========================================== */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape" &&
+                document
+                    .getElementById("modalBackdrop")
+                    .classList
+                    .contains("show")
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       AUTH STATE
+    ========================================== */
+
+    supabaseClient.auth.onAuthStateChange(
+        (event, session) => {
+
+            if (
+                event === "SIGNED_OUT" ||
+                !session
+            ) {
+
+                window.location.href =
+                    "inloggen.html";
+
+            }
+
+        }
+    );
 
 </script>
 
