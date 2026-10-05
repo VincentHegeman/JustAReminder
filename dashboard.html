@@ -1,355 +1,800 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Nooit Meer Vergeten</title>
 
-  <title>Dashboard – Nooit Meer Vergeten</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: #f5f7fa;
+            color: #17202a;
+            min-height: 100vh;
+        }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
-      color: #1f2937;
-    }
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
 
-    header {
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 18px 25px;
-    }
+        button {
+            cursor: pointer;
+        }
 
-    .header-inner {
-      max-width: 1000px;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
 
-    .logo {
-      font-size: 22px;
-      font-weight: bold;
-    }
+        /* SIDEBAR */
 
-    .logout {
-      background: #ef4444;
-      color: white;
-      border: 0;
-      padding: 10px 16px;
-      border-radius: 9px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 28px 18px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
 
-    .logout:hover {
-      background: #dc2626;
-    }
+        .logo {
+            padding: 0 14px 32px;
+        }
 
-    .container {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 20px;
-    }
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
 
-    .welcome {
-      margin-bottom: 30px;
-    }
+        .logo p {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
 
-    .welcome h1 {
-      margin-bottom: 8px;
-    }
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            padding: 0 14px;
+            margin-bottom: 10px;
+        }
 
-    .welcome p {
-      color: #6b7280;
-    }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 350px 1fr;
-      gap: 25px;
-    }
+        .menu button {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #cbd5e1;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
 
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 25px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-    }
+        .menu button:hover,
+        .menu button.active {
+            background: #1f2937;
+            color: white;
+        }
 
-    .card h2 {
-      margin-top: 0;
-    }
+        .sidebar-bottom {
+            margin-top: auto;
+        }
 
-    label {
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 6px;
-      font-weight: bold;
-    }
+        .logout {
+            width: 100%;
+            border: 1px solid #374151;
+            background: transparent;
+            color: #d1d5db;
+            padding: 11px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
 
-    input,
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 9px;
-      font-size: 15px;
-      font-family: Arial, sans-serif;
-    }
+        .logout:hover {
+            background: #1f2937;
+        }
 
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
+        /* MAIN */
 
-    .add-button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 13px;
-      border: 0;
-      border-radius: 10px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
 
-    .add-button:hover {
-      background: #1d4ed8;
-    }
+        .topbar {
+            height: 72px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 36px;
+        }
 
-    .add-button:disabled {
-      opacity: 0.6;
-    }
+        .search {
+            width: 340px;
+            position: relative;
+        }
 
-    .message {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 9px;
-      display: none;
-      line-height: 1.5;
-    }
+        .search input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            outline: none;
+            background: #f9fafb;
+        }
 
-    .error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+        .search input:focus {
+            border-color: #9ca3af;
+            background: white;
+        }
 
-    .success {
-      background: #dcfce7;
-      color: #166534;
-    }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .reminder {
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
 
-    .reminder.completed {
-      opacity: 0.6;
-    }
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
 
-    .reminder-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
+        .content {
+            padding: 36px;
+            max-width: 1500px;
+        }
 
-    .reminder-description {
-      color: #6b7280;
-      margin-bottom: 10px;
-      white-space: pre-wrap;
-    }
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 28px;
+        }
 
-    .reminder-date {
-      font-size: 14px;
-      color: #4b5563;
-      margin-bottom: 12px;
-    }
+        .welcome h2 {
+            font-size: 28px;
+            letter-spacing: -0.8px;
+        }
 
-    .actions {
-      display: flex;
-      gap: 8px;
-    }
+        .welcome p {
+            color: #6b7280;
+            margin-top: 7px;
+            font-size: 14px;
+        }
 
-    .actions button {
-      border: 0;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+        .primary-button {
+            border: none;
+            background: #111827;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
 
-    .complete {
-      background: #dcfce7;
-      color: #166534;
-    }
+        .primary-button:hover {
+            background: #1f2937;
+        }
 
-    .delete {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+        /* CARDS */
 
-    .empty {
-      text-align: center;
-      color: #6b7280;
-      padding: 30px 10px;
-    }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
 
-    .loading {
-      text-align: center;
-      color: #6b7280;
-      padding: 20px;
-    }
+        .stat {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 22px;
+        }
 
-    @media (max-width: 750px) {
+        .stat-label {
+            font-size: 13px;
+            color: #6b7280;
+        }
 
-      .grid {
-        grid-template-columns: 1fr;
-      }
+        .stat-number {
+            font-size: 30px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
 
-      .header-inner {
-        flex-direction: column;
-        align-items: stretch;
-      }
+        /* CONTENT GRID */
 
-      .logout {
-        width: 100%;
-      }
-    }
-  </style>
+        .section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-header h3 {
+            font-size: 16px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter {
+            border: 1px solid #e5e7eb;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 7px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .filter.active {
+            background: #111827;
+            color: white;
+            border-color: #111827;
+        }
+
+        /* REMINDERS */
+
+        .reminder {
+            padding: 18px 22px;
+            border-bottom: 1px solid #f0f1f3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .reminder:last-child {
+            border-bottom: none;
+        }
+
+        .reminder-main {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .check {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            background: white;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .check.done {
+            background: #111827;
+            border-color: #111827;
+            position: relative;
+        }
+
+        .check.done::after {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            left: 4px;
+            top: 1px;
+        }
+
+        .reminder-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .reminder.done .reminder-title {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+
+        .reminder-description {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .reminder-meta {
+            display: flex;
+            gap: 8px;
+            margin-top: 9px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 5px;
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .reminder-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .action-button {
+            border: 1px solid #e5e7eb;
+            background: white;
+            color: #4b5563;
+            padding: 7px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .action-button:hover {
+            background: #f9fafb;
+        }
+
+        .delete-button:hover {
+            color: #b91c1c;
+        }
+
+        .empty {
+            padding: 55px 20px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* MODAL */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.55);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 540px;
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h3 {
+            font-size: 19px;
+        }
+
+        .close {
+            border: none;
+            background: transparent;
+            font-size: 22px;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            padding: 11px 12px;
+            outline: none;
+            background: white;
+        }
+
+        .form-group textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 22px;
+        }
+
+        .secondary-button {
+            border: 1px solid #d1d5db;
+            background: white;
+            color: #374151;
+            padding: 11px 16px;
+            border-radius: 7px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .search {
+                width: 55%;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .welcome {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .reminder {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .reminder-actions {
+                margin-left: 34px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header>
+<div class="app">
 
-  <div class="header-inner">
+    <aside class="sidebar">
 
-    <div class="logo">
-      🧠 Nooit Meer Vergeten
-    </div>
-
-    <button class="logout" onclick="logout()">
-      Uitloggen
-    </button>
-
-  </div>
-
-</header>
-
-
-<div class="container">
-
-  <div class="welcome">
-
-    <h1 id="welcomeTitle">
-      Mijn herinneringen
-    </h1>
-
-    <p>
-      Voeg iets toe zodat je het nooit meer vergeet.
-    </p>
-
-  </div>
-
-
-  <div class="grid">
-
-
-    <!-- NIEUWE HERINNERING -->
-
-    <div class="card">
-
-      <h2>➕ Nieuwe herinnering</h2>
-
-      <label for="titel">
-        Titel
-      </label>
-
-      <input
-        type="text"
-        id="titel"
-        placeholder="Bijvoorbeeld: Verjaardag mama"
-      >
-
-
-      <label for="beschrijving">
-        Beschrijving
-      </label>
-
-      <textarea
-        id="beschrijving"
-        placeholder="Eventuele extra informatie..."
-      ></textarea>
-
-
-      <label for="datum">
-        Datum
-      </label>
-
-      <input
-        type="date"
-        id="datum"
-      >
-
-
-      <label for="tijd">
-        Tijd
-      </label>
-
-      <input
-        type="time"
-        id="tijd"
-      >
-
-
-      <button
-        class="add-button"
-        id="addButton"
-        onclick="addReminder()"
-      >
-        Herinnering toevoegen
-      </button>
-
-
-      <div
-        id="message"
-        class="message"
-      ></div>
-
-    </div>
-
-
-    <!-- HERINNERINGEN -->
-
-    <div class="card">
-
-      <h2>📋 Mijn herinneringen</h2>
-
-      <div id="reminders">
-
-        <div class="loading">
-          Herinneringen laden...
+        <div class="logo">
+            <h1>Nooit Meer Vergeten</h1>
+            <p>Persoonlijk overzicht</p>
         </div>
 
-      </div>
+        <div class="menu-title">Menu</div>
+
+        <nav class="menu">
+            <button class="active" onclick="showSection('overzicht')">
+                Overzicht
+            </button>
+
+            <button onclick="showSection('vandaag')">
+                Vandaag
+            </button>
+
+            <button onclick="showSection('aankomend')">
+                Aankomend
+            </button>
+
+            <button onclick="showSection('voltooid')">
+                Voltooid
+            </button>
+
+            <button onclick="openModal()">
+                Nieuwe herinnering
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button class="logout" onclick="logout()">
+                Uitloggen
+            </button>
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="search">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Zoek in herinneringen..."
+                    oninput="renderReminders()"
+                >
+            </div>
+
+            <div class="user-info">
+                <div class="avatar" id="avatar">?</div>
+
+                <div class="user-name" id="userName">
+                    Gebruiker
+                </div>
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <div class="welcome">
+
+                <div>
+                    <h2 id="welcomeTitle">Overzicht</h2>
+                    <p id="welcomeText">
+                        Hier staat je persoonlijke overzicht.
+                    </p>
+                </div>
+
+                <button class="primary-button" onclick="openModal()">
+                    Nieuwe herinnering
+                </button>
+
+            </div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <div class="stat-label">Totaal</div>
+                    <div class="stat-number" id="totalCount">0</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-label">Vandaag</div>
+                    <div class="stat-number" id="todayCount">0</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-label">Aankomend</div>
+                    <div class="stat-number" id="upcomingCount">0</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-label">Voltooid</div>
+                    <div class="stat-number" id="completedCount">0</div>
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <div class="section-header">
+
+                    <h3 id="sectionTitle">Herinneringen</h3>
+
+                    <div class="filters">
+
+                        <button
+                            class="filter active"
+                            onclick="setFilter('all', this)">
+                            Alles
+                        </button>
+
+                        <button
+                            class="filter"
+                            onclick="setFilter('open', this)">
+                            Openstaand
+                        </button>
+
+                        <button
+                            class="filter"
+                            onclick="setFilter('done', this)">
+                            Voltooid
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div id="reminderList"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal-overlay" id="modal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3 id="modalTitle">
+                Nieuwe herinnering
+            </h3>
+
+            <button class="close" onclick="closeModal()">
+                ×
+            </button>
+
+        </div>
+
+        <form id="reminderForm">
+
+            <div class="form-group">
+
+                <label for="title">
+                    Titel
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="Bijvoorbeeld: Tandartsafspraak"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="description">
+                    Beschrijving
+                </label>
+
+                <textarea
+                    id="description"
+                    placeholder="Extra informatie..."
+                ></textarea>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="date">
+                        Datum
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="time">
+                        Tijd
+                    </label>
+
+                    <input
+                        type="time"
+                        id="time"
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="closeModal()">
+                    Annuleren
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-button">
+                    Opslaan
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
-
-  </div>
 
 </div>
 
@@ -357,502 +802,723 @@
 <script>
 
 const SUPABASE_URL =
-  "https://fqupzovqwzaqkatcfbka.supabase.co";
+    "https://fqupzovqwzaqkatcfbka.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_ahp4b1jbybZmcQDDkkdNrg_IvbVXZsY";
+    "sb_publishable_ahp4b1jbybZmcQDDkkdNrg_IvbVXZsY";
 
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 
 let currentUser = null;
+let reminders = [];
+let currentFilter = "all";
+let editingId = null;
 
 
-/* =========================
-   BERICHT
-========================= */
+/* START */
 
-function showMessage(text, type) {
+async function init() {
 
-  const message =
-    document.getElementById("message");
+    const {
+        data: {
+            session
+        }
+    } = await supabaseClient.auth.getSession();
 
-  message.textContent = text;
-
-  message.className =
-    "message " + type;
-
-  message.style.display = "block";
-}
-
-
-/* =========================
-   CONTROLEREN OF INGELOGD
-========================= */
-
-async function checkUser() {
-
-  const {
-    data: {
-      session
+    if (!session) {
+        window.location.href = "/inloggen.html";
+        return;
     }
-  } = await supabaseClient.auth.getSession();
 
+    currentUser = session.user;
 
-  if (!session) {
+    const naam =
+        currentUser.user_metadata?.naam ||
+        currentUser.email?.split("@")[0] ||
+        "Gebruiker";
 
-    window.location.href =
-      "/inloggen.html";
+    document.getElementById("userName").textContent = naam;
 
-    return;
-  }
+    document.getElementById("avatar").textContent =
+        naam.charAt(0).toUpperCase();
 
-
-  currentUser =
-    session.user;
-
-
-  const naam =
-    currentUser.user_metadata?.naam;
-
-
-  if (naam) {
-
-    document.getElementById(
-      "welcomeTitle"
-    ).textContent =
-      "Welkom, " + naam + " 👋";
-
-  }
-
-
-  loadReminders();
+    await loadReminders();
 }
 
 
-/* =========================
-   HERINNERING TOEVOEGEN
-========================= */
-
-async function addReminder() {
-
-  const titel =
-    document.getElementById("titel").value.trim();
-
-  const beschrijving =
-    document.getElementById("beschrijving").value.trim();
-
-  const datum =
-    document.getElementById("datum").value;
-
-  const tijd =
-    document.getElementById("tijd").value;
-
-
-  if (!titel) {
-
-    showMessage(
-      "Vul een titel in.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const button =
-    document.getElementById("addButton");
-
-  button.disabled = true;
-
-  button.textContent =
-    "Toevoegen...";
-
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-
-    .from("reminders")
-
-    .insert({
-
-      user_id:
-        currentUser.id,
-
-      titel:
-        titel,
-
-      beschrijving:
-        beschrijving || null,
-
-      datum:
-        datum || null,
-
-      tijd:
-        tijd || null
-
-    })
-
-    .select();
-
-
-  if (error) {
-
-    console.error(error);
-
-    showMessage(
-      "Herinnering toevoegen mislukt: " +
-      error.message,
-      "error"
-    );
-
-    button.disabled = false;
-
-    button.textContent =
-      "Herinnering toevoegen";
-
-    return;
-  }
-
-
-  showMessage(
-    "Herinnering toegevoegd! 🎉",
-    "success"
-  );
-
-
-  document.getElementById(
-    "titel"
-  ).value = "";
-
-  document.getElementById(
-    "beschrijving"
-  ).value = "";
-
-  document.getElementById(
-    "datum"
-  ).value = "";
-
-  document.getElementById(
-    "tijd"
-  ).value = "";
-
-
-  button.disabled = false;
-
-  button.textContent =
-    "Herinnering toevoegen";
-
-
-  loadReminders();
-}
-
-
-/* =========================
-   HERINNERINGEN LADEN
-========================= */
+/* REMINDERS LADEN */
 
 async function loadReminders() {
 
-  const container =
-    document.getElementById("reminders");
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("reminders")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .order("datum", { ascending: true })
+        .order("tijd", { ascending: true });
 
-
-  container.innerHTML =
-    '<div class="loading">Laden...</div>';
-
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-
-    .from("reminders")
-
-    .select("*")
-
-    .eq(
-      "user_id",
-      currentUser.id
-    )
-
-    .order(
-      "datum",
-      {
-        ascending: true,
-        nullsFirst: false
-      }
-    );
-
-
-  if (error) {
-
-    console.error(error);
-
-    container.innerHTML =
-      '<div class="empty">Herinneringen konden niet worden geladen.</div>';
-
-    return;
-  }
-
-
-  if (!data || data.length === 0) {
-
-    container.innerHTML =
-      '<div class="empty">Je hebt nog geen herinneringen.</div>';
-
-    return;
-  }
-
-
-  container.innerHTML = "";
-
-
-  data.forEach(function(reminder) {
-
-    const div =
-      document.createElement("div");
-
-
-    div.className =
-      "reminder" +
-      (reminder.afgerond
-        ? " completed"
-        : "");
-
-
-    let dateText = "";
-
-
-    if (reminder.datum) {
-
-      dateText +=
-        "📅 " +
-        formatDate(reminder.datum);
-
+    if (error) {
+        console.error(error);
+        return;
     }
 
+    reminders = data || [];
 
-    if (reminder.tijd) {
-
-      dateText +=
-        "  ⏰ " +
-        reminder.tijd.substring(0, 5);
-
-    }
-
-
-    div.innerHTML = `
-
-      <div class="reminder-title">
-        ${escapeHtml(reminder.titel)}
-      </div>
-
-      ${
-        reminder.beschrijving
-          ? `<div class="reminder-description">
-              ${escapeHtml(reminder.beschrijving)}
-             </div>`
-          : ""
-      }
-
-      ${
-        dateText
-          ? `<div class="reminder-date">
-              ${dateText}
-             </div>`
-          : ""
-      }
-
-      <div class="actions">
-
-        <button
-          class="complete"
-          onclick="toggleReminder(${reminder.id}, ${reminder.afgerond})"
-        >
-          ${
-            reminder.afgerond
-              ? "↩️ Openmaken"
-              : "✅ Afronden"
-          }
-        </button>
-
-        <button
-          class="delete"
-          onclick="deleteReminder(${reminder.id})"
-        >
-          🗑️ Verwijderen
-        </button>
-
-      </div>
-
-    `;
-
-
-    container.appendChild(div);
-
-  });
-
+    updateStats();
+    renderReminders();
 }
 
 
-/* =========================
-   AFRONDEN / OPENMAKEN
-========================= */
+/* STATISTIEKEN */
 
-async function toggleReminder(
-  id,
-  currentStatus
-) {
+function updateStats() {
 
-  const {
-    error
-  } = await supabaseClient
+    const today =
+        new Date().toISOString().split("T")[0];
 
-    .from("reminders")
+    const total =
+        reminders.length;
 
-    .update({
-      afgerond:
-        !currentStatus
-    })
+    const completed =
+        reminders.filter(r => r.afgerond).length;
 
-    .eq(
-      "id",
-      id
-    )
+    const todayItems =
+        reminders.filter(r =>
+            r.datum === today &&
+            !r.afgerond
+        ).length;
 
-    .eq(
-      "user_id",
-      currentUser.id
-    );
+    const upcoming =
+        reminders.filter(r =>
+            r.datum &&
+            r.datum > today &&
+            !r.afgerond
+        ).length;
 
+    document.getElementById("totalCount").textContent =
+        total;
 
-  if (error) {
+    document.getElementById("todayCount").textContent =
+        todayItems;
 
-    alert(
-      "Kon herinnering niet aanpassen: " +
-      error.message
-    );
+    document.getElementById("upcomingCount").textContent =
+        upcoming;
 
-    return;
-  }
-
-
-  loadReminders();
+    document.getElementById("completedCount").textContent =
+        completed;
 }
 
 
-/* =========================
-   VERWIJDEREN
-========================= */
+/* LIJST */
+
+function renderReminders() {
+
+    const list =
+        document.getElementById("reminderList");
+
+    const search =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+    let filtered =
+        reminders.filter(reminder => {
+
+            const matchesSearch =
+                reminder.titel
+                    .toLowerCase()
+                    .includes(search) ||
+                (reminder.beschrijving || "")
+                    .toLowerCase()
+                    .includes(search);
+
+            if (!matchesSearch) {
+                return false;
+            }
+
+            if (currentFilter === "open") {
+                return !reminder.afgerond;
+            }
+
+            if (currentFilter === "done") {
+                return reminder.afgerond;
+            }
+
+            return true;
+        });
+
+    if (!filtered.length) {
+
+        list.innerHTML = `
+            <div class="empty">
+                Geen herinneringen gevonden.
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML =
+        filtered.map(reminder => {
+
+            const dateText =
+                reminder.datum
+                    ? formatDate(reminder.datum)
+                    : "Geen datum";
+
+            const timeText =
+                reminder.tijd
+                    ? reminder.tijd.substring(0, 5)
+                    : "";
+
+            return `
+                <div class="reminder ${reminder.afgerond ? "done" : ""}">
+
+                    <div class="reminder-main">
+
+                        <button
+                            class="check ${reminder.afgerond ? "done" : ""}"
+                            onclick="toggleComplete(${reminder.id}, ${!reminder.afgerond})">
+                        </button>
+
+                        <div>
+
+                            <div class="reminder-title">
+                                ${escapeHtml(reminder.titel)}
+                            </div>
+
+                            ${
+                                reminder.beschrijving
+                                ? `
+                                    <div class="reminder-description">
+                                        ${escapeHtml(reminder.beschrijving)}
+                                    </div>
+                                  `
+                                : ""
+                            }
+
+                            <div class="reminder-meta">
+
+                                <span class="badge">
+                                    ${dateText}
+                                </span>
+
+                                ${
+                                    timeText
+                                    ? `
+                                        <span class="badge">
+                                            ${timeText}
+                                        </span>
+                                      `
+                                    : ""
+                                }
+
+                                <span class="badge">
+                                    ${reminder.afgerond ? "Voltooid" : "Openstaand"}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="reminder-actions">
+
+                        <button
+                            class="action-button"
+                            onclick="editReminder(${reminder.id})">
+                            Bewerken
+                        </button>
+
+                        <button
+                            class="action-button delete-button"
+                            onclick="deleteReminder(${reminder.id})">
+                            Verwijderen
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+/* FILTER */
+
+function setFilter(filter, button) {
+
+    currentFilter = filter;
+
+    document
+        .querySelectorAll(".filter")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+    renderReminders();
+}
+
+
+/* MODAL */
+
+function openModal() {
+
+    editingId = null;
+
+    document.getElementById("modalTitle").textContent =
+        "Nieuwe herinnering";
+
+    document.getElementById("reminderForm").reset();
+
+    document
+        .getElementById("modal")
+        .classList.add("show");
+}
+
+
+function closeModal() {
+
+    document
+        .getElementById("modal")
+        .classList.remove("show");
+
+    editingId = null;
+}
+
+
+/* TOEVOEGEN / BEWERKEN */
+
+document
+    .getElementById("reminderForm")
+    .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const reminder = {
+
+            titel:
+                document.getElementById("title").value.trim(),
+
+            beschrijving:
+                document.getElementById("description").value.trim() ||
+                null,
+
+            datum:
+                document.getElementById("date").value ||
+                null,
+
+            tijd:
+                document.getElementById("time").value ||
+                null
+        };
+
+
+        if (!reminder.titel) {
+            return;
+        }
+
+
+        if (editingId) {
+
+            const {
+                error
+            } = await supabaseClient
+                .from("reminders")
+                .update(reminder)
+                .eq("id", editingId)
+                .eq("user_id", currentUser.id);
+
+            if (error) {
+                alert("De herinnering kon niet worden aangepast.");
+                console.error(error);
+                return;
+            }
+
+        } else {
+
+            const {
+                error
+            } = await supabaseClient
+                .from("reminders")
+                .insert({
+                    ...reminder,
+                    user_id: currentUser.id,
+                    afgerond: false
+                });
+
+            if (error) {
+                alert("De herinnering kon niet worden opgeslagen.");
+                console.error(error);
+                return;
+            }
+        }
+
+
+        closeModal();
+
+        await loadReminders();
+
+    });
+
+
+/* BEWERKEN */
+
+function editReminder(id) {
+
+    const reminder =
+        reminders.find(r => r.id === id);
+
+    if (!reminder) {
+        return;
+    }
+
+    editingId = id;
+
+    document.getElementById("modalTitle").textContent =
+        "Herinnering bewerken";
+
+    document.getElementById("title").value =
+        reminder.titel || "";
+
+    document.getElementById("description").value =
+        reminder.beschrijving || "";
+
+    document.getElementById("date").value =
+        reminder.datum || "";
+
+    document.getElementById("time").value =
+        reminder.tijd
+            ? reminder.tijd.substring(0, 5)
+            : "";
+
+    document
+        .getElementById("modal")
+        .classList.add("show");
+}
+
+
+/* VOLTOOIEN */
+
+async function toggleComplete(id, completed) {
+
+    const {
+        error
+    } = await supabaseClient
+        .from("reminders")
+        .update({
+            afgerond: completed
+        })
+        .eq("id", id)
+        .eq("user_id", currentUser.id);
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    await loadReminders();
+}
+
+
+/* VERWIJDEREN */
 
 async function deleteReminder(id) {
 
-  const bevestiging =
-    confirm(
-      "Weet je zeker dat je deze herinnering wilt verwijderen?"
-    );
+    const reminder =
+        reminders.find(r => r.id === id);
 
+    if (!reminder) {
+        return;
+    }
 
-  if (!bevestiging) {
-    return;
-  }
+    const confirmed =
+        confirm(
+            `Weet je zeker dat je "${reminder.titel}" wilt verwijderen?`
+        );
 
+    if (!confirmed) {
+        return;
+    }
 
-  const {
-    error
-  } = await supabaseClient
+    const {
+        error
+    } = await supabaseClient
+        .from("reminders")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", currentUser.id);
 
-    .from("reminders")
+    if (error) {
+        console.error(error);
+        return;
+    }
 
-    .delete()
-
-    .eq(
-      "id",
-      id
-    )
-
-    .eq(
-      "user_id",
-      currentUser.id
-    );
-
-
-  if (error) {
-
-    alert(
-      "Kon herinnering niet verwijderen: " +
-      error.message
-    );
-
-    return;
-  }
-
-
-  loadReminders();
+    await loadReminders();
 }
 
 
-/* =========================
-   UITLOGGEN
-========================= */
+/* MENU */
+
+function showSection(section) {
+
+    document
+        .querySelectorAll(".menu button")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    const titles = {
+
+        overzicht: [
+            "Overzicht",
+            "Hier staat je persoonlijke overzicht."
+        ],
+
+        vandaag: [
+            "Vandaag",
+            "Herinneringen die vandaag gepland staan."
+        ],
+
+        aankomend: [
+            "Aankomend",
+            "Je komende herinneringen."
+        ],
+
+        voltooid: [
+            "Voltooid",
+            "Herinneringen die je hebt afgerond."
+        ]
+    };
+
+    if (!titles[section]) {
+        return;
+    }
+
+    document.getElementById("welcomeTitle").textContent =
+        titles[section][0];
+
+    document.getElementById("welcomeText").textContent =
+        titles[section][1];
+
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+
+    if (section === "vandaag") {
+
+        currentFilter = "today";
+
+    } else if (section === "aankomend") {
+
+        currentFilter = "upcoming";
+
+    } else if (section === "voltooid") {
+
+        currentFilter = "done";
+
+    } else {
+
+        currentFilter = "all";
+
+    }
+
+    renderSpecialSection();
+}
+
+
+function renderSpecialSection() {
+
+    const list =
+        document.getElementById("reminderList");
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+    let filtered = reminders;
+
+    if (currentFilter === "today") {
+
+        filtered =
+            reminders.filter(r =>
+                r.datum === today &&
+                !r.afgerond
+            );
+
+    }
+
+    if (currentFilter === "upcoming") {
+
+        filtered =
+            reminders.filter(r =>
+                r.datum &&
+                r.datum > today &&
+                !r.afgerond
+            );
+
+    }
+
+    if (currentFilter === "done") {
+
+        filtered =
+            reminders.filter(r =>
+                r.afgerond
+            );
+
+    }
+
+    if (!filtered.length) {
+
+        list.innerHTML = `
+            <div class="empty">
+                Geen herinneringen gevonden.
+            </div>
+        `;
+
+        return;
+    }
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+    searchInput.value = "";
+
+    list.innerHTML =
+        filtered.map(reminder => {
+
+            const dateText =
+                reminder.datum
+                    ? formatDate(reminder.datum)
+                    : "Geen datum";
+
+            const timeText =
+                reminder.tijd
+                    ? reminder.tijd.substring(0, 5)
+                    : "";
+
+            return `
+                <div class="reminder ${reminder.afgerond ? "done" : ""}">
+
+                    <div class="reminder-main">
+
+                        <button
+                            class="check ${reminder.afgerond ? "done" : ""}"
+                            onclick="toggleComplete(${reminder.id}, ${!reminder.afgerond})">
+                        </button>
+
+                        <div>
+
+                            <div class="reminder-title">
+                                ${escapeHtml(reminder.titel)}
+                            </div>
+
+                            ${
+                                reminder.beschrijving
+                                ? `
+                                    <div class="reminder-description">
+                                        ${escapeHtml(reminder.beschrijving)}
+                                    </div>
+                                  `
+                                : ""
+                            }
+
+                            <div class="reminder-meta">
+
+                                <span class="badge">
+                                    ${dateText}
+                                </span>
+
+                                ${
+                                    timeText
+                                    ? `
+                                        <span class="badge">
+                                            ${timeText}
+                                        </span>
+                                      `
+                                    : ""
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="reminder-actions">
+
+                        <button
+                            class="action-button"
+                            onclick="editReminder(${reminder.id})">
+                            Bewerken
+                        </button>
+
+                        <button
+                            class="action-button delete-button"
+                            onclick="deleteReminder(${reminder.id})">
+                            Verwijderen
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+/* DATUM */
+
+function formatDate(date) {
+
+    const parts =
+        date.split("-");
+
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}
+
+
+/* VEILIG HTML */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+/* UITLOGGEN */
 
 async function logout() {
 
-  await supabaseClient.auth.signOut();
+    await supabaseClient.auth.signOut();
 
-  window.location.href =
-    "/inloggen.html";
+    window.location.href =
+        "/inloggen.html";
 }
 
 
-/* =========================
-   DATUM
-========================= */
+/* STARTEN */
 
-function formatDate(dateString) {
-
-  const parts =
-    dateString.split("-");
-
-
-  return (
-    parts[2] +
-    "-" +
-    parts[1] +
-    "-" +
-    parts[0]
-  );
-}
-
-
-/* =========================
-   VEILIG TEKST WEERGEVEN
-========================= */
-
-function escapeHtml(text) {
-
-  const div =
-    document.createElement("div");
-
-  div.textContent =
-    text;
-
-  return div.innerHTML;
-}
-
-
-/* =========================
-   START
-========================= */
-
-checkUser();
+init();
 
 </script>
 
