@@ -187,6 +187,23 @@
             background: #363634;
         }
 
+        /* PAGE TITLE */
+
+        .page-heading {
+            margin-bottom: 18px;
+        }
+
+        .page-heading h3 {
+            font-size: 20px;
+            letter-spacing: -0.3px;
+        }
+
+        .page-heading p {
+            color: #888;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
         /* STATS */
 
         .stats {
@@ -275,6 +292,11 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
+            transition: 0.15s;
+        }
+
+        .reminder:hover {
+            border-color: #d7d0c6;
         }
 
         .check {
@@ -299,7 +321,7 @@
             font-size: 13px;
             position: absolute;
             left: 3px;
-            top: 0px;
+            top: 0;
         }
 
         .reminder-main {
@@ -499,6 +521,7 @@
         }
 
         @media (max-width: 1050px) {
+
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -509,6 +532,7 @@
         }
 
         @media (max-width: 800px) {
+
             .sidebar {
                 display: none;
             }
@@ -554,6 +578,7 @@
         }
 
         @media (max-width: 550px) {
+
             .stats {
                 grid-template-columns: 1fr 1fr;
             }
@@ -568,6 +593,10 @@
 
             .card {
                 padding: 15px;
+            }
+
+            .filters {
+                flex-wrap: wrap;
             }
 
             .form-row {
@@ -585,6 +614,8 @@
 
 <div class="app">
 
+    <!-- SIDEBAR -->
+
     <aside class="sidebar">
 
         <div class="logo">
@@ -593,42 +624,88 @@
         </div>
 
         <nav class="nav">
-            <a href="dashboard.html" class="active">Overzicht</a>
-            <a href="#" onclick="setFilter('today'); return false;">Vandaag</a>
-            <a href="#" onclick="setFilter('upcoming'); return false;">Aankomend</a>
-            <a href="#" onclick="setFilter('completed'); return false;">Voltooid</a>
-            <a href="#" onclick="openNewReminder(); return false;">Nieuwe herinnering</a>
+
+            <a href="#" data-page="all" onclick="showPage('all'); return false;">
+                Overzicht
+            </a>
+
+            <a href="#" data-page="today" onclick="showPage('today'); return false;">
+                Vandaag
+            </a>
+
+            <a href="#" data-page="upcoming" onclick="showPage('upcoming'); return false;">
+                Aankomend
+            </a>
+
+            <a href="#" data-page="completed" onclick="showPage('completed'); return false;">
+                Voltooid
+            </a>
+
+            <a href="#" onclick="openNewReminder(); return false;">
+                Nieuwe herinnering
+            </a>
+
         </nav>
 
         <div class="sidebar-bottom">
+
             <a href="instellingen.html" class="profile-mini">
-                <div class="avatar" id="sidebarAvatar">V</div>
+
+                <div class="avatar" id="sidebarAvatar">
+                    V
+                </div>
 
                 <div>
-                    <strong id="sidebarName">Laden...</strong>
-                    <span>Instellingen</span>
+                    <strong id="sidebarName">
+                        Laden...
+                    </strong>
+
+                    <span>
+                        Instellingen
+                    </span>
                 </div>
+
             </a>
+
         </div>
 
     </aside>
 
 
+    <!-- MAIN -->
+
     <main class="main">
 
         <div class="mobile-header">
-            <strong>Nooit Meer Vergeten</strong>
-            <a href="instellingen.html">Instellingen</a>
+
+            <strong>
+                Nooit Meer Vergeten
+            </strong>
+
+            <a href="instellingen.html">
+                Instellingen
+            </a>
+
         </div>
+
 
         <div class="topbar">
 
             <div class="welcome">
-                <h2 id="welcomeTitle">Goedendag</h2>
-                <p>Hier staat je persoonlijke overzicht.</p>
+
+                <h2 id="welcomeTitle">
+                    Goedendag
+                </h2>
+
+                <p>
+                    Hier staat je persoonlijke overzicht.
+                </p>
+
             </div>
 
+
             <div class="top-actions">
+
                 <input
                     type="search"
                     id="searchInput"
@@ -636,38 +713,104 @@
                     placeholder="Zoeken..."
                 >
 
-                <button class="primary-btn" onclick="openNewReminder()">
+                <button
+                    class="primary-btn"
+                    onclick="openNewReminder()"
+                >
                     + Nieuwe
                 </button>
+
             </div>
 
         </div>
 
 
+        <!-- PAGE TITLE -->
+
+        <div class="page-heading">
+
+            <h3 id="pageTitle">
+                Overzicht
+            </h3>
+
+            <p id="pageDescription">
+                Al je herinneringen op één plek.
+            </p>
+
+        </div>
+
+
+        <!-- STATS -->
+
         <section class="stats">
 
             <div class="stat">
-                <div class="stat-label">Totaal</div>
-                <div class="stat-value" id="totalCount">0</div>
+
+                <div class="stat-label">
+                    Totaal
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalCount"
+                >
+                    0
+                </div>
+
             </div>
 
-            <div class="stat">
-                <div class="stat-label">Vandaag</div>
-                <div class="stat-value" id="todayCount">0</div>
-            </div>
 
             <div class="stat">
-                <div class="stat-label">Aankomend</div>
-                <div class="stat-value" id="upcomingCount">0</div>
+
+                <div class="stat-label">
+                    Vandaag
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="todayCount"
+                >
+                    0
+                </div>
+
             </div>
 
+
             <div class="stat">
-                <div class="stat-label">Voltooid</div>
-                <div class="stat-value" id="completedCount">0</div>
+
+                <div class="stat-label">
+                    Aankomend
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="upcomingCount"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-label">
+                    Voltooid
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="completedCount"
+                >
+                    0
+                </div>
+
             </div>
 
         </section>
 
+
+        <!-- CONTENT -->
 
         <div class="content-grid">
 
@@ -675,39 +818,70 @@
 
                 <div class="card-header">
 
-                    <h3>Herinneringen</h3>
+                    <h3 id="listTitle">
+                        Herinneringen
+                    </h3>
+
 
                     <div class="filters">
-                        <button class="filter active" onclick="setFilter('all', this)">
+
+                        <button
+                            class="filter active"
+                            onclick="setQuickFilter('all', this)"
+                        >
                             Alles
                         </button>
 
-                        <button class="filter" onclick="setFilter('open', this)">
+                        <button
+                            class="filter"
+                            onclick="setQuickFilter('open', this)"
+                        >
                             Openstaand
                         </button>
 
-                        <button class="filter" onclick="setFilter('completed', this)">
+                        <button
+                            class="filter"
+                            onclick="setQuickFilter('completed', this)"
+                        >
                             Voltooid
                         </button>
+
                     </div>
 
                 </div>
 
-                <div id="remindersList" class="reminders">
-                    <div class="empty">Herinneringen laden...</div>
+
+                <div
+                    id="remindersList"
+                    class="reminders"
+                >
+                    <div class="empty">
+                        Herinneringen laden...
+                    </div>
                 </div>
 
             </section>
 
 
+            <!-- UPCOMING -->
+
             <aside class="card">
 
                 <div class="card-header">
-                    <h3>Aankomend</h3>
+
+                    <h3>
+                        Aankomend
+                    </h3>
+
                 </div>
 
+
                 <div id="upcomingList">
-                    <div class="empty">Laden...</div>
+
+                    <div class="empty">
+                        Laden...
+                    </div>
+
                 </div>
 
             </aside>
@@ -721,23 +895,36 @@
 
 <!-- MODAL -->
 
-<div class="modal-overlay" id="modalOverlay">
+<div
+    class="modal-overlay"
+    id="modalOverlay"
+>
 
     <div class="modal">
 
         <div class="modal-header">
-            <h3 id="modalTitle">Nieuwe herinnering</h3>
 
-            <button class="close" onclick="closeModal()">
+            <h3 id="modalTitle">
+                Nieuwe herinnering
+            </h3>
+
+            <button
+                class="close"
+                onclick="closeModal()"
+            >
                 ×
             </button>
+
         </div>
 
 
         <form id="reminderForm">
 
             <div class="form-group">
-                <label for="titel">Titel</label>
+
+                <label for="titel">
+                    Titel
+                </label>
 
                 <input
                     type="text"
@@ -745,38 +932,51 @@
                     required
                     placeholder="Bijvoorbeeld: Tandartsafspraak"
                 >
+
             </div>
 
 
             <div class="form-group">
-                <label for="beschrijving">Beschrijving</label>
+
+                <label for="beschrijving">
+                    Beschrijving
+                </label>
 
                 <textarea
                     id="beschrijving"
                     placeholder="Extra informatie..."
                 ></textarea>
+
             </div>
 
 
             <div class="form-row">
 
                 <div class="form-group">
-                    <label for="datum">Datum</label>
+
+                    <label for="datum">
+                        Datum
+                    </label>
 
                     <input
                         type="date"
                         id="datum"
                     >
+
                 </div>
 
 
                 <div class="form-group">
-                    <label for="tijd">Tijd</label>
+
+                    <label for="tijd">
+                        Tijd
+                    </label>
 
                     <input
                         type="time"
                         id="tijd"
                     >
+
                 </div>
 
             </div>
@@ -785,53 +985,120 @@
             <div class="form-row">
 
                 <div class="form-group">
-                    <label for="categorie">Categorie</label>
+
+                    <label for="categorie">
+                        Categorie
+                    </label>
 
                     <select id="categorie">
-                        <option value="">Geen categorie</option>
-                        <option value="Privé">Privé</option>
-                        <option value="Werk">Werk</option>
-                        <option value="Gezondheid">Gezondheid</option>
-                        <option value="Familie">Familie</option>
-                        <option value="Financiën">Financiën</option>
-                        <option value="Overig">Overig</option>
+
+                        <option value="">
+                            Geen categorie
+                        </option>
+
+                        <option value="Privé">
+                            Privé
+                        </option>
+
+                        <option value="Werk">
+                            Werk
+                        </option>
+
+                        <option value="Gezondheid">
+                            Gezondheid
+                        </option>
+
+                        <option value="Familie">
+                            Familie
+                        </option>
+
+                        <option value="Financiën">
+                            Financiën
+                        </option>
+
+                        <option value="Overig">
+                            Overig
+                        </option>
+
                     </select>
+
                 </div>
 
 
                 <div class="form-group">
-                    <label for="prioriteit">Prioriteit</label>
+
+                    <label for="prioriteit">
+                        Prioriteit
+                    </label>
 
                     <select id="prioriteit">
-                        <option value="laag">Laag</option>
-                        <option value="normaal" selected>Normaal</option>
-                        <option value="hoog">Hoog</option>
+
+                        <option value="laag">
+                            Laag
+                        </option>
+
+                        <option
+                            value="normaal"
+                            selected
+                        >
+                            Normaal
+                        </option>
+
+                        <option value="hoog">
+                            Hoog
+                        </option>
+
                     </select>
+
                 </div>
 
             </div>
 
 
             <div class="form-group">
-                <label for="herhaling">Herhaling</label>
+
+                <label for="herhaling">
+                    Herhaling
+                </label>
 
                 <select id="herhaling">
-                    <option value="geen">Geen</option>
-                    <option value="dagelijks">Dagelijks</option>
-                    <option value="wekelijks">Wekelijks</option>
-                    <option value="maandelijks">Maandelijks</option>
-                    <option value="jaarlijks">Jaarlijks</option>
+
+                    <option value="geen">
+                        Geen
+                    </option>
+
+                    <option value="dagelijks">
+                        Dagelijks
+                    </option>
+
+                    <option value="wekelijks">
+                        Wekelijks
+                    </option>
+
+                    <option value="maandelijks">
+                        Maandelijks
+                    </option>
+
+                    <option value="jaarlijks">
+                        Jaarlijks
+                    </option>
+
                 </select>
+
             </div>
 
 
             <div class="form-group">
-                <label for="notities">Notities</label>
+
+                <label for="notities">
+                    Notities
+                </label>
 
                 <textarea
                     id="notities"
                     placeholder="Eventuele extra notities..."
                 ></textarea>
+
             </div>
 
 
@@ -847,7 +1114,15 @@
                     Verwijderen
                 </button>
 
-                <div style="margin-left:auto; display:flex; gap:8px;">
+
+                <div
+                    style="
+                        margin-left:auto;
+                        display:flex;
+                        gap:8px;
+                    "
+                >
+
                     <button
                         type="button"
                         class="small-btn"
@@ -862,6 +1137,7 @@
                     >
                         Opslaan
                     </button>
+
                 </div>
 
             </div>
@@ -893,36 +1169,57 @@
     /* DATA */
 
     let currentUser = null;
+
     let reminders = [];
-    let currentFilter = "all";
+
+    let currentPage = "all";
+
+    let quickFilter = "all";
+
     let editingId = null;
 
 
     /* START */
 
-    document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener(
+        "DOMContentLoaded",
+        async () => {
 
-        const {
-            data: {
-                session
+            const {
+                data: {
+                    session
+                }
+            } = await supabaseClient.auth.getSession();
+
+
+            if (!session) {
+
+                window.location.href =
+                    "inloggen.html";
+
+                return;
+
             }
-        } = await supabaseClient.auth.getSession();
 
-        if (!session) {
-            window.location.href = "inloggen.html";
-            return;
+
+            currentUser =
+                session.user;
+
+
+            await loadProfile();
+
+            await loadReminders();
+
+
+            document
+                .getElementById("searchInput")
+                .addEventListener(
+                    "input",
+                    renderReminders
+                );
+
         }
-
-        currentUser = session.user;
-
-        await loadProfile();
-        await loadReminders();
-
-        document
-            .getElementById("searchInput")
-            .addEventListener("input", renderReminders);
-
-    });
+    );
 
 
     /* PROFILE */
@@ -938,9 +1235,16 @@
             .eq("id", currentUser.id)
             .maybeSingle();
 
+
         if (error) {
-            console.error("Profiel laden mislukt:", error);
+
+            console.error(
+                "Profiel laden mislukt:",
+                error
+            );
+
         }
+
 
         const naam =
             data?.naam ||
@@ -948,18 +1252,30 @@
             currentUser.email?.split("@")[0] ||
             "Gebruiker";
 
+
         const firstName =
             naam.trim().split(" ")[0] ||
             naam;
 
-        document.getElementById("welcomeTitle").textContent =
+
+        document
+            .getElementById("welcomeTitle")
+            .textContent =
             `Goedendag, ${firstName}`;
 
-        document.getElementById("sidebarName").textContent =
+
+        document
+            .getElementById("sidebarName")
+            .textContent =
             naam;
 
-        document.getElementById("sidebarAvatar").textContent =
-            naam.charAt(0).toUpperCase();
+
+        document
+            .getElementById("sidebarAvatar")
+            .textContent =
+            naam
+                .charAt(0)
+                .toUpperCase();
 
     }
 
@@ -974,48 +1290,81 @@
         } = await supabaseClient
             .from("reminders")
             .select("*")
-            .eq("user_id", currentUser.id)
-            .order("datum", { ascending: true })
-            .order("tijd", { ascending: true });
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+            .order(
+                "datum",
+                {
+                    ascending: true
+                }
+            )
+            .order(
+                "tijd",
+                {
+                    ascending: true
+                }
+            );
+
 
         if (error) {
 
             console.error(error);
 
-            document.getElementById("remindersList").innerHTML =
-                `<div class="empty">
-                    Er ging iets mis bij het laden van je herinneringen.
-                </div>`;
+            document
+                .getElementById("remindersList")
+                .innerHTML =
+                `
+                    <div class="empty">
+                        Er ging iets mis bij het laden
+                        van je herinneringen.
+                    </div>
+                `;
 
             return;
+
         }
 
-        reminders = data || [];
+
+        reminders =
+            data || [];
+
 
         updateStats();
+
         renderReminders();
+
         renderUpcoming();
 
     }
 
 
-    /* STATS */
+    /* STATISTIEKEN */
 
     function updateStats() {
 
         const today =
-            new Date().toISOString().split("T")[0];
+            getToday();
+
 
         const total =
             reminders.length;
 
+
         const completed =
-            reminders.filter(r => r.afgerond).length;
+            reminders.filter(
+                r => r.afgerond
+            ).length;
+
 
         const todayCount =
             reminders.filter(
-                r => r.datum === today && !r.afgerond
+                r =>
+                    r.datum === today &&
+                    !r.afgerond
             ).length;
+
 
         const upcoming =
             reminders.filter(
@@ -1025,74 +1374,200 @@
                     !r.afgerond
             ).length;
 
-        document.getElementById("totalCount").textContent =
+
+        document
+            .getElementById("totalCount")
+            .textContent =
             total;
 
-        document.getElementById("todayCount").textContent =
+
+        document
+            .getElementById("todayCount")
+            .textContent =
             todayCount;
 
-        document.getElementById("upcomingCount").textContent =
+
+        document
+            .getElementById("upcomingCount")
+            .textContent =
             upcoming;
 
-        document.getElementById("completedCount").textContent =
+
+        document
+            .getElementById("completedCount")
+            .textContent =
             completed;
 
     }
 
 
-    /* FILTER */
+    /* PAGINA'S */
 
-    function setFilter(filter, button = null) {
+    function showPage(page) {
 
-        currentFilter = filter;
+        currentPage =
+            page;
+
+        quickFilter =
+            "all";
+
+
+        document
+            .querySelectorAll(".nav a[data-page]")
+            .forEach(link => {
+
+                link.classList.toggle(
+                    "active",
+                    link.dataset.page === page
+                );
+
+            });
+
+
+        const titles = {
+
+            all: {
+                title: "Overzicht",
+                description:
+                    "Al je herinneringen op één plek.",
+                list:
+                    "Herinneringen"
+            },
+
+            today: {
+                title: "Vandaag",
+                description:
+                    "Alles wat je vandaag niet wilt vergeten.",
+                list:
+                    "Herinneringen voor vandaag"
+            },
+
+            upcoming: {
+                title: "Aankomend",
+                description:
+                    "Een overzicht van wat er binnenkort gepland staat.",
+                list:
+                    "Aankomende herinneringen"
+            },
+
+            completed: {
+                title: "Voltooid",
+                description:
+                    "Herinneringen die je hebt afgerond.",
+                list:
+                    "Voltooide herinneringen"
+            }
+
+        };
+
+
+        const pageInfo =
+            titles[page];
+
+
+        document
+            .getElementById("pageTitle")
+            .textContent =
+            pageInfo.title;
+
+
+        document
+            .getElementById("pageDescription")
+            .textContent =
+            pageInfo.description;
+
+
+        document
+            .getElementById("listTitle")
+            .textContent =
+            pageInfo.list;
+
 
         document
             .querySelectorAll(".filter")
-            .forEach(btn => btn.classList.remove("active"));
+            .forEach(
+                button =>
+                    button.classList.remove("active")
+            );
 
-        if (button) {
-            button.classList.add("active");
-        }
+
+        document
+            .querySelector(".filter")
+            .classList.add("active");
+
 
         renderReminders();
+
     }
 
 
-    /* REMINDERS WEERGEVEN */
+    /* SNELFILTERS */
+
+    function setQuickFilter(
+        filter,
+        button
+    ) {
+
+        quickFilter =
+            filter;
+
+
+        document
+            .querySelectorAll(".filter")
+            .forEach(
+                item =>
+                    item.classList.remove("active")
+            );
+
+
+        if (button) {
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+
+        renderReminders();
+
+    }
+
+
+    /* HERINNERINGEN TONEN */
 
     function renderReminders() {
 
         const container =
-            document.getElementById("remindersList");
+            document.getElementById(
+                "remindersList"
+            );
+
 
         const search =
             document
-                .getElementById("searchInput")
+                .getElementById(
+                    "searchInput"
+                )
                 .value
                 .toLowerCase()
                 .trim();
 
+
         const today =
-            new Date().toISOString().split("T")[0];
+            getToday();
+
 
         let filtered =
             [...reminders];
 
-        if (currentFilter === "open") {
 
-            filtered =
-                filtered.filter(r => !r.afgerond);
+        /* PAGINA */
 
-        }
-
-        if (currentFilter === "completed") {
-
-            filtered =
-                filtered.filter(r => r.afgerond);
-
-        }
-
-        if (currentFilter === "today") {
+        if (
+            currentPage ===
+            "today"
+        ) {
 
             filtered =
                 filtered.filter(
@@ -1103,7 +1578,11 @@
 
         }
 
-        if (currentFilter === "upcoming") {
+
+        if (
+            currentPage ===
+            "upcoming"
+        ) {
 
             filtered =
                 filtered.filter(
@@ -1115,130 +1594,300 @@
 
         }
 
+
+        if (
+            currentPage ===
+            "completed"
+        ) {
+
+            filtered =
+                filtered.filter(
+                    r =>
+                        r.afgerond
+                );
+
+        }
+
+
+        /* SNELFILTER */
+
+        if (
+            quickFilter ===
+            "open"
+        ) {
+
+            filtered =
+                filtered.filter(
+                    r =>
+                        !r.afgerond
+                );
+
+        }
+
+
+        if (
+            quickFilter ===
+            "completed"
+        ) {
+
+            filtered =
+                filtered.filter(
+                    r =>
+                        r.afgerond
+                );
+
+        }
+
+
+        /* ZOEKEN */
+
         if (search) {
 
             filtered =
-                filtered.filter(r => {
+                filtered.filter(
+                    r => {
 
-                    const text = [
+                        const text = [
 
-                        r.titel,
-                        r.beschrijving,
-                        r.categorie,
-                        r.notities
+                            r.titel,
+                            r.beschrijving,
+                            r.categorie,
+                            r.notities
 
-                    ]
-                    .filter(Boolean)
-                    .join(" ")
-                    .toLowerCase();
+                        ]
+                            .filter(Boolean)
+                            .join(" ")
+                            .toLowerCase();
 
-                    return text.includes(search);
 
-                });
+                        return text.includes(
+                            search
+                        );
+
+                    }
+                );
 
         }
 
 
         if (!filtered.length) {
 
+            let message =
+                "Geen herinneringen gevonden.";
+
+
+            if (
+                currentPage ===
+                "today"
+            ) {
+
+                message =
+                    "Je hebt vandaag geen openstaande herinneringen.";
+
+            }
+
+
+            if (
+                currentPage ===
+                "upcoming"
+            ) {
+
+                message =
+                    "Je hebt geen aankomende herinneringen.";
+
+            }
+
+
+            if (
+                currentPage ===
+                "completed"
+            ) {
+
+                message =
+                    "Je hebt nog geen herinneringen voltooid.";
+
+            }
+
+
             container.innerHTML =
-                `<div class="empty">
-                    Geen herinneringen gevonden.
-                </div>`;
+                `
+                    <div class="empty">
+                        ${message}
+                    </div>
+                `;
 
             return;
+
         }
 
 
         container.innerHTML =
-            filtered.map(createReminderHTML).join("");
+            filtered
+                .map(
+                    createReminderHTML
+                )
+                .join("");
 
     }
 
 
-    /* HTML HERINNERING */
+    /* HERINNERING HTML */
 
-    function createReminderHTML(reminder) {
+    function createReminderHTML(
+        reminder
+    ) {
 
         const priorityClass =
-            reminder.prioriteit === "hoog"
+            reminder.prioriteit ===
+            "hoog"
+
                 ? "priority-high"
-                : reminder.prioriteit === "laag"
+
+                : reminder.prioriteit ===
+                  "laag"
+
                     ? "priority-low"
+
                     : "";
+
 
         const dateText =
             reminder.datum
-                ? formatDate(reminder.datum)
+                ? formatDate(
+                    reminder.datum
+                )
                 : "";
+
 
         const timeText =
             reminder.tijd
-                ? reminder.tijd.substring(0, 5)
+                ? reminder.tijd.substring(
+                    0,
+                    5
+                )
                 : "";
+
 
         return `
 
             <div class="reminder">
 
                 <button
-                    class="check ${reminder.afgerond ? "done" : ""}"
-                    onclick="toggleComplete(${reminder.id}, ${!reminder.afgerond})"
+                    class="check ${
+                        reminder.afgerond
+                            ? "done"
+                            : ""
+                    }"
+                    onclick="toggleComplete(
+                        ${reminder.id},
+                        ${!reminder.afgerond}
+                    )"
                     aria-label="Voltooien"
                 ></button>
+
 
                 <div class="reminder-main">
 
                     <div
-                        class="reminder-title ${reminder.afgerond ? "done" : ""}"
+                        class="reminder-title ${
+                            reminder.afgerond
+                                ? "done"
+                                : ""
+                        }"
                     >
-                        ${escapeHTML(reminder.titel)}
+                        ${
+                            escapeHTML(
+                                reminder.titel
+                            )
+                        }
                     </div>
+
 
                     ${
                         reminder.beschrijving
-                            ? `<div class="reminder-description">
-                                ${escapeHTML(reminder.beschrijving)}
-                            </div>`
+                            ? `
+                                <div class="reminder-description">
+                                    ${
+                                        escapeHTML(
+                                            reminder.beschrijving
+                                        )
+                                    }
+                                </div>
+                            `
                             : ""
                     }
+
 
                     <div class="reminder-meta">
 
                         ${
                             dateText
-                                ? `<span class="tag">${dateText}</span>`
+                                ? `
+                                    <span class="tag">
+                                        ${dateText}
+                                    </span>
+                                `
                                 : ""
                         }
+
 
                         ${
                             timeText
-                                ? `<span class="tag">${timeText}</span>`
+                                ? `
+                                    <span class="tag">
+                                        ${timeText}
+                                    </span>
+                                `
                                 : ""
                         }
+
 
                         ${
                             reminder.categorie
-                                ? `<span class="tag">
-                                    ${escapeHTML(reminder.categorie)}
-                                </span>`
+                                ? `
+                                    <span class="tag">
+                                        ${
+                                            escapeHTML(
+                                                reminder.categorie
+                                            )
+                                        }
+                                    </span>
+                                `
                                 : ""
                         }
+
 
                         ${
                             reminder.prioriteit
-                                ? `<span class="tag ${priorityClass}">
-                                    ${escapeHTML(reminder.prioriteit)}
-                                </span>`
+                                ? `
+                                    <span
+                                        class="tag ${priorityClass}"
+                                    >
+                                        ${
+                                            escapeHTML(
+                                                reminder.prioriteit
+                                            )
+                                        }
+                                    </span>
+                                `
                                 : ""
                         }
 
+
                         ${
                             reminder.herhaling &&
-                            reminder.herhaling !== "geen"
-                                ? `<span class="tag">
-                                    ${escapeHTML(reminder.herhaling)}
-                                </span>`
+                            reminder.herhaling !==
+                                "geen"
+
+                                ? `
+                                    <span class="tag">
+                                        ${
+                                            escapeHTML(
+                                                reminder.herhaling
+                                            )
+                                        }
+                                    </span>
+                                `
                                 : ""
                         }
 
@@ -1246,11 +1895,14 @@
 
                 </div>
 
+
                 <div class="reminder-actions">
 
                     <button
                         class="small-btn"
-                        onclick="editReminder(${reminder.id})"
+                        onclick="editReminder(
+                            ${reminder.id}
+                        )"
                     >
                         Bewerken
                     </button>
@@ -1264,15 +1916,19 @@
     }
 
 
-    /* UPCOMING */
+    /* AANKOMEND */
 
     function renderUpcoming() {
 
         const container =
-            document.getElementById("upcomingList");
+            document.getElementById(
+                "upcomingList"
+            );
+
 
         const today =
-            new Date().toISOString().split("T")[0];
+            getToday();
+
 
         const upcoming =
             reminders
@@ -1282,48 +1938,82 @@
                         r.datum &&
                         r.datum >= today
                 )
-                .sort((a, b) => {
+                .sort(
+                    (a, b) => {
 
-                    const aValue =
-                        `${a.datum} ${a.tijd || ""}`;
+                        const aValue =
+                            `${a.datum} ${
+                                a.tijd || ""
+                            }`;
 
-                    const bValue =
-                        `${b.datum} ${b.tijd || ""}`;
-
-                    return aValue.localeCompare(bValue);
-
-                })
-                .slice(0, 5);
+                        const bValue =
+                            `${b.datum} ${
+                                b.tijd || ""
+                            }`;
 
 
-        if (!upcoming.length) {
+                        return aValue.localeCompare(
+                            bValue
+                        );
+
+                    }
+                )
+                .slice(
+                    0,
+                    5
+                );
+
+
+        if (
+            !upcoming.length
+        ) {
 
             container.innerHTML =
-                `<div class="empty">
-                    Geen aankomende herinneringen.
-                </div>`;
+                `
+                    <div class="empty">
+                        Geen aankomende herinneringen.
+                    </div>
+                `;
 
             return;
+
         }
 
 
         container.innerHTML =
-            upcoming.map(r => `
+            upcoming
+                .map(
+                    r => `
 
-                <div class="upcoming-item">
+                        <div class="upcoming-item">
 
-                    <div class="upcoming-date">
-                        ${formatDate(r.datum)}
-                        ${r.tijd ? " · " + r.tijd.substring(0,5) : ""}
-                    </div>
+                            <div class="upcoming-date">
+                                ${formatDate(r.datum)}
+                                ${
+                                    r.tijd
+                                        ? " · " +
+                                          r.tijd.substring(
+                                              0,
+                                              5
+                                          )
+                                        : ""
+                                }
+                            </div>
 
-                    <div class="upcoming-title">
-                        ${escapeHTML(r.titel)}
-                    </div>
 
-                </div>
+                            <div class="upcoming-title">
+                                ${
+                                    escapeHTML(
+                                        r.titel
+                                    )
+                                }
+                            </div>
 
-            `).join("");
+                        </div>
+
+                    `
+                )
+                .join("");
 
     }
 
@@ -1332,75 +2022,181 @@
 
     function openNewReminder() {
 
-        editingId = null;
+        editingId =
+            null;
 
-        document.getElementById("modalTitle").textContent =
-            "Nieuwe herinnering";
-
-        document.getElementById("deleteButton").style.display =
-            "none";
-
-        document.getElementById("reminderForm").reset();
-
-        document.getElementById("prioriteit").value =
-            "normaal";
-
-        document.getElementById("herhaling").value =
-            "geen";
 
         document
-            .getElementById("modalOverlay")
-            .classList.add("show");
+            .getElementById(
+                "modalTitle"
+            )
+            .textContent =
+            "Nieuwe herinnering";
+
+
+        document
+            .getElementById(
+                "deleteButton"
+            )
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById(
+                "reminderForm"
+            )
+            .reset();
+
+
+        document
+            .getElementById(
+                "prioriteit"
+            )
+            .value =
+            "normaal";
+
+
+        document
+            .getElementById(
+                "herhaling"
+            )
+            .value =
+            "geen";
+
+
+        document
+            .getElementById(
+                "modalOverlay"
+            )
+            .classList.add(
+                "show"
+            );
 
     }
 
 
     /* BEWERKEN */
 
-    function editReminder(id) {
+    function editReminder(
+        id
+    ) {
 
         const reminder =
-            reminders.find(r => r.id === id);
+            reminders.find(
+                r =>
+                    r.id === id
+            );
 
-        if (!reminder) return;
 
-        editingId = id;
+        if (!reminder) {
+            return;
+        }
 
-        document.getElementById("modalTitle").textContent =
-            "Herinnering bewerken";
 
-        document.getElementById("deleteButton").style.display =
-            "block";
+        editingId =
+            id;
 
-        document.getElementById("titel").value =
-            reminder.titel || "";
-
-        document.getElementById("beschrijving").value =
-            reminder.beschrijving || "";
-
-        document.getElementById("datum").value =
-            reminder.datum || "";
-
-        document.getElementById("tijd").value =
-            reminder.tijd
-                ? reminder.tijd.substring(0, 5)
-                : "";
-
-        document.getElementById("categorie").value =
-            reminder.categorie || "";
-
-        document.getElementById("prioriteit").value =
-            reminder.prioriteit || "normaal";
-
-        document.getElementById("herhaling").value =
-            reminder.herhaling || "geen";
-
-        document.getElementById("notities").value =
-            reminder.notities || "";
 
         document
-            .getElementById("modalOverlay")
-            .classList.add("show");
+            .getElementById(
+                "modalTitle"
+            )
+            .textContent =
+            "Herinnering bewerken";
+
+
+        document
+            .getElementById(
+                "deleteButton"
+            )
+            .style.display =
+            "block";
+
+
+        document
+            .getElementById(
+                "titel"
+            )
+            .value =
+            reminder.titel ||
+            "";
+
+
+        document
+            .getElementById(
+                "beschrijving"
+            )
+            .value =
+            reminder.beschrijving ||
+            "";
+
+
+        document
+            .getElementById(
+                "datum"
+            )
+            .value =
+            reminder.datum ||
+            "";
+
+
+        document
+            .getElementById(
+                "tijd"
+            )
+            .value =
+            reminder.tijd
+                ? reminder.tijd.substring(
+                    0,
+                    5
+                )
+                : "";
+
+
+        document
+            .getElementById(
+                "categorie"
+            )
+            .value =
+            reminder.categorie ||
+            "";
+
+
+        document
+            .getElementById(
+                "prioriteit"
+            )
+            .value =
+            reminder.prioriteit ||
+            "normaal";
+
+
+        document
+            .getElementById(
+                "herhaling"
+            )
+            .value =
+            reminder.herhaling ||
+            "geen";
+
+
+        document
+            .getElementById(
+                "notities"
+            )
+            .value =
+            reminder.notities ||
+            "";
+
+
+        document
+            .getElementById(
+                "modalOverlay"
+            )
+            .classList.add(
+                "show"
+            );
 
     }
 
@@ -1408,110 +2204,196 @@
     /* OPSLAAN */
 
     document
-        .getElementById("reminderForm")
-        .addEventListener("submit", async event => {
+        .getElementById(
+            "reminderForm"
+        )
+        .addEventListener(
+            "submit",
+            async event => {
 
-            event.preventDefault();
-
-            const payload = {
-
-                titel:
-                    document.getElementById("titel").value.trim(),
-
-                beschrijving:
-                    document.getElementById("beschrijving").value.trim() || null,
-
-                datum:
-                    document.getElementById("datum").value || null,
-
-                tijd:
-                    document.getElementById("tijd").value || null,
-
-                categorie:
-                    document.getElementById("categorie").value || null,
-
-                prioriteit:
-                    document.getElementById("prioriteit").value,
-
-                herhaling:
-                    document.getElementById("herhaling").value,
-
-                notities:
-                    document.getElementById("notities").value.trim() || null
-
-            };
+                event.preventDefault();
 
 
-            let error;
+                const payload = {
+
+                    titel:
+                        document
+                            .getElementById(
+                                "titel"
+                            )
+                            .value
+                            .trim(),
+
+                    beschrijving:
+                        document
+                            .getElementById(
+                                "beschrijving"
+                            )
+                            .value
+                            .trim() ||
+                        null,
+
+                    datum:
+                        document
+                            .getElementById(
+                                "datum"
+                            )
+                            .value ||
+                        null,
+
+                    tijd:
+                        document
+                            .getElementById(
+                                "tijd"
+                            )
+                            .value ||
+                        null,
+
+                    categorie:
+                        document
+                            .getElementById(
+                                "categorie"
+                            )
+                            .value ||
+                        null,
+
+                    prioriteit:
+                        document
+                            .getElementById(
+                                "prioriteit"
+                            )
+                            .value,
+
+                    herhaling:
+                        document
+                            .getElementById(
+                                "herhaling"
+                            )
+                            .value,
+
+                    notities:
+                        document
+                            .getElementById(
+                                "notities"
+                            )
+                            .value
+                            .trim() ||
+                        null
+
+                };
 
 
-            if (editingId) {
+                let error;
 
-                const result =
-                    await supabaseClient
-                        .from("reminders")
-                        .update(payload)
-                        .eq("id", editingId)
-                        .eq("user_id", currentUser.id);
 
-                error = result.error;
+                if (editingId) {
 
-            } else {
+                    const result =
+                        await supabaseClient
+                            .from(
+                                "reminders"
+                            )
+                            .update(
+                                payload
+                            )
+                            .eq(
+                                "id",
+                                editingId
+                            )
+                            .eq(
+                                "user_id",
+                                currentUser.id
+                            );
 
-                const result =
-                    await supabaseClient
-                        .from("reminders")
-                        .insert({
-                            ...payload,
-                            user_id: currentUser.id
-                        });
 
-                error = result.error;
+                    error =
+                        result.error;
+
+                } else {
+
+                    const result =
+                        await supabaseClient
+                            .from(
+                                "reminders"
+                            )
+                            .insert({
+                                ...payload,
+                                user_id:
+                                    currentUser.id
+                            });
+
+
+                    error =
+                        result.error;
+
+                }
+
+
+                if (error) {
+
+                    console.error(
+                        error
+                    );
+
+                    alert(
+                        "Opslaan is niet gelukt. Controleer je verbinding en probeer opnieuw."
+                    );
+
+                    return;
+
+                }
+
+
+                closeModal();
+
+                await loadReminders();
 
             }
-
-
-            if (error) {
-
-                console.error(error);
-
-                alert(
-                    "Opslaan is niet gelukt. Controleer je verbinding en probeer opnieuw."
-                );
-
-                return;
-            }
-
-
-            closeModal();
-
-            await loadReminders();
-
-        });
+        );
 
 
     /* VOLTOOIEN */
 
-    async function toggleComplete(id, completed) {
+    async function toggleComplete(
+        id,
+        completed
+    ) {
 
         const {
             error
-        } = await supabaseClient
-            .from("reminders")
-            .update({
-                afgerond: completed
-            })
-            .eq("id", id)
-            .eq("user_id", currentUser.id);
+        } =
+            await supabaseClient
+                .from(
+                    "reminders"
+                )
+                .update({
+                    afgerond:
+                        completed
+                })
+                .eq(
+                    "id",
+                    id
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
+
 
         if (error) {
 
-            console.error(error);
+            console.error(
+                error
+            );
 
-            alert("De herinnering kon niet worden bijgewerkt.");
+            alert(
+                "De herinnering kon niet worden bijgewerkt."
+            );
 
             return;
+
         }
+
 
         await loadReminders();
 
@@ -1522,34 +2404,52 @@
 
     async function deleteCurrentReminder() {
 
-        if (!editingId) return;
+        if (!editingId) {
+            return;
+        }
+
 
         const confirmed =
             confirm(
                 "Weet je zeker dat je deze herinnering wilt verwijderen?"
             );
 
-        if (!confirmed) return;
+
+        if (!confirmed) {
+            return;
+        }
 
 
         const {
             error
-        } = await supabaseClient
-            .from("reminders")
-            .delete()
-            .eq("id", editingId)
-            .eq("user_id", currentUser.id);
+        } =
+            await supabaseClient
+                .from(
+                    "reminders"
+                )
+                .delete()
+                .eq(
+                    "id",
+                    editingId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
 
 
         if (error) {
 
-            console.error(error);
+            console.error(
+                error
+            );
 
             alert(
                 "De herinnering kon niet worden verwijderd."
             );
 
             return;
+
         }
 
 
@@ -1565,29 +2465,84 @@
     function closeModal() {
 
         document
-            .getElementById("modalOverlay")
-            .classList.remove("show");
+            .getElementById(
+                "modalOverlay"
+            )
+            .classList.remove(
+                "show"
+            );
 
-        editingId = null;
+
+        editingId =
+            null;
+
+    }
+
+
+    /* VANDAAG */
+
+    function getToday() {
+
+        const now =
+            new Date();
+
+
+        const year =
+            now.getFullYear();
+
+
+        const month =
+            String(
+                now.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const day =
+            String(
+                now.getDate()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        return `${year}-${month}-${day}`;
 
     }
 
 
     /* DATUM */
 
-    function formatDate(dateString) {
+    function formatDate(
+        dateString
+    ) {
 
-        if (!dateString) return "";
+        if (!dateString) {
+            return "";
+        }
+
 
         const date =
-            new Date(dateString + "T00:00:00");
+            new Date(
+                dateString +
+                "T00:00:00"
+            );
+
 
         return date.toLocaleDateString(
             "nl-NL",
             {
-                day: "numeric",
-                month: "short",
-                year: "numeric"
+                day:
+                    "numeric",
+
+                month:
+                    "short",
+
+                year:
+                    "numeric"
             }
         );
 
@@ -1596,31 +2551,58 @@
 
     /* HTML VEILIG MAKEN */
 
-    function escapeHTML(value) {
+    function escapeHTML(
+        value
+    ) {
 
-        return String(value)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
+        return String(
+            value
+        )
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
 
     }
 
 
-    /* MODAL SLUITEN BIJ KLIK ERBUITEN */
+    /* MODAL BUITENKANT */
 
     document
-        .getElementById("modalOverlay")
-        .addEventListener("click", event => {
+        .getElementById(
+            "modalOverlay"
+        )
+        .addEventListener(
+            "click",
+            event => {
 
-            if (
-                event.target.id === "modalOverlay"
-            ) {
-                closeModal();
+                if (
+                    event.target.id ===
+                    "modalOverlay"
+                ) {
+
+                    closeModal();
+
+                }
+
             }
-
-        });
+        );
 
 </script>
 
