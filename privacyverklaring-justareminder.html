@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Privacyverklaring | JustAReminder</title>
+  <meta name="description" content="Privacyverklaring van JustAReminder.">
+
+  <style>
+    :root {
+      --navy: #172542;
+      --navy-light: #26385f;
+      --blue: #4d79d8;
+      --blue-soft: #eaf2ff;
+      --green: #45a878;
+      --green-soft: #e9f8f0;
+      --purple: #8868d9;
+      --purple-soft: #f1ecff;
+      --orange: #e7a33a;
+      --orange-soft: #fff5df;
+      --pink-soft: #fff0f5;
+      --cream: #faf8f4;
+      --white: #ffffff;
+      --text: #1e2d4b;
+      --text-light: #71809a;
+      --border: #e8eaf0;
+      --shadow: 0 12px 38px rgba(31, 48, 78, .07);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--cream);
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 92% 0%, rgba(255, 213, 106, .18), transparent 25%),
+        radial-gradient(circle at 5% 18%, rgba(77, 121, 216, .09), transparent 28%),
+        var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250, 248, 244, .9);
+      border-bottom: 1px solid rgba(232, 234, 240, .9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .topbar-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      min-height: 72px;
+      padding: 10px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 43px;
+      height: 43px;
+      flex: 0 0 43px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 13px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 20px;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(77, 121, 216, .08);
+    }
+
+    .brand-name {
+      font-weight: 850;
+      letter-spacing: -.45px;
+      color: var(--navy);
+      font-size: 18px;
+      white-space: nowrap;
+    }
+
+    .brand-name .blue { color: #3977ef; }
+
+    .top-actions {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .small-button {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      padding: 8px 13px;
+      border: 1px solid #e1e6ee;
+      background: white;
+      color: #52627d;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .small-button.primary {
+      border-color: var(--navy);
+      background: var(--navy);
+      color: white;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 42px 22px 70px;
+    }
+
+    .hero {
+      overflow: hidden;
+      position: relative;
+      padding: 44px;
+      border: 1px solid #eee8dd;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 93% 12%, rgba(255, 213, 106, .33), transparent 26%),
+        linear-gradient(135deg, #ffffff 0%, #fffaf0 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -75px;
+      bottom: -105px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(77, 121, 216, .055);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 12px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #eef3ff;
+      color: #5271b7;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 0 13px;
+      color: var(--navy);
+      font-size: clamp(34px, 6vw, 53px);
+      line-height: 1.02;
+      letter-spacing: -1.8px;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 1;
+      max-width: 750px;
+      margin: 0;
+      color: var(--text-light);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .updated {
+      position: relative;
+      z-index: 1;
+      margin-top: 18px;
+      color: #8a95a7;
+      font-size: 12px;
+    }
+
+    .layout {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 94px;
+      padding: 19px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 8px 28px rgba(31,48,78,.045);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .toc-title {
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 850;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: .65px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 8px 9px;
+      border-radius: 10px;
+      color: #65738b;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .toc a:hover {
+      background: #f3f6fb;
+      color: var(--navy);
+    }
+
+    .privacy {
+      min-width: 0;
+      display: grid;
+      gap: 14px;
+    }
+
+    .notice {
+      padding: 17px 18px;
+      border-radius: 17px;
+      background: var(--orange-soft);
+      border: 1px solid #f4dfad;
+      color: #7c622f;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .section {
+      scroll-margin-top: 94px;
+      padding: 27px 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 8px 30px rgba(31,48,78,.045);
+    }
+
+    .section-number {
+      width: 37px;
+      height: 37px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 13px;
+      border-radius: 12px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .section:nth-of-type(4n+2) .section-number {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .section:nth-of-type(4n+3) .section-number {
+      background: var(--purple-soft);
+      color: var(--purple);
+    }
+
+    .section:nth-of-type(4n+4) .section-number {
+      background: var(--orange-soft);
+      color: var(--orange);
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      color: var(--navy);
+      font-size: 21px;
+      line-height: 1.25;
+      letter-spacing: -.35px;
+    }
+
+    .section h3 {
+      margin: 20px 0 7px;
+      color: #34435f;
+      font-size: 14px;
+    }
+
+    .section p {
+      margin: 0 0 11px;
+      color: #68768d;
+      font-size: 13px;
+    }
+
+    .section p:last-child { margin-bottom: 0; }
+
+    .section ul {
+      margin: 8px 0 12px;
+      padding-left: 21px;
+      color: #68768d;
+      font-size: 13px;
+    }
+
+    .section li { margin: 6px 0; }
+
+    .placeholder {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 1px 5px;
+      background: #fff2cf;
+      color: #8d6918;
+      font-weight: 750;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 13px 0 4px;
+      border: 1px solid #e7ebf1;
+      border-radius: 15px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 650px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid #edf0f4;
+    }
+
+    th {
+      background: #f7f9fc;
+      color: #52627d;
+      font-size: 11px;
+      letter-spacing: .15px;
+    }
+
+    td {
+      color: #68768d;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .contact-box {
+      padding: 20px;
+      border-radius: 17px;
+      background: #f7f9fc;
+      border: 1px solid #e8edf4;
+    }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: 155px minmax(0,1fr);
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 12px;
+      border-bottom: 1px solid #e8edf4;
+    }
+
+    .contact-row:last-child { border-bottom: 0; }
+
+    .contact-label {
+      color: #8792a3;
+    }
+
+    .contact-value {
+      color: var(--navy);
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .info-card {
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: 15px;
+      border: 1px solid #dcecff;
+      background: #edf5ff;
+      color: #526987;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .warning-card {
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: 15px;
+      border: 1px solid #f2dce5;
+      background: var(--pink-soft);
+      color: #81566a;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer {
+      margin-top: 30px;
+      padding: 28px 22px;
+      border-radius: 22px;
+      background: var(--navy);
+      color: white;
+      text-align: center;
+    }
+
+    .footer strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .footer p {
+      margin: 0;
+      color: #c7d0e0;
+      font-size: 12px;
+    }
+
+    .footer-links {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 16px;
+    }
+
+    .footer-links a {
+      color: #e7edf7;
+      font-size: 11px;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+
+      .toc-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 4px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar-inner {
+        min-height: 64px;
+        padding: 8px 12px;
+      }
+
+      .brand-icon {
+        width: 39px;
+        height: 39px;
+        flex-basis: 39px;
+      }
+
+      .brand-name {
+        font-size: 15px;
+      }
+
+      .top-actions .small-button:not(.primary) {
+        display: none;
+      }
+
+      .small-button {
+        min-height: 39px;
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+
+      .page {
+        padding: 16px 10px 38px;
+      }
+
+      .hero {
+        padding: 27px 18px 25px;
+        border-radius: 22px;
+      }
+
+      .hero h1 {
+        font-size: clamp(31px, 10vw, 42px);
+      }
+
+      .hero p {
+        font-size: 13px;
+      }
+
+      .layout {
+        margin-top: 13px;
+        gap: 12px;
+      }
+
+      .toc {
+        padding: 15px;
+        border-radius: 18px;
+      }
+
+      .toc-links {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .toc a {
+        padding: 7px;
+        font-size: 10px;
+      }
+
+      .notice {
+        padding: 14px;
+        font-size: 11px;
+      }
+
+      .section {
+        padding: 21px 17px;
+        border-radius: 19px;
+      }
+
+      .section h2 {
+        font-size: 18px;
+      }
+
+      .section p,
+      .section ul {
+        font-size: 12px;
+      }
+
+      .contact-row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      .table-wrap {
+        margin-left: -2px;
+        margin-right: -2px;
+      }
+    }
+
+    @media print {
+      .topbar,
+      .toc,
+      .notice {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .page {
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero,
+      .section {
+        break-inside: avoid;
+        box-shadow: none;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .privacy {
+        display: block;
+      }
+
+      .section {
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <a href="/" class="brand" aria-label="Naar JustAReminder">
+        <span class="brand-icon">✓</span>
+        <span class="brand-name">JustA<span class="blue">Reminder</span></span>
+      </a>
+
+      <div class="top-actions">
+        <button class="small-button" type="button" onclick="window.print()">
+          Afdrukken / opslaan
+        </button>
+        <a class="small-button primary" href="/">
+          Terug
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="page">
+
+    <section class="hero">
+      <div class="eyebrow">Privacy</div>
+      <h1>Privacyverklaring</h1>
+      <p>
+        Bij JustAReminder draait alles om het onthouden van wat voor jou belangrijk is.
+        Daarbij horen ook duidelijke afspraken over jouw persoonsgegevens. Hier lees je
+        welke gegevens we gebruiken, waarom we dat doen, met wie we gegevens delen en
+        welke rechten je hebt.
+      </p>
+      <div class="updated">Laatst bijgewerkt: 7 oktober 2026</div>
+    </section>
+
+    <div class="layout">
+
+      <aside class="toc" aria-label="Inhoudsopgave">
+        <div class="toc-title">Inhoud</div>
+
+        <div class="toc-links">
+          <a href="#artikel-1">1. Wie is verantwoordelijk?</a>
+          <a href="#artikel-2">2. Welke gegevens?</a>
+          <a href="#artikel-3">3. Waarom en grondslagen</a>
+          <a href="#artikel-4">4. Herinneringsinhoud</a>
+          <a href="#artikel-5">5. Pushmeldingen</a>
+          <a href="#artikel-6">6. Dienstverleners</a>
+          <a href="#artikel-7">7. Buiten de EER</a>
+          <a href="#artikel-8">8. Bewaartermijnen</a>
+          <a href="#artikel-9">9. Cookies en opslag</a>
+          <a href="#artikel-10">10. Beveiliging</a>
+          <a href="#artikel-11">11. Jouw rechten</a>
+          <a href="#artikel-12">12. Kinderen</a>
+          <a href="#artikel-13">13. Automatische besluiten</a>
+          <a href="#artikel-14">14. Wijzigingen</a>
+          <a href="#artikel-15">15. Klachten</a>
+          <a href="#artikel-16">16. Contact</a>
+        </div>
+      </aside>
+
+      <div class="privacy">
+
+        <div class="notice">
+          <strong>Voor publicatie:</strong>
+          vervang de geel gemarkeerde velden door je officiële bedrijfs- en
+          contactgegevens. Controleer ook je betaalprovider en je definitieve
+          hosting-/verwerkerslijst voordat je deze pagina live zet.
+        </div>
+
+        <section class="section" id="artikel-1">
+          <div class="section-number">01</div>
+          <h2>Wie is verantwoordelijk voor je gegevens?</h2>
+
+          <p>
+            De onderneming achter JustAReminder is de verwerkingsverantwoordelijke voor
+            de persoonsgegevens die via JustAReminder worden verwerkt, behalve wanneer
+            in deze privacyverklaring anders wordt uitgelegd.
+          </p>
+
+          <div class="contact-box">
+            <div class="contact-row">
+              <div class="contact-label">Handelsnaam</div>
+              <div class="contact-value">JustAReminder</div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">Officiële bedrijfsnaam</div>
+              <div class="contact-value"><span class="placeholder">[officiële bedrijfsnaam]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">KvK-nummer</div>
+              <div class="contact-value"><span class="placeholder">[KvK-nummer]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">Vestigings-/contactadres</div>
+              <div class="contact-value"><span class="placeholder">[adres dat je wettelijk moet vermelden]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">Privacy e-mail</div>
+              <div class="contact-value"><span class="placeholder">[privacy@jouwdomein.nl of zakelijk e-mailadres]</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="artikel-2">
+          <div class="section-number">02</div>
+          <h2>Welke persoonsgegevens verwerken we?</h2>
+
+          <p>
+            Welke gegevens we verwerken hangt af van hoe je JustAReminder gebruikt.
+            Het kan onder andere gaan om:
+          </p>
+
+          <ul>
+            <li><strong>Accountgegevens:</strong> naam, e-mailadres, account-id en datum waarop je account is aangemaakt.</li>
+            <li><strong>Herinneringsgegevens:</strong> titel, beschrijving, datum, tijd, categorie, prioriteit, notities, herhaling en voltooiingsstatus.</li>
+            <li><strong>Pushgegevens:</strong> push-endpoint, technische pushsleutels, apparaat-/browserinformatie en gegevens die nodig zijn om een melding te plannen en te versturen.</li>
+            <li><strong>Technische en beveiligingsgegevens:</strong> bijvoorbeeld IP-adres, browserinformatie, foutmeldingen, beveiligingslogs en technische gebeurtenissen voor zover onze hosting- en infrastructuurleveranciers deze verwerken.</li>
+            <li><strong>Contactgegevens:</strong> informatie die je zelf verstrekt wanneer je contact met ons opneemt.</li>
+            <li><strong>Betaalgegevens:</strong> wanneer betaalde abonnementen worden aangeboden, kunnen factuurgegevens en transactie-informatie worden verwerkt. Volledige kaart- of bankgegevens worden normaal gesproken door de betaalprovider verwerkt en niet door JustAReminder zelf opgeslagen.</li>
+          </ul>
+
+          <p>
+            We verkopen jouw persoonsgegevens niet aan adverteerders of datahandelaren.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-3">
+          <div class="section-number">03</div>
+          <h2>Waarom verwerken we gegevens en op welke grondslag?</h2>
+
+          <p>
+            Onder de AVG mogen persoonsgegevens alleen worden verwerkt wanneer daarvoor
+            een geldige grondslag bestaat. De belangrijkste verwerkingen binnen
+            JustAReminder zijn:
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Doel</th>
+                  <th>Voorbeelden van gegevens</th>
+                  <th>Grondslag</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Account aanmaken en beheren</td>
+                  <td>Naam, e-mail, account-id</td>
+                  <td>Uitvoering van de overeenkomst</td>
+                </tr>
+                <tr>
+                  <td>Herinneringen opslaan, tonen en synchroniseren</td>
+                  <td>Herinneringsinhoud, datum, tijd, categorie, status</td>
+                  <td>Uitvoering van de overeenkomst</td>
+                </tr>
+                <tr>
+                  <td>Door jou ingeschakelde pushmeldingen versturen</td>
+                  <td>Push-endpoint, pushsleutels, meldingstijd</td>
+                  <td>Uitvoering van de door jou gevraagde dienst; waar toestemming wettelijk nodig is, toestemming</td>
+                </tr>
+                <tr>
+                  <td>Beveiliging, misbruikpreventie en storingen oplossen</td>
+                  <td>IP-adres, browsergegevens, technische logs</td>
+                  <td>Gerechtvaardigd belang om de dienst veilig en betrouwbaar te houden</td>
+                </tr>
+                <tr>
+                  <td>Klantenservice en communicatie</td>
+                  <td>E-mail, berichtinhoud, accountinformatie</td>
+                  <td>Uitvoering overeenkomst en/of gerechtvaardigd belang</td>
+                </tr>
+                <tr>
+                  <td>Betalingen en administratie</td>
+                  <td>Factuurgegevens, transactie-informatie</td>
+                  <td>Uitvoering overeenkomst en wettelijke verplichtingen</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Wanneer we voor een specifieke verwerking toestemming gebruiken, kun je die
+            toestemming weer intrekken. Intrekken heeft geen terugwerkende kracht.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-4">
+          <div class="section-number">04</div>
+          <h2>De inhoud van je herinneringen</h2>
+
+          <p>
+            Herinneringen kunnen vrije tekst bevatten. Daardoor bepaal jij grotendeels
+            zelf welke inhoud je in JustAReminder opslaat.
+          </p>
+
+          <p>
+            We gebruiken de inhoud van je herinneringen alleen voor het leveren,
+            synchroniseren, weergeven en – wanneer je dat inschakelt – melden van jouw
+            herinneringen, en niet om advertentieprofielen over jou te maken.
+          </p>
+
+          <div class="warning-card">
+            <strong>Let op met gevoelige informatie.</strong>
+            JustAReminder is geen medisch dossier, zorgplatform of kluis voor zeer
+            gevoelige persoonsgegevens. Vermijd het opslaan van gezondheidsgegevens,
+            burgerservicenummers, wachtwoorden, betaalgegevens of andere bijzondere of
+            zeer gevoelige informatie wanneer dat niet noodzakelijk is.
+          </div>
+        </section>
+
+        <section class="section" id="artikel-5">
+          <div class="section-number">05</div>
+          <h2>Pushmeldingen</h2>
+
+          <p>
+            Wanneer je pushmeldingen inschakelt, vraagt je browser of apparaat eerst
+            toestemming om meldingen te mogen tonen. Zonder die apparaat- of
+            browsertoestemming kan JustAReminder geen pushmeldingen versturen.
+          </p>
+
+          <p>
+            Om een pushmelding op jouw apparaat af te leveren, slaan we technische
+            abonnementsgegevens op, waaronder een uniek push-endpoint en cryptografische
+            sleutels. Deze gegevens zijn gekoppeld aan je account voor zover dat nodig is
+            om jouw herinneringen naar het juiste apparaat te sturen.
+          </p>
+
+          <p>
+            Je kunt pushmeldingen uitschakelen via je browser of apparaat. Waar mogelijk
+            verwijderen we een uitgeschakelde of beëindigde pushregistratie uit onze
+            database zodra deze niet langer nodig is.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-6">
+          <div class="section-number">06</div>
+          <h2>Met welke dienstverleners delen we gegevens?</h2>
+
+          <p>
+            We delen persoonsgegevens alleen wanneer dat nodig is om JustAReminder te
+            laten werken, een wettelijke verplichting na te komen of onze rechten te
+            beschermen.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dienstverlener</th>
+                  <th>Rol / doel</th>
+                  <th>Mogelijke gegevens</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Supabase</td>
+                  <td>Database, authenticatie en backend-infrastructuur</td>
+                  <td>Accountgegevens, herinneringen, pushregistraties en technische gegevens</td>
+                </tr>
+                <tr>
+                  <td>Vercel</td>
+                  <td>Hosting en levering van de webapp</td>
+                  <td>Technische verzoekgegevens, IP-adres en logs voor zover verwerkt door de hostingdienst</td>
+                </tr>
+                <tr>
+                  <td>JouwWeb</td>
+                  <td>Publieke website / marketingpagina's, voor zover daarvoor gebruikt</td>
+                  <td>Technische websitegegevens en gegevens die je via de publieke website invoert</td>
+                </tr>
+                <tr>
+                  <td><span class="placeholder">[betaalprovider]</span></td>
+                  <td>Betalingen en abonnementsbeheer, zodra betalingen actief zijn</td>
+                  <td>Factuur- en transactiegegevens</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Met partijen die persoonsgegevens namens ons verwerken sluiten we, voor zover
+            de AVG dit vereist, passende afspraken over de verwerking en beveiliging.
+          </p>
+
+          <p>
+            Een dienstverlener kan voor bepaalde eigen verwerkingen zelfstandig
+            verwerkingsverantwoordelijke zijn. In dat geval geldt voor die verwerking
+            ook de privacyinformatie van die dienstverlener.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-7">
+          <div class="section-number">07</div>
+          <h2>Doorgifte buiten de Europese Economische Ruimte</h2>
+
+          <p>
+            Sommige technische leveranciers of hun subverwerkers kunnen persoonsgegevens
+            buiten de Europese Economische Ruimte verwerken.
+          </p>
+
+          <p>
+            Wanneer dat gebeurt, zorgen we dat daarvoor een geldige doorgiftegrondslag
+            wordt gebruikt, bijvoorbeeld een adequaatheidsbesluit van de Europese
+            Commissie of passende contractuele waarborgen zoals standaardcontractbepalingen,
+            voor zover de AVG dat vereist.
+          </p>
+
+          <p>
+            Voor specifieke informatie over de actuele locaties en subverwerkers van
+            onze leveranciers kun je contact met ons opnemen.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-8">
+          <div class="section-number">08</div>
+          <h2>Hoe lang bewaren we persoonsgegevens?</h2>
+
+          <p>
+            We bewaren persoonsgegevens niet langer dan nodig voor het doel waarvoor ze
+            zijn verzameld, tenzij een wettelijke bewaarplicht of een gerechtvaardigde
+            noodzaak een langere bewaartermijn vereist.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Gegevens</th>
+                  <th>Bewaartermijn / criterium</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Accountgegevens</td>
+                  <td>Zolang je account actief is en daarna alleen zolang noodzakelijk voor afronding, beveiliging of wettelijke verplichtingen.</td>
+                </tr>
+                <tr>
+                  <td>Herinneringen en notities</td>
+                  <td>Totdat je ze verwijdert of je account wordt verwijderd, behoudens tijdelijke back-ups of wettelijke noodzaak.</td>
+                </tr>
+                <tr>
+                  <td>Pushregistraties</td>
+                  <td>Zolang de pushregistratie voor jouw apparaat actief en nodig is.</td>
+                </tr>
+                <tr>
+                  <td>Supportberichten</td>
+                  <td>Zolang nodig om je vraag af te handelen en eventuele opvolging of geschillen te beheren.</td>
+                </tr>
+                <tr>
+                  <td>Technische en beveiligingslogs</td>
+                  <td>Een beperkte periode die nodig is voor beveiliging, foutopsporing en misbruikpreventie, afhankelijk van de gebruikte leverancier en instellingen.</td>
+                </tr>
+                <tr>
+                  <td>Factuur- en administratieve gegevens</td>
+                  <td>Gedurende de wettelijke administratieve bewaartermijn voor zover die van toepassing is.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Back-ups kunnen gegevens nog kort na verwijdering bevatten totdat de
+            betreffende back-up volgens het normale rotatieschema wordt overschreven.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-9">
+          <div class="section-number">09</div>
+          <h2>Cookies, sessies en lokale opslag</h2>
+
+          <p>
+            De JustAReminder-webapp kan technisch noodzakelijke cookies, sessies of
+            browseropslag gebruiken om bijvoorbeeld ingelogd te blijven, de dienst veilig
+            te laten functioneren en bepaalde voorkeuren te onthouden.
+          </p>
+
+          <p>
+            Voor niet-noodzakelijke tracking- of marketingtechnologieën vragen we vooraf
+            toestemming wanneer de wet dat vereist. Als we dergelijke technologieën in
+            de toekomst toevoegen, passen we deze verklaring en waar nodig de
+            cookiemelding aan.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-10">
+          <div class="section-number">10</div>
+          <h2>Hoe beveiligen we je gegevens?</h2>
+
+          <p>
+            We nemen passende technische en organisatorische maatregelen om
+            persoonsgegevens te beschermen tegen verlies, misbruik en onbevoegde toegang.
+            Daarbij kan onder andere gebruik worden gemaakt van:
+          </p>
+
+          <ul>
+            <li>versleutelde verbindingen via HTTPS;</li>
+            <li>authenticatie en toegangsbeperkingen;</li>
+            <li>databasebeveiliging en toegangsregels per gebruiker;</li>
+            <li>beperkte toegang tot beheer- en productieomgevingen;</li>
+            <li>updates en beveiligingsmaatregelen bij onze technische leveranciers.</li>
+          </ul>
+
+          <p>
+            Geen enkel online systeem is volledig zonder risico. Daarom blijven we onze
+            beveiligingsmaatregelen aanpassen wanneer de dienst of risico's veranderen.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-11">
+          <div class="section-number">11</div>
+          <h2>Welke privacyrechten heb je?</h2>
+
+          <p>
+            Afhankelijk van de situatie heb je onder de AVG onder meer het recht om:
+          </p>
+
+          <ul>
+            <li>inzage te vragen in de persoonsgegevens die we van je verwerken;</li>
+            <li>onjuiste gegevens te laten corrigeren;</li>
+            <li>gegevens te laten verwijderen wanneer daarvoor een wettelijke grond bestaat;</li>
+            <li>de verwerking in bepaalde situaties te laten beperken;</li>
+            <li>bezwaar te maken tegen bepaalde verwerkingen die op gerechtvaardigd belang zijn gebaseerd;</li>
+            <li>gegevens in bepaalde gevallen in een overdraagbaar formaat te ontvangen;</li>
+            <li>toestemming in te trekken wanneer een verwerking op toestemming is gebaseerd.</li>
+          </ul>
+
+          <p>
+            Stuur je verzoek naar
+            <span class="placeholder">[privacy e-mailadres]</span>.
+            We kunnen aanvullende informatie vragen om te controleren dat het verzoek
+            daadwerkelijk van jou afkomstig is.
+          </p>
+
+          <p>
+            We reageren in beginsel binnen één maand. Wanneer een verzoek complex is of
+            wanneer er veel verzoeken zijn, kan de wettelijke termijn onder voorwaarden
+            worden verlengd.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-12">
+          <div class="section-number">12</div>
+          <h2>Kinderen</h2>
+
+          <p>
+            JustAReminder is niet specifiek gericht op kinderen. Wanneer voor een
+            verwerking toestemming als AVG-grondslag nodig is en de gebruiker volgens
+            toepasselijk recht niet zelfstandig geldige toestemming kan geven, is
+            toestemming of betrokkenheid van een ouder of wettelijke vertegenwoordiger
+            nodig.
+          </p>
+
+          <p>
+            Denk je dat een kind persoonsgegevens via JustAReminder heeft verstrekt in
+            strijd met de toepasselijke regels? Neem dan contact met ons op.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-13">
+          <div class="section-number">13</div>
+          <h2>Geautomatiseerde besluitvorming en profilering</h2>
+
+          <p>
+            JustAReminder neemt op basis van jouw persoonsgegevens geen uitsluitend
+            geautomatiseerde besluiten die juridische gevolgen voor je hebben of je op
+            vergelijkbare wijze in aanmerkelijke mate treffen.
+          </p>
+
+          <p>
+            We gebruiken de inhoud van je herinneringen niet voor advertentieprofilering.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-14">
+          <div class="section-number">14</div>
+          <h2>Wijzigingen in deze privacyverklaring</h2>
+
+          <p>
+            We kunnen deze privacyverklaring aanpassen wanneer de dienst, onze
+            leveranciers of privacywetgeving veranderen.
+          </p>
+
+          <p>
+            Bovenaan deze pagina staat de datum van de laatste wijziging. Bij belangrijke
+            veranderingen informeren we gebruikers waar dat passend of wettelijk vereist
+            is via de website, de app of per e-mail.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-15">
+          <div class="section-number">15</div>
+          <h2>Klacht over privacy</h2>
+
+          <p>
+            Heb je een vraag of klacht over hoe we met je persoonsgegevens omgaan? Neem
+            eerst contact met ons op via
+            <span class="placeholder">[privacy e-mailadres]</span>.
+            We proberen je vraag of klacht zo zorgvuldig mogelijk op te lossen.
+          </p>
+
+          <p>
+            Je hebt daarnaast het recht een klacht in te dienen bij de toezichthouder.
+            In Nederland is dat de Autoriteit Persoonsgegevens.
+          </p>
+
+          <div class="info-card">
+            Autoriteit Persoonsgegevens:
+            <a href="https://autoriteitpersoonsgegevens.nl/klacht"
+               target="_blank"
+               rel="noopener noreferrer"
+               style="font-weight:800;color:#365fba;">
+              autoriteitpersoonsgegevens.nl/klacht
+            </a>
+          </div>
+        </section>
+
+        <section class="section" id="artikel-16">
+          <div class="section-number">16</div>
+          <h2>Contact</h2>
+
+          <p>
+            Voor privacyvragen, verzoeken of klachten kun je contact opnemen met:
+          </p>
+
+          <div class="contact-box">
+            <div class="contact-row">
+              <div class="contact-label">Bedrijf</div>
+              <div class="contact-value">JustAReminder / <span class="placeholder">[officiële bedrijfsnaam]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">E-mail</div>
+              <div class="contact-value"><span class="placeholder">[privacy e-mailadres]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">Adres</div>
+              <div class="contact-value"><span class="placeholder">[adres dat je wettelijk moet vermelden]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">KvK</div>
+              <div class="contact-value"><span class="placeholder">[KvK-nummer]</span></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <footer class="footer">
+      <strong>JustAReminder</strong>
+      <p>Keep life on track.</p>
+
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/privacy.html">Privacyverklaring</a>
+        <a href="/algemene-voorwaarden.html">Algemene voorwaarden</a>
+        <a href="/contact.html">Contact</a>
+      </div>
+    </footer>
+
+  </main>
+
+</body>
+</html>
