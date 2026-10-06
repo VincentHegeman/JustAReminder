@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Algemene voorwaarden | JustAReminder</title>
+  <meta name="description" content="Algemene voorwaarden van JustAReminder.">
+
+  <style>
+    :root {
+      --navy: #172542;
+      --navy-light: #26385f;
+      --blue: #4d79d8;
+      --blue-soft: #eaf2ff;
+      --green: #45a878;
+      --green-soft: #e9f8f0;
+      --purple: #8868d9;
+      --purple-soft: #f1ecff;
+      --orange: #e7a33a;
+      --orange-soft: #fff5df;
+      --cream: #faf8f4;
+      --white: #ffffff;
+      --text: #1e2d4b;
+      --text-light: #71809a;
+      --border: #e8eaf0;
+      --shadow: 0 12px 38px rgba(31, 48, 78, .07);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--cream);
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 92% 0%, rgba(255, 213, 106, .18), transparent 25%),
+        radial-gradient(circle at 5% 18%, rgba(77, 121, 216, .09), transparent 28%),
+        var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250, 248, 244, .9);
+      border-bottom: 1px solid rgba(232, 234, 240, .9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .topbar-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      min-height: 72px;
+      padding: 10px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 43px;
+      height: 43px;
+      flex: 0 0 43px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 13px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 20px;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(77, 121, 216, .08);
+    }
+
+    .brand-name {
+      font-weight: 850;
+      letter-spacing: -.45px;
+      color: var(--navy);
+      font-size: 18px;
+      white-space: nowrap;
+    }
+
+    .brand-name .blue { color: #3977ef; }
+
+    .top-actions {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .small-button {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      padding: 8px 13px;
+      border: 1px solid #e1e6ee;
+      background: white;
+      color: #52627d;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .small-button.primary {
+      border-color: var(--navy);
+      background: var(--navy);
+      color: white;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 42px 22px 70px;
+    }
+
+    .hero {
+      overflow: hidden;
+      position: relative;
+      padding: 44px;
+      border: 1px solid #eee8dd;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 93% 12%, rgba(255, 213, 106, .33), transparent 26%),
+        linear-gradient(135deg, #ffffff 0%, #fffaf0 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -75px;
+      bottom: -105px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(77, 121, 216, .055);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 12px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #eef3ff;
+      color: #5271b7;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 0 13px;
+      color: var(--navy);
+      font-size: clamp(34px, 6vw, 53px);
+      line-height: 1.02;
+      letter-spacing: -1.8px;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 1;
+      max-width: 730px;
+      margin: 0;
+      color: var(--text-light);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .updated {
+      position: relative;
+      z-index: 1;
+      margin-top: 18px;
+      color: #8a95a7;
+      font-size: 12px;
+    }
+
+    .layout {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 94px;
+      padding: 19px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 8px 28px rgba(31,48,78,.045);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .toc-title {
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 850;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: .65px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 8px 9px;
+      border-radius: 10px;
+      color: #65738b;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .toc a:hover {
+      background: #f3f6fb;
+      color: var(--navy);
+    }
+
+    .terms {
+      min-width: 0;
+      display: grid;
+      gap: 14px;
+    }
+
+    .notice {
+      padding: 17px 18px;
+      border-radius: 17px;
+      background: var(--orange-soft);
+      border: 1px solid #f4dfad;
+      color: #7c622f;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .section {
+      scroll-margin-top: 94px;
+      padding: 27px 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 8px 30px rgba(31,48,78,.045);
+    }
+
+    .section-number {
+      width: 37px;
+      height: 37px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 13px;
+      border-radius: 12px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .section:nth-of-type(4n+2) .section-number {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .section:nth-of-type(4n+3) .section-number {
+      background: var(--purple-soft);
+      color: var(--purple);
+    }
+
+    .section:nth-of-type(4n+4) .section-number {
+      background: var(--orange-soft);
+      color: var(--orange);
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      color: var(--navy);
+      font-size: 21px;
+      line-height: 1.25;
+      letter-spacing: -.35px;
+    }
+
+    .section h3 {
+      margin: 18px 0 7px;
+      color: #34435f;
+      font-size: 14px;
+    }
+
+    .section p {
+      margin: 0 0 11px;
+      color: #68768d;
+      font-size: 13px;
+    }
+
+    .section p:last-child { margin-bottom: 0; }
+
+    .section ul {
+      margin: 8px 0 12px;
+      padding-left: 21px;
+      color: #68768d;
+      font-size: 13px;
+    }
+
+    .section li { margin: 6px 0; }
+
+    .placeholder {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 1px 5px;
+      background: #fff2cf;
+      color: #8d6918;
+      font-weight: 750;
+    }
+
+    .contact-box {
+      padding: 20px;
+      border-radius: 17px;
+      background: #f7f9fc;
+      border: 1px solid #e8edf4;
+    }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: 150px minmax(0,1fr);
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 12px;
+      border-bottom: 1px solid #e8edf4;
+    }
+
+    .contact-row:last-child { border-bottom: 0; }
+
+    .contact-label {
+      color: #8792a3;
+    }
+
+    .contact-value {
+      color: var(--navy);
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .footer {
+      margin-top: 30px;
+      padding: 28px 22px;
+      border-radius: 22px;
+      background: var(--navy);
+      color: white;
+      text-align: center;
+    }
+
+    .footer strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .footer p {
+      margin: 0;
+      color: #c7d0e0;
+      font-size: 12px;
+    }
+
+    .footer-links {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 16px;
+    }
+
+    .footer-links a {
+      color: #e7edf7;
+      font-size: 11px;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+
+      .toc-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 4px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar-inner {
+        min-height: 64px;
+        padding: 8px 12px;
+      }
+
+      .brand-icon {
+        width: 39px;
+        height: 39px;
+        flex-basis: 39px;
+      }
+
+      .brand-name {
+        font-size: 15px;
+      }
+
+      .top-actions .small-button:not(.primary) {
+        display: none;
+      }
+
+      .small-button {
+        min-height: 39px;
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+
+      .page {
+        padding: 16px 10px 38px;
+      }
+
+      .hero {
+        padding: 27px 18px 25px;
+        border-radius: 22px;
+      }
+
+      .hero h1 {
+        font-size: clamp(31px, 10vw, 42px);
+      }
+
+      .hero p {
+        font-size: 13px;
+      }
+
+      .layout {
+        margin-top: 13px;
+        gap: 12px;
+      }
+
+      .toc {
+        padding: 15px;
+        border-radius: 18px;
+      }
+
+      .toc-links {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .toc a {
+        padding: 7px;
+        font-size: 10px;
+      }
+
+      .notice {
+        padding: 14px;
+        font-size: 11px;
+      }
+
+      .section {
+        padding: 21px 17px;
+        border-radius: 19px;
+      }
+
+      .section h2 {
+        font-size: 18px;
+      }
+
+      .section p,
+      .section ul {
+        font-size: 12px;
+      }
+
+      .contact-row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+    }
+
+    @media print {
+      .topbar,
+      .toc,
+      .notice {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .page {
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero,
+      .section {
+        break-inside: avoid;
+        box-shadow: none;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .terms {
+        display: block;
+      }
+
+      .section {
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <a href="/" class="brand" aria-label="Naar JustAReminder">
+        <span class="brand-icon">✓</span>
+        <span class="brand-name">JustA<span class="blue">Reminder</span></span>
+      </a>
+
+      <div class="top-actions">
+        <button class="small-button" type="button" onclick="window.print()">
+          Afdrukken / opslaan
+        </button>
+        <a class="small-button primary" href="/">
+          Terug
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="page">
+
+    <section class="hero">
+      <div class="eyebrow">Juridisch</div>
+      <h1>Algemene voorwaarden</h1>
+      <p>
+        Deze algemene voorwaarden beschrijven de afspraken die gelden wanneer je
+        JustAReminder gebruikt, een account aanmaakt of een betaald abonnement afsluit.
+      </p>
+      <div class="updated">Laatst bijgewerkt: 7 oktober 2026</div>
+    </section>
+
+    <div class="layout">
+
+      <aside class="toc" aria-label="Inhoudsopgave">
+        <div class="toc-title">Inhoud</div>
+
+        <div class="toc-links">
+          <a href="#artikel-1">1. Wie wij zijn</a>
+          <a href="#artikel-2">2. Toepasselijkheid</a>
+          <a href="#artikel-3">3. De dienst</a>
+          <a href="#artikel-4">4. Account</a>
+          <a href="#artikel-5">5. Gebruik</a>
+          <a href="#artikel-6">6. Meldingen</a>
+          <a href="#artikel-7">7. Prijzen en betaling</a>
+          <a href="#artikel-8">8. Abonnementen</a>
+          <a href="#artikel-9">9. Bedenktijd</a>
+          <a href="#artikel-10">10. Beschikbaarheid</a>
+          <a href="#artikel-11">11. Intellectueel eigendom</a>
+          <a href="#artikel-12">12. Jouw gegevens</a>
+          <a href="#artikel-13">13. Aansprakelijkheid</a>
+          <a href="#artikel-14">14. Overmacht</a>
+          <a href="#artikel-15">15. Wijzigingen</a>
+          <a href="#artikel-16">16. Klachten</a>
+          <a href="#artikel-17">17. Beëindiging</a>
+          <a href="#artikel-18">18. Recht en geschillen</a>
+          <a href="#artikel-19">19. Contact</a>
+        </div>
+      </aside>
+
+      <div class="terms">
+
+        <div class="notice">
+          <strong>Voor publicatie invullen:</strong>
+          vervang alle geel gemarkeerde velden door je officiële bedrijfsgegevens.
+          Laat deze voorwaarden bij voorkeur juridisch controleren voordat je betalende
+          klanten accepteert, zeker wanneer je buiten Nederland verkoopt.
+        </div>
+
+        <section class="section" id="artikel-1">
+          <div class="section-number">01</div>
+          <h2>Wie wij zijn</h2>
+
+          <p>
+            JustAReminder is een online dienst waarmee gebruikers persoonlijke
+            herinneringen kunnen opslaan, beheren en ontvangen.
+          </p>
+
+          <div class="contact-box">
+            <div class="contact-row">
+              <div class="contact-label">Handelsnaam</div>
+              <div class="contact-value">JustAReminder</div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">Juridische naam</div>
+              <div class="contact-value"><span class="placeholder">[jouw officiële bedrijfsnaam]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">KvK-nummer</div>
+              <div class="contact-value"><span class="placeholder">[KvK-nummer]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">Btw-id</div>
+              <div class="contact-value"><span class="placeholder">[btw-id, indien van toepassing]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">Vestigingsadres</div>
+              <div class="contact-value"><span class="placeholder">[zakelijk adres]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">E-mail</div>
+              <div class="contact-value"><span class="placeholder">[zakelijk e-mailadres]</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="artikel-2">
+          <div class="section-number">02</div>
+          <h2>Toepasselijkheid</h2>
+
+          <p>
+            Deze algemene voorwaarden zijn van toepassing op ieder gebruik van
+            JustAReminder en op iedere overeenkomst tussen JustAReminder en een gebruiker
+            of klant.
+          </p>
+
+          <p>
+            Wanneer een bepaling uit deze voorwaarden in strijd is met dwingend
+            consumentenrecht, gaat het dwingende wettelijke recht voor.
+          </p>
+
+          <p>
+            Door een account aan te maken of een betaald abonnement af te sluiten,
+            bevestigt de gebruiker dat hij of zij vóór het sluiten van de overeenkomst
+            de mogelijkheid heeft gehad deze voorwaarden te bekijken en op te slaan.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-3">
+          <div class="section-number">03</div>
+          <h2>De dienst</h2>
+
+          <p>
+            JustAReminder biedt software waarmee gebruikers onder andere herinneringen,
+            datums, tijden, categorieën, prioriteiten, notities en herhalingen kunnen
+            beheren. Afhankelijk van het gekozen abonnement kunnen aanvullende functies
+            beschikbaar zijn.
+          </p>
+
+          <p>
+            JustAReminder mag de dienst doorontwikkelen, verbeteren of onderdelen wijzigen,
+            zolang daardoor de kern van een lopende betaalde overeenkomst niet zonder goede
+            reden wezenlijk wordt uitgehold.
+          </p>
+
+          <p>
+            Functies kunnen afhankelijk zijn van externe partijen, browsers,
+            besturingssystemen, internetverbindingen of apparaatinstellingen.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-4">
+          <div class="section-number">04</div>
+          <h2>Account en beveiliging</h2>
+
+          <p>
+            Voor bepaalde functies is een persoonlijk account nodig. De gebruiker moet
+            juiste en actuele gegevens verstrekken en is verantwoordelijk voor het veilig
+            bewaren van de eigen inloggegevens.
+          </p>
+
+          <p>
+            Het is niet toegestaan een account van een ander zonder toestemming te
+            gebruiken of toegang tot een account te delen wanneer dat tot misbruik,
+            beveiligingsrisico's of ongeoorloofd gebruik leidt.
+          </p>
+
+          <p>
+            Vermoedt een gebruiker dat iemand onbevoegd toegang heeft tot het account,
+            dan moet het wachtwoord zo snel mogelijk worden gewijzigd en kan contact
+            worden opgenomen met JustAReminder.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-5">
+          <div class="section-number">05</div>
+          <h2>Toegestaan gebruik</h2>
+
+          <p>De gebruiker mag JustAReminder uitsluitend rechtmatig gebruiken.</p>
+
+          <p>Het is onder meer niet toegestaan om:</p>
+
+          <ul>
+            <li>de dienst te gebruiken voor fraude, misleiding of andere illegale activiteiten;</li>
+            <li>de beveiliging of werking van de dienst te omzeilen of te verstoren;</li>
+            <li>schadelijke code, malware of geautomatiseerd misbruik te verspreiden;</li>
+            <li>rechten van JustAReminder of derden te schenden;</li>
+            <li>de dienst op oneigenlijke wijze te kopiëren, reverse-engineeren of doorverkopen, voor zover wettelijk niet toegestaan.</li>
+          </ul>
+
+          <p>
+            Bij ernstig misbruik kan JustAReminder toegang tijdelijk beperken of beëindigen.
+            Wanneer dat redelijkerwijs mogelijk is, krijgt de gebruiker hierover vooraf
+            bericht.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-6">
+          <div class="section-number">06</div>
+          <h2>Herinneringen en meldingen</h2>
+
+          <p>
+            JustAReminder is bedoeld als hulpmiddel. De gebruiker blijft zelf
+            verantwoordelijk voor afspraken, deadlines, medicatie, betalingen,
+            verplichtingen en andere zaken waarvoor een herinnering wordt ingesteld.
+          </p>
+
+          <p>
+            Een melding kan te laat, dubbel of helemaal niet aankomen door bijvoorbeeld
+            internetproblemen, browserinstellingen, batterijbesparing, storingen,
+            wijzigingen in een apparaat of diensten van derden.
+          </p>
+
+          <p>
+            JustAReminder mag daarom niet worden gebruikt als het enige systeem waarop
+            iemand vertrouwt in situaties waarin het missen van een melding ernstige
+            schade, letsel of andere grote gevolgen kan veroorzaken.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-7">
+          <div class="section-number">07</div>
+          <h2>Prijzen en betaling</h2>
+
+          <p>
+            De actuele prijs van een betaald abonnement wordt vóór het afsluiten duidelijk
+            getoond. Voor consumenten worden prijzen inclusief toepasselijke belastingen
+            weergegeven, tenzij de wet iets anders toestaat.
+          </p>
+
+          <p>
+            Betaling vindt plaats via de aangeboden betaalmethode en betaalprovider.
+            Wanneer een betaling niet kan worden verwerkt, kan toegang tot betaalde
+            functies worden beperkt nadat de klant een redelijke mogelijkheid heeft
+            gekregen om de betaling alsnog te voldoen.
+          </p>
+
+          <p>
+            JustAReminder mag prijzen voor toekomstige abonnementsperioden wijzigen.
+            Bij een relevante prijswijziging wordt de klant vooraf geïnformeerd en blijven
+            wettelijke opzeggingsrechten van toepassing.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-8">
+          <div class="section-number">08</div>
+          <h2>Abonnementen, verlenging en opzegging</h2>
+
+          <p>
+            De looptijd en factureringsperiode van een abonnement staan bij het aanbod
+            vermeld voordat de klant bestelt.
+          </p>
+
+          <p>
+            Wanneer een abonnement automatisch wordt verlengd, wordt dit vooraf duidelijk
+            gemaakt. Consumenten kunnen een abonnement na een eventuele wettelijke of
+            overeengekomen minimumduur opzeggen overeenkomstig de toepasselijke
+            consumentenregels.
+          </p>
+
+          <p>
+            Bij een maandelijks opzegbaar abonnement eindigt de betaalde toegang in beginsel
+            aan het einde van de reeds betaalde periode, tenzij bij het aanbod uitdrukkelijk
+            iets anders staat of dwingend recht een andere uitkomst vereist.
+          </p>
+
+          <p>
+            Een online afgesloten abonnement kan ook online worden opgezegd wanneer dat
+            wettelijk vereist is.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-9">
+          <div class="section-number">09</div>
+          <h2>Bedenktijd voor consumenten</h2>
+
+          <p>
+            Een consument die online een betaald abonnement of andere dienst afsluit,
+            heeft waar de wet dit bepaalt een wettelijke bedenktijd van 14 dagen.
+          </p>
+
+          <p>
+            Als de consument uitdrukkelijk verzoekt om de dienst al tijdens de bedenktijd
+            te laten beginnen en vervolgens binnen die termijn herroept, kan voor het reeds
+            geleverde deel een evenredig bedrag verschuldigd zijn wanneer de wet dat toestaat
+            en de vereiste informatie vooraf correct is verstrekt.
+          </p>
+
+          <p>
+            Wettelijke uitzonderingen op het herroepingsrecht gelden alleen wanneer aan
+            alle daarvoor geldende voorwaarden is voldaan.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-10">
+          <div class="section-number">10</div>
+          <h2>Beschikbaarheid, onderhoud en updates</h2>
+
+          <p>
+            JustAReminder probeert de dienst betrouwbaar beschikbaar te houden, maar kan
+            geen ononderbroken of foutloze werking garanderen.
+          </p>
+
+          <p>
+            Onderhoud, beveiligingsupdates, technische storingen, overmacht of problemen
+            bij externe leveranciers kunnen leiden tot tijdelijke onbeschikbaarheid.
+            Gepland onderhoud wordt waar redelijk mogelijk zo uitgevoerd dat gebruikers
+            zo min mogelijk hinder ondervinden.
+          </p>
+
+          <p>
+            Rechten van consumenten met betrekking tot conformiteit, updates en digitale
+            diensten blijven onverminderd van toepassing voor zover deze wettelijk gelden.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-11">
+          <div class="section-number">11</div>
+          <h2>Intellectueel eigendom</h2>
+
+          <p>
+            Alle rechten op de software, naam, vormgeving, teksten, code, logo's en overige
+            onderdelen van JustAReminder behoren toe aan JustAReminder of de betreffende
+            rechthebbenden, tenzij anders vermeld.
+          </p>
+
+          <p>
+            De gebruiker ontvangt uitsluitend een beperkt, persoonlijk, niet-exclusief
+            en niet-overdraagbaar recht om de dienst te gebruiken zolang de overeenkomst
+            loopt en deze voorwaarden worden nageleefd.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-12">
+          <div class="section-number">12</div>
+          <h2>Jouw gegevens en privacy</h2>
+
+          <p>
+            De inhoud die de gebruiker zelf invoert, zoals titels, notities en
+            herinneringen, blijft van de gebruiker.
+          </p>
+
+          <p>
+            JustAReminder verwerkt persoonsgegevens uitsluitend voor de doeleinden en op
+            de wijze die in de privacyverklaring worden beschreven en voor zover toegestaan
+            of vereist volgens toepasselijke privacywetgeving.
+          </p>
+
+          <p>
+            De gebruiker is verantwoordelijk voor het rechtmatig invoeren van gegevens
+            over andere personen.
+          </p>
+
+          <p>
+            Meer informatie over persoonsgegevens, bewaartermijnen, rechten en eventuele
+            dienstverleners hoort in een afzonderlijke privacyverklaring.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-13">
+          <div class="section-number">13</div>
+          <h2>Aansprakelijkheid</h2>
+
+          <p>
+            Niets in deze voorwaarden beperkt of sluit aansprakelijkheid uit wanneer dat
+            volgens dwingend recht niet is toegestaan.
+          </p>
+
+          <p>
+            Voor zover wettelijk toegestaan is JustAReminder niet aansprakelijk voor
+            indirecte schade die uitsluitend ontstaat doordat een melding niet, te laat
+            of onjuist wordt ontvangen, wanneer de oorzaak buiten de redelijke controle
+            van JustAReminder ligt.
+          </p>
+
+          <p>
+            De gebruiker blijft verantwoordelijk voor het controleren van belangrijke
+            afspraken, deadlines en verplichtingen en voor het maken van passende
+            back-ups of alternatieve controles wanneer de gevolgen van vergeten groot
+            kunnen zijn.
+          </p>
+
+          <p>
+            Voor zakelijke klanten kan in een afzonderlijke zakelijke overeenkomst een
+            verdere redelijke aansprakelijkheidsbeperking worden afgesproken.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-14">
+          <div class="section-number">14</div>
+          <h2>Overmacht</h2>
+
+          <p>
+            JustAReminder is niet gehouden tot nakoming voor zover nakoming tijdelijk of
+            blijvend onmogelijk is door omstandigheden die redelijkerwijs buiten zijn
+            invloed liggen, zoals grootschalige internetstoringen, storingen bij
+            hosting- of cloudleveranciers, natuurrampen, oorlog, overheidsmaatregelen
+            of andere vergelijkbare gebeurtenissen.
+          </p>
+
+          <p>
+            Wettelijke rechten van consumenten blijven daarbij gelden.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-15">
+          <div class="section-number">15</div>
+          <h2>Wijziging van deze voorwaarden</h2>
+
+          <p>
+            JustAReminder kan deze voorwaarden wijzigen wanneer daar een redelijke aanleiding
+            voor is, bijvoorbeeld door nieuwe functies, wetswijzigingen, beveiliging of
+            veranderingen in de dienstverlening.
+          </p>
+
+          <p>
+            Bij wezenlijke wijzigingen die nadelig zijn voor een lopende betaalde
+            overeenkomst wordt de klant tijdig geïnformeerd. Waar de wet dit vereist,
+            krijgt de klant het recht de overeenkomst te beëindigen voordat de wijziging
+            ingaat.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-16">
+          <div class="section-number">16</div>
+          <h2>Klachten</h2>
+
+          <p>
+            Een klacht kan worden gestuurd naar
+            <span class="placeholder">[zakelijk e-mailadres]</span>.
+            Vermeld daarbij voldoende informatie om de klacht te kunnen onderzoeken.
+          </p>
+
+          <p>
+            JustAReminder probeert klachten binnen een redelijke termijn inhoudelijk te
+            beantwoorden. Wanneer meer tijd nodig is, ontvangt de klant waar mogelijk
+            een bevestiging en een indicatie van de verdere behandeling.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-17">
+          <div class="section-number">17</div>
+          <h2>Beëindiging van een account</h2>
+
+          <p>
+            Een gebruiker kan het account beëindigen via de daarvoor beschikbare functie
+            of door contact op te nemen met JustAReminder.
+          </p>
+
+          <p>
+            Openstaande betalingsverplichtingen blijven bestaan voor zover deze rechtmatig
+            verschuldigd zijn.
+          </p>
+
+          <p>
+            Na beëindiging kunnen gegevens worden verwijderd of gedurende een beperkte
+            periode worden bewaard wanneer dat nodig is voor wettelijke verplichtingen,
+            beveiliging, geschillen of andere legitieme doeleinden zoals beschreven in de
+            privacyverklaring.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-18">
+          <div class="section-number">18</div>
+          <h2>Toepasselijk recht en geschillen</h2>
+
+          <p>
+            Op overeenkomsten met JustAReminder is Nederlands recht van toepassing, voor
+            zover een rechtskeuze wettelijk is toegestaan.
+          </p>
+
+          <p>
+            Een consument behoudt de bescherming van dwingende consumentenregels die op
+            grond van toepasselijk internationaal recht niet door deze rechtskeuze kunnen
+            worden uitgesloten.
+          </p>
+
+          <p>
+            Geschillen worden voorgelegd aan de bevoegde rechter, tenzij dwingend recht
+            een andere rechter aanwijst. Partijen proberen een geschil bij voorkeur eerst
+            onderling op te lossen.
+          </p>
+        </section>
+
+        <section class="section" id="artikel-19">
+          <div class="section-number">19</div>
+          <h2>Contact</h2>
+
+          <p>
+            Voor vragen over deze voorwaarden kun je contact opnemen met:
+          </p>
+
+          <div class="contact-box">
+            <div class="contact-row">
+              <div class="contact-label">Bedrijf</div>
+              <div class="contact-value">JustAReminder / <span class="placeholder">[officiële bedrijfsnaam]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">E-mail</div>
+              <div class="contact-value"><span class="placeholder">[zakelijk e-mailadres]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">Adres</div>
+              <div class="contact-value"><span class="placeholder">[zakelijk adres]</span></div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-label">KvK</div>
+              <div class="contact-value"><span class="placeholder">[KvK-nummer]</span></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <footer class="footer">
+      <strong>JustAReminder</strong>
+      <p>Keep life on track.</p>
+
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/privacy.html">Privacyverklaring</a>
+        <a href="/algemene-voorwaarden.html">Algemene voorwaarden</a>
+        <a href="/contact.html">Contact</a>
+      </div>
+    </footer>
+
+  </main>
+
+</body>
+</html>
