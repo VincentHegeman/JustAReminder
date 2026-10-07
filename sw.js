@@ -2,6 +2,7 @@ self.addEventListener("install", () => {
     self.skipWaiting();
 });
 
+
 self.addEventListener("activate", event => {
     event.waitUntil(
         self.clients.claim()
@@ -15,15 +16,28 @@ self.addEventListener("push", event => {
         title: "JustAReminder",
         body: "Je hebt een herinnering.",
         url: "dashboard.html",
-        tag: "justareminder"
+        tag: "justareminder",
+
+        reminderId: null,
+        reminderType: "reminder",
+        repeatUntilCompleted: false
     };
+
 
     if (event.data) {
 
         try {
-            payload = event.data.json();
+
+            payload = {
+                ...payload,
+                ...event.data.json()
+            };
+
         } catch (error) {
-            payload.body = event.data.text();
+
+            payload.body =
+                event.data.text();
+
         }
 
     }
@@ -32,6 +46,15 @@ self.addEventListener("push", event => {
     const title =
         payload.title ||
         "JustAReminder";
+
+
+    /*
+     * Alleen taken die moeten blijven terugkomen
+     * krijgen requireInteraction.
+     */
+    const isRepeatingTask =
+        payload.reminderType === "task" &&
+        payload.repeatUntilCompleted === true;
 
 
     const options = {
@@ -44,18 +67,45 @@ self.addEventListener("push", event => {
             payload.tag ||
             "justareminder",
 
+        /*
+         * Zorgt dat een nieuwe push met dezelfde tag
+         * opnieuw aandacht vraagt.
+         */
         renotify: true,
+
+
+        /*
+         * Bij een taak probeert de browser
+         * de notificatie zichtbaar te houden
+         * totdat de gebruiker ermee interacteert.
+         */
+        requireInteraction:
+            isRepeatingTask,
+
 
         timestamp:
             payload.timestamp
                 ? Number(payload.timestamp)
                 : Date.now(),
 
+
         data: {
+
             url:
                 payload.url ||
                 payload.data?.url ||
-                "dashboard.html"
+                "dashboard.html",
+
+            reminderId:
+                payload.reminderId ||
+                null,
+
+            reminderType:
+                payload.reminderType ||
+                "reminder",
+
+            repeatUntilCompleted:
+                payload.repeatUntilCompleted === true
         }
 
     };
@@ -108,9 +158,11 @@ self.addEventListener(
                     ) {
 
                         if ("navigate" in client) {
+
                             client.navigate(
                                 targetUrl
                             );
+
                         }
 
                         return client.focus();
