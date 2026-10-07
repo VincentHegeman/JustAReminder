@@ -12,10 +12,10 @@ self.addEventListener("activate", event => {
 self.addEventListener("push", event => {
 
     let payload = {
-        title: "Nooit Meer Vergeten",
+        title: "JustAReminder",
         body: "Je hebt een herinnering.",
         url: "dashboard.html",
-        tag: "nooit-meer-vergeten"
+        tag: "justareminder"
     };
 
     if (event.data) {
@@ -31,7 +31,7 @@ self.addEventListener("push", event => {
 
     const title =
         payload.title ||
-        "Nooit Meer Vergeten";
+        "JustAReminder";
 
 
     const options = {
@@ -42,9 +42,14 @@ self.addEventListener("push", event => {
 
         tag:
             payload.tag ||
-            "nooit-meer-vergeten",
+            "justareminder",
 
         renotify: true,
+
+        timestamp:
+            payload.timestamp
+                ? Number(payload.timestamp)
+                : Date.now(),
 
         data: {
             url:
