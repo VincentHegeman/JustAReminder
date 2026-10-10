@@ -1,376 +1,673 @@
 
 /*
- * JustAReminder — Gratis OCR Scanner V2
- * Herkent tekst uit agenda's en voegt bijbehorende
- * regels samen tot één herinnering.
- *
- * Geen OpenAI- of Gemini-key nodig.
- * Alle resultaten blijven controleerbaar.
- */
+  JustAReminder - OCR Scanner V3
+  --------------------------------
+  Gratis agendascanner met Tesseract.js.
 
-(function (global) {
-  'use strict';
+  - Geen Gemini of OpenAI nodig
+  - Geen API-key nodig
+  - Nederlandse en Engelse tekstherkenning
+  - Probeert regels van één notitie samen te voegen
+  - Herkent Nederlandse datums en tijdstippen
+  - Filtert onleesbare OCR-tekst
+  - Maximaal 10 voorstellen
+  - Alles moet eerst gecontroleerd worden
 
-  let loading = null;
+  Gebruik:
+    JustAReminderOCR.scan(file, onProgress)
+    JustAReminderOCR.parse(text)
 
-  const maanden = {
-    januari: 1, jan: 1,
-    februari: 2, feb: 2,
-    maart: 3, mrt: 3,
-    april: 4, apr: 4,
+  Retourneert:
+    {
+      text: "...",
+      entries: [...]
+    }
+*/
+
+(function (window) {
+  "use strict";
+
+  const OCR_VERSION = "3.0.0";
+
+  const OCR_URL =
+    "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js";
+
+  let loadingPromise = null;
+
+  const MONTHS = {
+    januari: 1,
+    jan: 1,
+    februari: 2,
+    feb: 2,
+    maart: 3,
+    mrt: 3,
+    april: 4,
+    apr: 4,
     mei: 5,
-    juni: 6, jun: 6,
-    juli: 7, jul: 7,
-    augustus: 8, aug: 8,
-    september: 9, sep: 9, sept: 9,
-    oktober: 10, okt: 10,
-    november: 11, nov: 11,
-    december: 12, dec: 12
+    juni: 6,
+    jun: 6,
+    juli: 7,
+    jul: 7,
+    augustus: 8,
+    aug: 8,
+    september: 9,
+    sep: 9,
+    sept: 9,
+    oktober: 10,
+    okt: 10,
+    november: 11,
+    nov: 11,
+    december: 12,
+    dec: 12
   };
 
-  function laadOCR() {
-    if (global.Tesseract) {
-      return Promise.resolve(global.Tesseract);
+  const KNOWN_WORDS = new Set([
+    "afspraak",
+    "agenda",
+    "apotheek",
+    "arts",
+    "auto",
+    "bezoek",
+    "bellen",
+    "belangrijk",
+    "brief",
+    "controle",
+    "dag",
+    "dierenarts",
+    "dokter",
+    "formulier",
+    "huisarts",
+    "inschrijving",
+    "kantoor",
+    "kapper",
+    "kinderen",
+    "kvk",
+    "map",
+    "mee",
+    "meenemen",
+    "medicatie",
+    "medicijnen",
+    "middag",
+    "morgen",
+    "moet",
+    "moeten",
+    "niet",
+    "notitie",
+    "oktober",
+    "ophalen",
+    "school",
+    "sleutels",
+    "tandarts",
+    "taak",
+    "testen",
+    "tijd",
+    "vandaag",
+    "vergeten",
+    "vergadering",
+    "werk",
+    "ziekenhuis",
+    "zwolle"
+  ]);
+
+  const IMPORTANT_WORDS =
+    /\b(niet vergeten|belangrijk|dringend|urgent|spoed|meenemen|moet mee|uiterlijk)\b/i;
+
+  const APPOINTMENT_WORDS =
+    /\b(afspraak|dokter|huisarts|tandarts|ziekenhuis|kapper|kvk|vergadering|gesprek|controle)\b/i;
+
+  const TASK_WORDS =
+    /\b(meenemen|ophalen|kopen|regelen|betalen|bellen|versturen|inleveren)\b/i;
+
+  const MEDICINE_WORDS =
+    /\b(medicatie|medicijnen|medicijn|tabletten|pillen)\b/i;
+
+  function loadTesseract() {
+    if (window.Tesseract) {
+      return Promise.resolve(window.Tesseract);
     }
 
-    if (!loading) {
-      loading = new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-
-        script.src =
-          'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
-
-        script.onload = () => {
-          if (global.Tesseract) {
-            resolve(global.Tesseract);
-          } else {
-            reject(new Error('OCR-bibliotheek ontbreekt.'));
-          }
-        };
-
-        script.onerror = () => {
-          reject(new Error(
-            'OCR kon niet worden geladen. Controleer je internet.'
-          ));
-        };
-
-        document.head.appendChild(script);
-      }).catch(error => {
-        loading = null;
-        throw error;
-      });
+    if (loadingPromise) {
+      return loadingPromise;
     }
 
-    return loading;
+    loadingPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+
+      script.src = OCR_URL;
+      script.async = true;
+
+      script.onload = function () {
+        if (window.Tesseract) {
+          resolve(window.Tesseract);
+        } else {
+          reject(
+            new Error("OCR-bibliotheek kon niet worden gestart.")
+          );
+        }
+      };
+
+      script.onerror = function () {
+        reject(
+          new Error(
+            "OCR kon niet worden geladen. Controleer je internetverbinding."
+          )
+        );
+      };
+
+      document.head.appendChild(script);
+    }).catch(error => {
+      loadingPromise = null;
+      throw error;
+    });
+
+    return loadingPromise;
   }
 
-  function geldigeDatum(jaar, maand, dag) {
-    const d = new Date(Date.UTC(jaar, maand - 1, dag));
+  function cleanText(value) {
+    return String(value || "")
+      .normalize("NFC")
+      .replace(/[ \t]+/g, " ")
+      .replace(/\r/g, "")
+      .trim();
+  }
+
+  function cleanLine(value) {
+    return cleanText(value)
+      .replace(/^[|=_~*•]+/, "")
+      .replace(/[|=_~*•]+$/, "")
+      .trim();
+  }
+
+  function validDate(year, month, day) {
+    const date = new Date(Date.UTC(year, month - 1, day));
 
     return (
-      d.getUTCFullYear() === jaar &&
-      d.getUTCMonth() === maand - 1 &&
-      d.getUTCDate() === dag
+      date.getUTCFullYear() === year &&
+      date.getUTCMonth() === month - 1 &&
+      date.getUTCDate() === day
     );
   }
 
-  function datumTekst(jaar, maand, dag) {
+  function formatDate(year, month, day) {
     return (
-      jaar + '-' +
-      String(maand).padStart(2, '0') + '-' +
-      String(dag).padStart(2, '0')
+      String(year).padStart(4, "0") +
+      "-" +
+      String(month).padStart(2, "0") +
+      "-" +
+      String(day).padStart(2, "0")
     );
   }
 
-  function kiesJaar(maand, dag) {
-    const vandaag = new Date();
-    const huidigJaar = vandaag.getFullYear();
+  function guessYear(month, day) {
+    const today = new Date();
 
-    // Kies dit jaar, of volgend jaar als de datum
-    // al voorbij is. Laat de gebruiker dit controleren.
-    for (const jaar of [huidigJaar, huidigJaar + 1]) {
-      if (!geldigeDatum(jaar, maand, dag)) continue;
+    const year = today.getFullYear();
 
-      const kandidaat = new Date(
-        jaar, maand - 1, dag, 23, 59, 59
-      );
+    const todayStart = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
 
-      if (kandidaat >= vandaag) {
-        return jaar;
-      }
-    }
+    const candidate = new Date(year, month - 1, day);
 
-    return huidigJaar;
+    return candidate >= todayStart ? year : year + 1;
   }
 
-  function herkenDatum(tekst) {
+  function getDate(text) {
     let match;
 
-    // Voorbeeld: 2026-10-13
-    match = tekst.match(
+    // 2026-10-13
+    match = text.match(
       /\b(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})\b/
     );
 
     if (match) {
-      const jaar = Number(match[1]);
-      const maand = Number(match[2]);
-      const dag = Number(match[3]);
+      const year = Number(match[1]);
+      const month = Number(match[2]);
+      const day = Number(match[3]);
 
-      if (geldigeDatum(jaar, maand, dag)) {
+      if (validDate(year, month, day)) {
         return {
-          date: datumTekst(jaar, maand, dag),
+          value: formatDate(year, month, day),
           matched: match[0],
-          assumedYear: false
+          assumed: false
         };
       }
     }
 
-    // Voorbeeld: 13-10-2026 of 13/10
-    match = tekst.match(
+    // 13-10-2026 of 13/10
+    match = text.match(
       /\b(\d{1,2})[-/.](\d{1,2})(?:[-/.](20\d{2}))?\b/
     );
 
     if (match) {
-      const dag = Number(match[1]);
-      const maand = Number(match[2]);
-      const aangenomen = !match[3];
+      const day = Number(match[1]);
+      const month = Number(match[2]);
 
-      const jaar = match[3]
-        ? Number(match[3])
-        : kiesJaar(maand, dag);
+      const assumed = !match[3];
 
-      if (geldigeDatum(jaar, maand, dag)) {
+      const year = assumed
+        ? guessYear(month, day)
+        : Number(match[3]);
+
+      if (validDate(year, month, day)) {
         return {
-          date: datumTekst(jaar, maand, dag),
+          value: formatDate(year, month, day),
           matched: match[0],
-          assumedYear: aangenomen
+          assumed
         };
       }
     }
 
-    // Voorbeeld: 13 oktober of 13 oktober 2026
-    const maandnamen = Object.keys(maanden)
+    // 13 oktober 2026 / 13 oktober
+    const monthNames = Object.keys(MONTHS)
       .sort((a, b) => b.length - a.length)
-      .join('|');
+      .join("|");
 
-    const regex = new RegExp(
-      '\\b(\\d{1,2})\\s+(' +
-      maandnamen +
-      ')(?:\\s+(20\\d{2}))?\\b',
-      'i'
+    const pattern = new RegExp(
+      "\\b(\\d{1,2})\\s+(" +
+        monthNames +
+        ")(?:\\s+(20\\d{2}))?\\b",
+      "i"
     );
 
-    match = tekst.match(regex);
+    match = text.match(pattern);
 
     if (match) {
-      const dag = Number(match[1]);
-      const maand = maanden[match[2].toLowerCase()];
-      const aangenomen = !match[3];
+      const day = Number(match[1]);
+      const month = MONTHS[match[2].toLowerCase()];
 
-      const jaar = match[3]
-        ? Number(match[3])
-        : kiesJaar(maand, dag);
+      const assumed = !match[3];
 
-      if (geldigeDatum(jaar, maand, dag)) {
+      const year = assumed
+        ? guessYear(month, day)
+        : Number(match[3]);
+
+      if (validDate(year, month, day)) {
         return {
-          date: datumTekst(jaar, maand, dag),
+          value: formatDate(year, month, day),
           matched: match[0],
-          assumedYear: aangenomen
+          assumed
         };
       }
     }
 
     return {
-      date: null,
-      matched: '',
-      assumedYear: false
+      value: null,
+      matched: "",
+      assumed: false
     };
   }
 
-  function herkenTijd(tekst) {
-    const match = tekst.match(
+  function getTime(text) {
+    const match = text.match(
       /\b(?:om\s+)?([01]?\d|2[0-3])[:.]([0-5]\d)\b/i
     );
 
-    if (!match) return null;
+    if (!match) {
+      return null;
+    }
 
     return (
-      String(Number(match[1])).padStart(2, '0') +
-      ':' + match[2]
+      String(Number(match[1])).padStart(2, "0") +
+      ":" +
+      match[2]
     );
   }
 
-  function herkenLocatie(tekst) {
-    // Herkent o.a. "in Zwolle" en "te Amsterdam".
-    const match = tekst.match(
+  function getLocation(text) {
+    const match = text.match(
       /\b(?:in|te|locatie:)\s+([A-Z][a-zà-ÿ]+(?:\s+[A-Z][a-zà-ÿ]+)*)/
     );
 
-    return match ? match[1] : null;
-  }
-
-  function maakTitel(tekst, locatie) {
-    if (/\bkvk\b/i.test(tekst)) {
-      return locatie
-        ? 'KVK-inschrijving ' + locatie
-        : 'KVK-afspraak';
+    if (!match) {
+      return null;
     }
 
-    if (/\b(tandarts|dokter|huisarts|ziekenhuis)\b/i.test(tekst)) {
-      const match = tekst.match(
-        /\b(tandarts|dokter|huisarts|ziekenhuis)\b/i
+    const location = match[1].trim();
+
+    if (location.length > 50) {
+      return null;
+    }
+
+    return location;
+  }
+
+  function looksReadable(line) {
+    const text = cleanLine(line);
+
+    if (text.length < 5) {
+      return false;
+    }
+
+    const letters = text.match(/[a-zà-ÿ]/gi) || [];
+
+    const characters = text.replace(/\s/g, "");
+
+    if (!characters.length) {
+      return false;
+    }
+
+    const letterRatio = letters.length / characters.length;
+
+    if (letterRatio < 0.48) {
+      return false;
+    }
+
+    const words = text.match(/[a-zà-ÿ]{2,}/gi) || [];
+
+    if (words.length < 2) {
+      return false;
+    }
+
+    // Al te veel losse symbolen? Waarschijnlijk OCR-ruis.
+    const strangeSymbols =
+      (text.match(/[=<>£€#@~|\\[\]{}]/g) || []).length;
+
+    if (strangeSymbols > 2) {
+      return false;
+    }
+
+    const knownCount = words.filter(word =>
+      KNOWN_WORDS.has(word.toLowerCase())
+    ).length;
+
+    const hasDate = Boolean(getDate(text).value);
+
+    const hasImportantContent =
+      IMPORTANT_WORDS.test(text) ||
+      APPOINTMENT_WORDS.test(text) ||
+      TASK_WORDS.test(text) ||
+      MEDICINE_WORDS.test(text);
+
+    // Geef voorkeur aan herkenbare agendatekst.
+    // Willekeurige woordgroepen worden niet automatisch afspraken.
+    return (
+      knownCount >= 1 ||
+      hasDate ||
+      hasImportantContent
+    );
+  }
+
+  function getEntryType(text) {
+    if (APPOINTMENT_WORDS.test(text)) {
+      return "appointment";
+    }
+
+    if (TASK_WORDS.test(text)) {
+      return "task";
+    }
+
+    return "reminder";
+  }
+
+  function getPriority(text) {
+    if (IMPORTANT_WORDS.test(text) || text.includes("!")) {
+      return "high";
+    }
+
+    return "normal";
+  }
+
+  function getTitle(text, location) {
+    if (/\bkvk\b/i.test(text)) {
+      return location
+        ? "KVK-afspraak " + location
+        : "KVK-afspraak";
+    }
+
+    const medical = text.match(
+      /\b(tandarts|huisarts|dokter|ziekenhuis)\b/i
+    );
+
+    if (medical) {
+      return "Afspraak " + medical[1].toLowerCase();
+    }
+
+    if (MEDICINE_WORDS.test(text)) {
+      return "Medicatieherinnering";
+    }
+
+    let title = text;
+
+    const date = getDate(title);
+
+    if (date.matched) {
+      title = title.replace(date.matched, " ");
+    }
+
+    title = title
+      .replace(/\b(?:om\s+)?\d{1,2}[:.]\d{2}\b/gi, " ")
+      .replace(/\s+/g, " ")
+      .replace(/^[,;:.!\-\s]+/, "")
+      .trim();
+
+    const firstSentence = title.split(/[.!?\n]/)[0].trim();
+
+    if (firstSentence.length >= 4) {
+      return firstSentence.slice(0, 100);
+    }
+
+    return "Herinnering controleren";
+  }
+
+  function buildEntry(lines) {
+    const text = lines.join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (!text) {
+      return null;
+    }
+
+    const date = getDate(text);
+    const time = getTime(text);
+    const location = getLocation(text);
+
+    // Zonder datum of herkenbare taak liever niets voorstellen.
+    const meaningful =
+      Boolean(date.value) ||
+      APPOINTMENT_WORDS.test(text) ||
+      TASK_WORDS.test(text) ||
+      MEDICINE_WORDS.test(text);
+
+    if (!meaningful) {
+      return null;
+    }
+
+    const notes = [text];
+
+    if (location) {
+      notes.push("Locatie: " + location);
+    }
+
+    if (date.assumed) {
+      notes.push(
+        "Let op: het jaartal is automatisch geschat. Controleer de datum."
       );
-      return 'Afspraak ' + match[1].toLowerCase();
-    }
-
-    if (/\bmedicijn|medicatie\b/i.test(tekst)) {
-      return 'Medicatieherinnering';
-    }
-
-    let titel = tekst
-      .replace(/\b\d{1,2}\s+[a-z]+\s*(?:20\d{2})?\b/gi, '')
-      .replace(/\b\d{1,2}[:.]\d{2}\b/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-
-    titel = titel.split(/[.!?\n]/)[0].trim();
-
-    return titel.slice(0, 100) || 'Controleer herinnering';
-  }
-
-  function maakHerinnering(regels) {
-    const tekst = regels.join(' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-
-    if (!tekst) return null;
-
-    const datum = herkenDatum(tekst);
-    const tijd = herkenTijd(tekst);
-    const locatie = herkenLocatie(tekst);
-
-    const belangrijk =
-      /niet vergeten|belangrijk|dringend|urgent|moet mee|meenemen|!/i
-        .test(tekst);
-
-    const titel = maakTitel(tekst, locatie);
-
-    let notities = tekst;
-
-    if (locatie && !new RegExp(
-      'Locatie:\\s*' + locatie, 'i'
-    ).test(notities)) {
-      notities += '\nLocatie: ' + locatie;
-    }
-
-    if (datum.assumedYear) {
-      notities += '\nLet op: jaartal is automatisch aangenomen.';
     }
 
     return {
-      title: titel,
-      entry_type: 'reminder',
-      event_date: datum.date,
-      event_time: tijd,
-      recurrence: 'none',
+      title: getTitle(text, location),
+      entry_type: getEntryType(text),
+      event_date: date.value,
+      event_time: time,
+      recurrence: "none",
       weekday: null,
-      priority: belangrijk ? 'high' : 'normal',
-      notes: notities.slice(0, 1000),
+      priority: getPriority(text),
+      notes: notes.join("\n").slice(0, 1000),
       requires_review: true,
-      confidence: 'low',
-      selected: true
+      confidence: "low",
+      selected: false
     };
   }
 
-  function parse(tekst) {
-    const regels = String(tekst || '')
+  function parse(rawText) {
+    const lines = String(rawText || "")
       .split(/\r?\n/)
-      .map(regel => regel.replace(/\s+/g, ' ').trim())
+      .map(cleanLine)
       .filter(Boolean)
       .slice(0, 100);
 
-    if (!regels.length) return [];
+    if (!lines.length) {
+      return [];
+    }
 
-    const groepen = [];
-    let huidigeGroep = [];
-    let huidigeDatum = null;
+    // Haal duidelijke OCR-rommel weg.
+    const readable = lines.filter(looksReadable);
 
-    for (const regel of regels) {
-      const gevonden = herkenDatum(regel);
+    if (!readable.length) {
+      return [];
+    }
 
-      // Alleen bij een duidelijk andere datum beginnen
-      // we aan een nieuwe afspraak.
+    const groups = [];
+
+    let current = [];
+    let currentDate = null;
+
+    for (const line of readable) {
+      const detected = getDate(line);
+
+      // Een nieuwe datum kan een nieuwe agenda-afspraak betekenen.
       if (
-        gevonden.date &&
-        huidigeDatum &&
-        gevonden.date !== huidigeDatum &&
-        huidigeGroep.length
+        detected.value &&
+        currentDate &&
+        detected.value !== currentDate &&
+        current.length
       ) {
-        groepen.push(huidigeGroep);
-        huidigeGroep = [];
+        groups.push(current);
+        current = [];
       }
 
-      huidigeGroep.push(regel);
+      current.push(line);
 
-      if (gevonden.date) {
-        huidigeDatum = gevonden.date;
+      if (detected.value) {
+        currentDate = detected.value;
       }
     }
 
-    if (huidigeGroep.length) {
-      groepen.push(huidigeGroep);
+    if (current.length) {
+      groups.push(current);
     }
 
-    const resultaten = groepen
-      .map(maakHerinnering)
-      .filter(Boolean);
+    // Maak maximaal 10 voorstellen.
+    const entries = groups
+      .map(buildEntry)
+      .filter(Boolean)
+      .slice(0, 10);
 
-    return resultaten.slice(0, 30);
+    // Verwijder exact dubbele voorstellen.
+    const seen = new Set();
+
+    return entries.filter(entry => {
+      const key = [
+        entry.title.toLowerCase(),
+        entry.event_date || "",
+        entry.event_time || ""
+      ].join("|");
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
   }
 
   async function scan(file, onProgress) {
-    if (!file || !file.type.startsWith('image/')) {
-      throw new Error('Kies een JPG-, PNG- of WebP-foto.');
+    if (!file) {
+      throw new Error("Selecteer eerst een foto.");
+    }
+
+    const allowed = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+    if (!allowed.includes(file.type)) {
+      throw new Error(
+        "Gebruik een JPG-, PNG- of WebP-afbeelding."
+      );
     }
 
     if (file.size > 12 * 1024 * 1024) {
-      throw new Error('Foto is te groot. Maximaal 12 MB.');
+      throw new Error(
+        "De afbeelding is te groot. Maximaal 12 MB."
+      );
     }
 
-    const Tesseract = await laadOCR();
+    const Tesseract = await loadTesseract();
 
-    const worker = await Tesseract.createWorker(
-      'nld+eng',
-      1,
-      {
-        logger: data => {
-          if (
-            data.status === 'recognizing text' &&
-            typeof onProgress === 'function'
-          ) {
-            onProgress(
-              Math.round((data.progress || 0) * 100)
-            );
-          }
-        }
-      }
-    );
+    let worker = null;
 
     try {
-      const { data } = await worker.recognize(file);
+      worker = await Tesseract.createWorker(
+        "nld+eng",
+        1,
+        {
+          logger: message => {
+            if (
+              message.status === "recognizing text" &&
+              typeof onProgress === "function"
+            ) {
+              onProgress(
+                Math.round((message.progress || 0) * 100)
+              );
+            }
+          }
+        }
+      );
 
-      const tekst = data.text || '';
+      const response = await worker.recognize(file);
+
+      const data = response.data || {};
+
+      const text = data.text || "";
+
+      const confidence = Number(data.confidence || 0);
+
+      // Lage herkenningskwaliteit: niet automatisch importeren.
+      if (confidence < 40) {
+        return {
+          text,
+          entries: [],
+          confidence,
+          warning:
+            "De foto is onvoldoende leesbaar. " +
+            "Maak een scherpere foto of voer de afspraak handmatig in."
+        };
+      }
+
+      const entries = parse(text);
 
       return {
-        text: tekst,
-        entries: parse(tekst)
+        text,
+        entries,
+        confidence,
+        warning: entries.length === 0
+          ? "Geen betrouwbare afspraken herkend. " +
+            "Controleer de foto of voer de afspraak handmatig in."
+          : null
       };
+
+    } catch (error) {
+      throw new Error(
+        "Het uitlezen van de foto is mislukt: " +
+        (error?.message || "Onbekende fout")
+      );
+
     } finally {
-      await worker.terminate();
+      if (worker) {
+        await worker.terminate();
+      }
     }
   }
 
-  global.JustAReminderOCR = {
+  window.JustAReminderOCR = {
+    version: OCR_VERSION,
     scan,
     parse
   };
