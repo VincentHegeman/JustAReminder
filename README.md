@@ -1,2 +1,2 @@
-# JustAReminder
+# Nooit-meer-vergeten
 Webapp voor herinneringen
