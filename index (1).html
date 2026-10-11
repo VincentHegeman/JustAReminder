@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url=inloggen.html">
+  <title>JustAReminder Privé — Inloggen</title>
+  <style>
+    :root{color-scheme:light}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#fffaf3;color:#345b68;font-family:Verdana,Arial,sans-serif}
+    main{max-width:34rem;margin:1.5rem;padding:2rem;background:#fffefa;border:1px solid #eee4d7;border-radius:22px;text-align:center;box-shadow:0 8px 35px #345b6810}
+    a{color:#345b68;font-weight:bold}
+  </style>
+  <script>
+    // De oude welkomstpagina vervalt: verwijs naar de bestaande Privé-inlogpagina.
+    // Neem een eventuele querystring mee voor toekomstig gebruik.
+    const suffix=window.location.search+window.location.hash;
+    window.location.replace('inloggen.html'+suffix);
+  </script>
+</head>
+<body>
+  <main>
+    <h1>JustAReminder Privé</h1>
+    <p>Je wordt doorgestuurd naar de inlogpagina.</p>
+    <p><a href="inloggen.html">Ga naar inloggen</a></p>
+  </main>
+</body>
+</html>
