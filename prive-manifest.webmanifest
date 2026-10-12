@@ -1,0 +1,26 @@
+{
+  "id": "/prive-app",
+  "name": "JustAReminder Privé",
+  "short_name": "JustAReminder",
+  "description": "Jouw persoonlijke herinneringen op één rustige plek.",
+  "lang": "nl",
+  "start_url": "./dashboard.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffaf3",
+  "theme_color": "#fffaf3",
+  "icons": [
+    {
+      "src": "./prive-icon-192-v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./prive-icon-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

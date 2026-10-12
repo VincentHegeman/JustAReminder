@@ -1,0 +1,10 @@
+JustAReminder Privé — installatieknop + icoon
+
+1. Maak een back-up van dashboard.html in GitHub.
+2. Upload dashboard.html, prive-manifest.webmanifest en de drie *-v2.png bestanden naar de hoofdmap van Privé.
+3. Vervang alleen bestaande dashboard.html en prive-manifest.webmanifest; laat sw.js, inloggen.html, instellingen.html en andere bestanden ongemoeid.
+4. Wacht op Vercel Production Ready.
+5. Laad de website opnieuw. De knop Installeer app staat in het menu.
+6. Voor het nieuwe pictogram: sluit/verwijder zo nodig de oude geïnstalleerde app en installeer opnieuw; browsers bewaren soms oude iconen.
+7. De installatieknop toont instructies als de browser geen automatische installatiepopup ondersteunt.
+8. Bij Vercel-fouten niet blijven committen; wacht en controleer het nieuwe production deployment.
