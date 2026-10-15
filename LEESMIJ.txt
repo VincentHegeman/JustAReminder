@@ -1,10 +1,24 @@
-JustAReminder Privé — installatieknop + icoon
+JustAReminder Privé — nieuwe dashboardversie / bèta-categorieën
 
-1. Maak een back-up van dashboard.html in GitHub.
-2. Upload dashboard.html, prive-manifest.webmanifest en de drie *-v2.png bestanden naar de hoofdmap van Privé.
-3. Vervang alleen bestaande dashboard.html en prive-manifest.webmanifest; laat sw.js, inloggen.html, instellingen.html en andere bestanden ongemoeid.
-4. Wacht op Vercel Production Ready.
-5. Laad de website opnieuw. De knop Installeer app staat in het menu.
-6. Voor het nieuwe pictogram: sluit/verwijder zo nodig de oude geïnstalleerde app en installeer opnieuw; browsers bewaren soms oude iconen.
-7. De installatieknop toont instructies als de browser geen automatische installatiepopup ondersteunt.
-8. Bij Vercel-fouten niet blijven committen; wacht en controleer het nieuwe production deployment.
+BESTANDEN
+1. dashboard.html: agenda-startpagina, to-do lijst, slim invoeren BÈTA, categorieën maken, directe opslag, terugkerende taken, themakleuren.
+2. instellingen.html: persoonlijke kleurthema's, profielfoto kiezen/verwijderen, bestaande instellingen behouden.
+3. JustAReminder-avatar-storage.sql: éénmalige optionele Supabase-inrichting van beveiligde profielfoto-opslag. Maak eerst een backup en check of bucket/policies al bestaan.
+
+INSTALLATIE
+- Test eerst in een aparte Vercel preview deployment en met een testaccount.
+- Vervang pas na die controle je bestaande dashboard.html en instellingen.html.
+- Laat de andere PWA, manifest- en serverbestanden bestaan.
+- Voor profielfoto's: voer eerst de SQL uit in je eigen Supabase-project. Bucket jar-avatars is privé.
+- Controleer als laatste takenlimieten, gegevensscheiding, betaalstatus en pushmeldingen met een echt account.
+
+GEGEVENS
+- To-do's zijn echte privétaken in dezelfde Supabase reminders-tabel en tellen mee met de accountlimiet.
+- Nieuwe categorieën, categorie-kleuren, thema's en instellingen worden aan het account gekoppeld via persoonlijke auth metadata, met lokale back-up.
+- Herhaling gebruikt de bestaande herhaling-velden en maakt bij afronden van een terugkerende taak de volgende aan.
+- Geen destructieve wijzigingen aan de bestaande reminders-tabellen.
+
+AANDACHTSPUNT VOOR PRODUCTIE
+- Na afronden binnen één browsertab worden dubbele kliks tegengehouden. Voor gegarandeerd exact één nieuwe herhaling op meerdere apparaten is nog server-side transactionele/idempotente logica nodig.
+- Betalingsverwerking en pushmeldingen vallen buiten deze UI-wijziging en moeten afzonderlijk end-to-end getest worden.
+- De ingebouwde Smart Engine blijft BÈTA en gebruikt regelgebaseerde herkenning; onduidelijke zinnen zelf controleren.

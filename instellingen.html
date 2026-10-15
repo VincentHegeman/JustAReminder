@@ -11,13 +11,34 @@
 .dialog-backdrop{position:fixed;inset:0;z-index:30;background:#21363b9e;display:none;place-items:center;padding:16px}.dialog-backdrop.show{display:grid}.dialog{width:min(100%,515px);background:#fffdf9;border-radius:26px;box-shadow:0 24px 80px #17282d40;overflow:hidden}.dialog .inner{padding:24px}.dialog h2{margin:0 0 16px;color:#345b68}.dialog .warning{background:#fff1ef;border:1px solid #f5d3d1;border-radius:15px;padding:15px;color:#864744;font-size:14px}.dialog .label{display:block;font-size:13px;font-weight:850;color:#5b6672;margin:16px 0 6px}.agree{display:flex;align-items:flex-start;gap:11px;margin:15px 0;color:#596d70;font-size:13px}.agree input{width:18px;height:18px;accent-color:#b94743;flex:none}.dialog .actions{border-top:1px solid #eee9e3;margin:0;padding:17px 22px;justify-content:flex-end}.dialog .message{margin-top:13px}.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.skip:focus{height:auto;width:auto;clip:auto;z-index:200;background:#fff;padding:9px}
 @media(max-width:800px){.settings-layout{grid-template-columns:1fr}.side{position:static;display:flex;gap:4px;overflow-x:auto;border-radius:18px;white-space:nowrap}.side a{flex:none}.side-note{display:none}.wrap{padding:23px 15px 52px}.panel{border-radius:22px}.form-grid{grid-template-columns:1fr}.top{padding:13px 17px}.topright{gap:6px}.topright a,.topright button{padding:8px 11px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body>
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+/* Shared JustAReminder appearance */
+:root{--jar-accent:#467b80;--jar-accent-strong:#345b68;--jar-appearance-background:#fffaf3;--jar-appearance-surface:#fffdf9;--jar-appearance-text:#394c54;--jar-appearance-menu:#fffdf9;--jar-appearance-border:#eee6d9;--jar-on-accent:#fff;--jar-accent-wash:#e7f4ed}
+html,body{background:var(--jar-appearance-background)!important;color:var(--jar-appearance-text)!important}
+body{background:radial-gradient(circle at 90% 3%,color-mix(in srgb,var(--jar-accent) 9%,transparent),transparent 30%),var(--jar-appearance-background)!important}
+.top,.panel,.side,.dialog,.info,.notice{background:var(--jar-appearance-surface)!important;border-color:var(--jar-appearance-border)!important;color:var(--jar-appearance-text)}
+.panel.mint,.panel.blue,.panel.peach,.panel.lilac{background:color-mix(in srgb,var(--jar-accent) 4%,var(--jar-appearance-surface))!important}
+.brand,.heading h1,.panel h2,.panel-head,.notice h3,.info strong,.jar-avatar-copy strong,.side a,.dialog h2{color:var(--jar-accent-strong)!important}
+.side a.current,.side a:hover,.side a:focus-visible,.brand-mark,.panel-icon,.btn.soft{background:var(--jar-accent-wash)!important;color:var(--jar-accent-strong)!important}
+.btn:not(.soft):not(.danger){background:var(--jar-accent)!important;color:var(--jar-on-accent)!important}
+.field input,.field select,.dialog input,.topright a,.topright button{background:var(--jar-appearance-surface)!important;color:var(--jar-appearance-text)!important;border-color:var(--jar-appearance-border)!important}
+.field input:focus,.field select:focus{outline-color:var(--jar-accent)}
+.jar-avatar-area{display:flex;gap:18px;align-items:center;margin-top:24px;padding:16px;border:1px solid var(--jar-appearance-border);border-radius:19px;background:var(--jar-appearance-surface)}
+.jar-avatar-preview{width:94px;height:94px;flex:0 0 94px;border-radius:26px;display:flex;align-items:center;justify-content:center;background:var(--jar-accent-wash);color:var(--jar-accent-strong);font-size:42px;font-weight:850;border:1px solid var(--jar-appearance-border);background-size:cover;background-position:center}
+.jar-avatar-copy{min-width:0;flex:1}.jar-avatar-copy p{font-size:13px;color:var(--jar-appearance-text);opacity:.72;margin:5px 0}.jar-avatar-copy .actions{margin:10px 0;align-items:center}.jar-avatar-copy small{color:var(--jar-appearance-text);opacity:.68}
+.jar-avatar-pick{display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.jar-theme-settings{border:1px solid var(--jar-appearance-border);padding:17px;border-radius:17px;margin:0 0 19px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--jar-appearance-surface)}
+.jar-theme-settings strong{color:var(--jar-accent-strong)}.jar-theme-settings p{margin:3px 0 0;font-size:12px;color:var(--jar-appearance-text);opacity:.72}.jar-theme-settings small{flex-basis:100%;font-size:11px;color:var(--jar-accent-strong)}
+@media(max-width:570px){.jar-avatar-area{align-items:flex-start;flex-direction:column}.jar-avatar-preview{width:88px;height:88px;flex:0 0 88px}.jar-avatar-copy .actions{flex-direction:column;align-items:stretch}.jar-avatar-copy .btn{width:100%;text-align:center}}
+</style>
+</head><body>
 <a class="visually-hidden skip" href="#main">Ga naar inhoud</a>
 <header class="top"><a class="brand" href="dashboard.html"><span class="brand-mark" aria-hidden="true">✓</span>JustAReminder</a><div class="topright"><a href="dashboard.html" data-i18n="navDashboard">Dashboard</a><button type="button" id="logoutTop" data-i18n="logout">Uitloggen</button></div></header>
 <div class="wrap"><header class="heading"><span class="eyebrow">JustAReminder</span><h1 data-i18n="settings">Instellingen</h1><p>Beheer je persoonlijke gegevens, meldingen en account op één rustige plek.</p></header>
 <div class="settings-layout"><nav class="side" aria-label="Instellingenmenu"><a href="#profile" data-i18n="myProfile">Mijn profiel</a><a href="#password" data-i18n="security">Wachtwoord</a><a href="#language" data-i18n="languageTitle">Taal en weergave</a><a href="#notifications" data-i18n="notifications">Meldingen</a><a href="#preferences" data-i18n="preferences">Dashboard aanpassen</a><a href="#subscription" data-i18n="subscription">Abonnement</a><a href="#account" data-i18n="account">Account</a></nav>
 <main class="main" id="main">
-<section class="panel mint" id="profile"><div class="panel-head"><div class="panel-icon" aria-hidden="true">P</div><h2 data-i18n="myProfile">Mijn profiel</h2></div><p class="lead" data-i18n="profileSubtitle">Pas je naam aan zoals die in JustAReminder verschijnt.</p><form id="profileForm"><div class="form-grid"><div class="field"><label for="name" data-i18n="name">Naam</label><input id="name" maxlength="100" autocomplete="name" required></div><div class="field"><label for="email" data-i18n="email">E-mailadres</label><input id="email" type="email" autocomplete="email" readonly aria-readonly="true"></div></div><div class="actions"><button class="btn" id="saveProfile" type="submit" data-i18n="saveProfile">Profiel opslaan</button></div></form><div id="profileMessage" class="message" hidden role="status"></div></section>
+<section class="panel mint" id="profile"><div class="panel-head"><div class="panel-icon" aria-hidden="true">P</div><h2 data-i18n="myProfile">Mijn profiel</h2></div><p class="lead" data-i18n="profileSubtitle">Pas je naam aan zoals die in JustAReminder verschijnt.</p><form id="profileForm"><div class="form-grid"><div class="field"><label for="name" data-i18n="name">Naam</label><input id="name" maxlength="100" autocomplete="name" required></div><div class="field"><label for="email" data-i18n="email">E-mailadres</label><input id="email" type="email" autocomplete="email" readonly aria-readonly="true"></div></div><div class="actions"><button class="btn" id="saveProfile" type="submit" data-i18n="saveProfile">Profiel opslaan</button></div></form><div class="jar-avatar-area"><div id="jarSettingsAvatar" class="jar-avatar-preview" aria-label="Profielfoto voorbeeld">P</div><div class="jar-avatar-copy"><strong>Mijn profielfoto</strong><p>Een foto maakt je account persoonlijk. Alleen jij kunt deze instellen.</p><div class="actions"><label for="jarAvatarFile" class="btn jar-avatar-pick">Foto kiezen</label><input id="jarAvatarFile" type="file" accept="image/jpeg,image/png,image/webp" hidden><button class="btn soft" id="jarAvatarRemove" type="button">Foto verwijderen</button></div><small>JPG, PNG of WebP, maximaal 3 MB. Wordt verkleind voor opslag.</small></div></div><div class="message" id="jarAvatarMessage" role="status" hidden></div><div id="profileMessage" class="message" hidden role="status"></div></section>
 <section class="panel blue" id="password"><div class="panel-head"><div class="panel-icon" aria-hidden="true">#</div><h2 data-i18n="security">Wachtwoord</h2></div><p class="lead" data-i18n="securitySubtitle">Kies een nieuw wachtwoord voor je account.</p><form id="passwordForm"><div class="form-grid"><div class="field"><label for="password1" data-i18n="newPassword">Nieuw wachtwoord</label><input id="password1" type="password" autocomplete="new-password" minlength="6" required></div><div class="field"><label for="password2" data-i18n="confirmPassword">Herhaal wachtwoord</label><input id="password2" type="password" autocomplete="new-password" minlength="6" required></div></div><div class="actions"><button type="submit" class="btn" id="savePassword" data-i18n="changePassword">Wachtwoord wijzigen</button></div><p class="help" data-i18n="passwordHint">Gebruik minimaal 6 tekens.</p></form><div id="passwordMessage" class="message" hidden role="status"></div></section>
 <section class="panel lilac" id="language"><div class="panel-head"><div class="panel-icon" aria-hidden="true">Aa</div><h2 data-i18n="languageTitle">Taal en weergave</h2></div><p class="lead" data-i18n="languageSubtitle">Deze taal wordt ook gebruikt in je dashboard.</p><div class="field"><label for="languageSelect" data-i18n="chooseLanguage">Kies je taal</label><select id="languageSelect"><option value="nl">Nederlands</option>
 <option value="en">English</option>
@@ -44,7 +65,7 @@
 <option value="es">Español</option>
 <option value="sv">Svenska</option></select></div><div class="actions"><button type="button" class="btn" id="saveLanguage" data-i18n="saveLanguage">Taal opslaan</button></div><div id="languageMessage" class="message" hidden role="status"></div></section>
 <section class="panel peach" id="notifications"><div class="panel-head"><div class="panel-icon" aria-hidden="true">!</div><h2 data-i18n="notifications">Meldingen</h2></div><p class="lead" data-i18n="notificationsSubtitle">Beheer de pushmeldingen van deze website op dit apparaat.</p><div class="notice"><strong id="notificationState" data-i18n="notificationState">Nog niet gecontroleerd</strong><p class="small" id="notificationOrigin"></p></div><div class="actions"><button class="btn soft" id="checkNotifications" type="button" data-i18n="checkNotifications">Status controleren</button><button class="btn" id="disableNotifications" type="button" data-i18n="disableNotifications">Meldingen op dit apparaat uitzetten</button></div><div id="notificationMessage" class="message" hidden role="status"></div><div class="notice" style="margin-top:18px"><h3 data-i18n="oldNoticeTitle">Oude website uitschakelen</h3><p data-i18n="oldNoticeText">Ontvang je nog meldingen van nooit-meer-vergeten.vercel.app? Blokkeer meldingen voor dat adres in de browserinstellingen. Deze nieuwe website kan de toestemming van een ander domein niet zelf wijzigen.</p><p class="small" data-i18n="oldNoticeHow">Chrome: Instellingen → Privacy en beveiliging → Site-instellingen → Meldingen. Zoek het oude adres en kies Blokkeren.</p><p class="small"><strong>nooit-meer-vergeten.vercel.app</strong> — <span>blokkeren</span><br><strong>justareminder.vercel.app</strong> — <span>toestaan</span></p></div></section>
-<section class="panel" id="preferences"><div class="panel-head"><div class="panel-icon" aria-hidden="true">≡</div><h2 data-i18n="preferences">Dashboard aanpassen</h2></div><p class="lead" data-i18n="preferencesText">Kies categorieën, kleuren en de indeling van je eigen dashboard via Extra opties.</p><a class="btn" style="display:inline-flex;text-decoration:none;align-items:center;justify-content:center" href="dashboard.html" data-i18n="openDashboard">Open dashboard</a></section>
+<section class="panel" id="preferences"><div class="panel-head"><div class="panel-icon" aria-hidden="true">≡</div><h2 data-i18n="preferences">Dashboard aanpassen</h2></div><p class="lead" data-i18n="preferencesText">Kies categorieën, kleuren en de indeling van je eigen dashboard via Extra opties.</p><div class="jar-theme-settings"><div><strong>Mijn kleuren</strong><p>Dit is dezelfde kleurcombinatie als in je dashboard.</p></div><button type="button" class="btn soft" id="jarSettingsRandomTheme">Verras me met een kleurencombinatie</button><small id="jarSettingsThemeMessage" role="status" aria-live="polite"></small></div><a class="btn" style="display:inline-flex;text-decoration:none;align-items:center;justify-content:center" href="dashboard.html" data-i18n="openDashboard">Open dashboard</a></section>
 <section class="panel" id="subscription"><div class="panel-head"><div class="panel-icon" aria-hidden="true">€</div><h2 data-i18n="subscription">Abonnement</h2></div><p class="lead" data-i18n="subscriptionText">Je abonnement en extra bundels kun je bekijken vanuit het dashboard. Automatische betalingen via Mollie worden na 13 oktober verder ingericht.</p><a class="btn soft" style="display:inline-flex;text-decoration:none" href="dashboard.html" data-i18n="openDashboard">Open dashboard</a></section>
 <section class="panel warn" id="account"><div class="panel-head"><div class="panel-icon" aria-hidden="true">×</div><h2 data-i18n="account">Account</h2></div><p class="lead" data-i18n="accountInfo">Hier beheer je jouw JustAReminder-account.</p><div class="info-list"><div class="info"><span class="small" data-i18n="status">Accountstatus</span><strong><span class="color-bullet"></span> <span data-i18n="active">Actief</span></strong></div><div class="info"><span class="small" data-i18n="createdAt">Account aangemaakt</span><strong id="createdAt">—</strong></div></div><div class="notice" style="margin-top:18px;border-color:#f3d8d2"><h3 data-i18n="deleteAccount">Account definitief verwijderen</h3><p data-i18n="deleteWarning">Let op: dit is definitief. Een eventueel betaald abonnement moet eerst veilig worden stopgezet. Als dat niet lukt, houdt de server je account intact.</p><button class="btn danger" type="button" id="openDelete" data-i18n="deleteAccount">Account definitief verwijderen</button></div></section>
 </main></div></div>
@@ -79,6 +100,7 @@ async function init(){
   language=safeLang(prefer||profile?.language||user.user_metadata?.jar_language||'nl');updateLang();
   if(profileError){console.warn('Profiles ophalen mislukt:',profileError.code)}
   updateNotificationStatus();
+  if(typeof jarExtraSettingsReady==='function')jarExtraSettingsReady();
 }
 async function saveProfile(ev){ev.preventDefault();clearMsg('profileMessage');if(!user)return;
  const naam=$('name').value.trim();if(!naam)return;const btn=$('saveProfile');btn.disabled=true;
@@ -170,4 +192,85 @@ $('confirmDelete').addEventListener('click',doDelete);
 $('deleteDialog').addEventListener('click',ev=>{if(ev.target===$('deleteDialog'))closeDelete()});
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape')closeDelete()});
 init();
-</script></body></html>
+</script>
+<script>
+/* Settings: same saved palette as dashboard + private account profile photo */
+const JAR_SETTING_PALETTES=[
+ {accent:'#477e77',background:'#f5faf4',surface:'#fffdf8',text:'#354e49',menu:'#ecf4ee'},
+ {accent:'#a36b60',background:'#fff5ef',surface:'#fffdfb',text:'#57483d',menu:'#fff0e9'},
+ {accent:'#6b6ea1',background:'#f6f4ff',surface:'#ffffff',text:'#3e435d',menu:'#eeedfb'},
+ {accent:'#b0734b',background:'#fdf8ee',surface:'#fffef9',text:'#50493a',menu:'#fbf1dc'},
+ {accent:'#437998',background:'#f2f9fb',surface:'#ffffff',text:'#304f5f',menu:'#e7f4fa'},
+ {accent:'#68825a',background:'#f6faee',surface:'#fffdf8',text:'#425143',menu:'#eaf4e2'},
+ {accent:'#925d78',background:'#fff5f9',surface:'#fffcfd',text:'#57414d',menu:'#fcebf3'},
+ {accent:'#987e58',background:'#faf6eb',surface:'#fffef8',text:'#4c463c',menu:'#f4ecd8'},
+ {accent:'#4c807f',background:'#f3f8f6',surface:'#fffefa',text:'#345557',menu:'#e7f3f1'},
+ {accent:'#8b6b99',background:'#faf6fc',surface:'#fffefe',text:'#52435c',menu:'#f2eafa'}
+];
+const jarHex=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v);
+function jarSettingsTheme(t){if(!t||!jarHex(t.accent))return;
+ const root=document.documentElement.style;
+ const specs={'--jar-accent':t.accent,'--jar-accent-strong':t.accent,'--jar-appearance-background':t.background,'--jar-appearance-surface':t.surface,'--jar-appearance-text':t.text,'--jar-appearance-menu':t.menu,'--jar-appearance-border':t.accent+'22','--jar-on-accent':'#ffffff'};
+ for(const [k,v] of Object.entries(specs))if(jarHex(v))root.setProperty(k,v);
+ const accent=t.accent;root.setProperty('--jar-accent-wash','#'+[1,3,5].map(i=>Math.round(parseInt(accent.slice(i,i+2),16)*.12+255*.88).toString(16).padStart(2,'0')).join(''));
+}
+function jarGetSettingsPrefs(){
+ const remote=user?.user_metadata?.jar_dashboard_settings_v1;
+ let local=null;try{local=JSON.parse(localStorage.getItem('jar_personal_v1_'+user.id)||'null')}catch(e){}
+ const pref=(local?.updatedAt||0)>=(remote?.updatedAt||0)?(local||remote):(remote||local);
+ return pref&&typeof pref==='object'?pref:{};
+}
+async function jarSettingsRandomTheme(){if(!user)return;
+ const prefs=jarGetSettingsPrefs(),pool=JAR_SETTING_PALETTES.filter(x=>x.accent!==prefs.theme?.accent);const theme={name:'custom',...(pool[Math.floor(Math.random()*pool.length)]||JAR_SETTING_PALETTES[0])};
+ prefs.theme=theme;prefs.version=1;prefs.updatedAt=Date.now();
+ jarSettingsTheme(theme);const status=$('jarSettingsThemeMessage');status.textContent='Nieuwe kleuren worden bewaard...';
+ try{localStorage.setItem('jar_personal_v1_'+user.id,JSON.stringify(prefs));const {error}=await supabaseClient.auth.updateUser({data:{jar_dashboard_settings_v1:prefs}});
+  if(error)throw error;status.textContent='Kleuren opgeslagen. Je dashboard krijgt dezelfde stijl.';
+ }catch(error){status.textContent='Kleuren zijn lokaal bewaard. Online synchroniseren is niet gelukt.';}
+}
+async function jarSettingsAvatarLoad(){
+ const picture=$('jarSettingsAvatar');picture.textContent=($('name').value||'P').slice(0,1).toUpperCase();
+ const path=user?.user_metadata?.jar_avatar_path;
+ if(!path||!path.startsWith(user.id+'/'))return;
+ try{const {data,error}=await supabaseClient.storage.from('jar-avatars').createSignedUrl(path,3600);
+ if(error)throw error;if(data?.signedUrl){picture.style.backgroundImage='url('+JSON.stringify(data.signedUrl)+')';picture.textContent='';}}
+ catch(err){console.warn('Avatar ophalen:',err);}
+}
+async function jarCropAvatar(file){
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Kies een JPG, PNG of WebP foto.');
+ if(file.size>3*1024*1024)throw new Error('De foto mag maximaal 3 MB zijn.');
+ let source;
+ if(typeof createImageBitmap==='function')source=await createImageBitmap(file);
+ else source=await new Promise((resolve,reject)=>{const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};img.onerror=()=>{URL.revokeObjectURL(url);reject(Error('Afbeelding kan niet worden geladen.'));};img.src=url;});
+ try{const side=Math.min(source.width,source.height),sx=(source.width-side)/2,sy=(source.height-side)/2;
+ const canvas=document.createElement('canvas');canvas.width=canvas.height=320;
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,320,320);ctx.drawImage(source,sx,sy,side,side,0,0,320,320);
+ return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('Foto kon niet worden verwerkt.')),'image/jpeg',.84));
+ }finally{source.close?.();}
+}
+async function jarSettingsAvatarUpload(event){const file=event.target.files?.[0];if(!file||!user)return;
+ const status=$('jarAvatarMessage');status.hidden=false;status.classList.remove('error');status.textContent='Profielfoto wordt opgeslagen...';
+ try{const blob=await jarCropAvatar(file),path=user.id+'/avatar.jpg';
+ const {error}=await supabaseClient.storage.from('jar-avatars').upload(path,blob,{contentType:'image/jpeg',upsert:true,cacheControl:'0'});
+ if(error)throw error;
+ const {data:updated,error:metaError}=await supabaseClient.auth.updateUser({data:{jar_avatar_path:path,jar_avatar_updated_at:Date.now()}});
+ if(metaError)throw metaError;if(updated?.user)user=updated.user;
+ await jarSettingsAvatarLoad();status.textContent='Profielfoto opgeslagen. Je ziet hem ook in het dashboard.';
+ }catch(error){status.classList.add('error');status.textContent='Foto niet opgeslagen: '+(error?.message||'probeer het opnieuw')+'. Controleer ook of de beveiligde fotobucket is ingesteld.';}
+ finally{event.target.value='';}
+}
+async function jarSettingsAvatarRemove(){if(!user)return;
+ const status=$('jarAvatarMessage');status.hidden=false;status.classList.remove('error');status.textContent='Foto verwijderen...';
+ try{const path=user.user_metadata?.jar_avatar_path;
+ if(path&&path.startsWith(user.id+'/')){const {error}=await supabaseClient.storage.from('jar-avatars').remove([path]);if(error)throw error;}
+ const {data,error}=await supabaseClient.auth.updateUser({data:{jar_avatar_path:null,jar_avatar_updated_at:Date.now()}});
+ if(error)throw error;if(data?.user)user=data.user;
+ const el=$('jarSettingsAvatar');el.style.backgroundImage='';el.textContent=($('name').value||'P').slice(0,1).toUpperCase();status.textContent='Profielfoto verwijderd.';
+ }catch(error){status.classList.add('error');status.textContent='Verwijderen is niet gelukt: '+(error?.message||'probeer opnieuw');}
+}
+function jarExtraSettingsReady(){jarSettingsTheme(jarGetSettingsPrefs().theme);jarSettingsAvatarLoad();}
+$('jarSettingsRandomTheme').addEventListener('click',jarSettingsRandomTheme);
+$('jarAvatarFile').addEventListener('change',jarSettingsAvatarUpload);
+$('jarAvatarRemove').addEventListener('click',jarSettingsAvatarRemove);
+</script>
+</body></html>
