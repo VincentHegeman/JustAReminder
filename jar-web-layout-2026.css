@@ -1,0 +1,309 @@
+/* JustAReminder 2026 unified web interface — design-only overlay.
+   Scoped to body.jar-web-refresh. Do not alter routing, entitlements,
+   Supabase, push handlers, wizard control, or theme preference storage.
+   The colour variables follow the active account theme where available. */
+:root {
+  --jar26-paper:#f8f6f1;
+  --jar26-white:#fffefa;
+  --jar26-ink:#3d3b36;
+  --jar26-warm:#9a7e57;
+  --jar26-radius-lg:22px;
+  --jar26-radius-md:15px;
+  --jar26-shadow:0 13px 40px rgba(57,49,36,.065);
+  --jar26-ease:cubic-bezier(.2,.65,.2,1);
+}
+body.jar-web-refresh {
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background:var(--prod-bg,var(--jar-appearance-background,var(--jar26-paper)));
+  color:var(--prod-text,var(--jar-appearance-text,var(--jar26-ink)));
+  accent-color:var(--prod-accent,var(--jar-family-accent,#8c7859));
+}
+body.jar-web-refresh :is(h1,h2,h3) {
+  letter-spacing:-.65px;
+  text-wrap:balance;
+}
+body.jar-web-refresh :is(button,a,input,textarea,select,summary):focus-visible {
+  outline:3px solid var(--prod-accent,var(--jar-family-accent,#598579))!important;
+  outline-offset:3px;
+}
+body.jar-web-refresh :is(button,.btn,.add-button,.filter-button,.jar26-action,.jar26-bottom>button) {
+  transition:background-color .16s var(--jar26-ease),border-color .16s var(--jar26-ease),box-shadow .16s var(--jar26-ease),transform .16s var(--jar26-ease);
+}
+body.jar-web-refresh :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),textarea,select) {
+  border-radius:12px;
+  max-width:100%;
+}
+body.jar-web-refresh :is(.sidebar,.mobile-menu){
+  background:var(--prod-menu,var(--jar-family-menu,var(--jar-appearance-menu,var(--jar26-white))));
+  border-color:var(--prod-border,var(--jar-family-border,#e4e0d8));
+}
+body.jar-web-refresh .sidebar{
+  border-right:1px solid var(--prod-border,var(--jar-family-border,#e5e0d7));
+  box-shadow:7px 0 35px rgba(44,38,30,.025);
+  padding-top:26px;
+}
+body.jar-web-refresh .sidebar .brand{
+  margin-bottom:8px;
+  padding-bottom:22px;
+}
+body.jar-web-refresh :is(.sidebar,.mobile-menu) .brand-icon{
+  width:44px;
+  height:44px;
+  min-width:44px;
+  display:grid;
+  place-items:center;
+  border-radius:15px;
+  background:var(--prod-soft,var(--jar-family-accent-wash,#eee7dc));
+  color:var(--prod-accent,var(--jar-family-accent,#8e785b));
+  box-shadow:none;
+}
+body.jar-web-refresh .brand-text{
+  font-weight:800;
+  letter-spacing:-.65px;
+}
+body.jar-web-refresh :is(.sidebar,.mobile-menu) .nav{gap:6px}
+body.jar-web-refresh :is(.sidebar,.mobile-menu) .nav-link{
+  min-height:43px;
+  border-radius:13px;
+  padding:10px 13px;
+  font-weight:700;
+  font-size:13px;
+}
+body.jar-web-refresh :is(.sidebar,.mobile-menu) .nav-link:is(:hover,:focus-visible,.active){
+  background:var(--prod-soft,var(--jar-family-accent-wash,#f0e9de))!important;
+  color:var(--prod-accent,var(--jar-family-accent,#467c70))!important;
+}
+body.jar-web-refresh .nav-icon{font-size:19px;min-width:22px;display:inline-flex;justify-content:center}
+body.jar-web-refresh .main{
+  background:transparent;
+  min-width:0;
+}
+body.jar-web-refresh .topbar {
+  min-height:76px;
+  background:var(--prod-surface,var(--jar-family-surface,var(--jar26-white)));
+  border-bottom:1px solid var(--prod-border,var(--jar-family-border,#e6e1d8));
+  box-shadow:0 2px 16px rgba(54,48,37,.025);
+  padding-inline:clamp(15px,2.6vw,38px);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+body.jar-web-refresh :is(.search-box,.search-box input) {
+  border-radius:14px;
+}
+body.jar-web-refresh .search-box input {
+  background:var(--prod-bg,var(--jar-family-bg,#f8f6f1));
+  border:1px solid var(--prod-border,var(--jar-family-border,#e3ded5));
+  color:var(--prod-text,var(--jar-family-ink,#3d3b36));
+  min-height:42px;
+}
+body.jar-web-refresh .user-avatar,
+body.jar-web-refresh #topUserAvatar {
+  border:2px solid var(--prod-surface,var(--jar-family-surface,#fffefa));
+  box-shadow:0 0 0 1px var(--prod-border,var(--jar-family-border,#e3dfd6));
+}
+body.jar-web-refresh .content {
+  width:100%;
+  margin-inline:auto;
+  padding-top:clamp(20px,3vw,38px);
+  padding-bottom:clamp(92px,8vw,110px);
+}
+body.jar-web-refresh :is(.welcome,.welcome-card,.jar26-intro) {
+  border-radius:var(--jar26-radius-lg);
+}
+body.jar-web-refresh :is(.welcome,.welcome-card) h1,
+body.jar-web-refresh .jar26-hero-grid h1 {
+  font-size:clamp(26px,3.4vw,39px);
+  line-height:1.18;
+  letter-spacing:-1.25px;
+  font-weight:800;
+}
+body.jar-web-refresh .jar26-intro {
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+body.jar-web-refresh .jar26-intro .jar26-hero-grid {
+  align-items:center;
+  gap:15px;
+}
+body.jar-web-refresh .jar26-hero-grid p,
+body.jar-web-refresh .welcome p,
+body.jar-web-refresh .welcome-card p {
+  line-height:1.65;
+  max-width:760px;
+}
+body.jar-web-refresh :is(.jar26-home,.jar26-intro,.jar26-summary,.dashboard-grid,.stats,.jar-prod-fullpage,.calendar-shell,.jar26-todo-fold){
+  min-width:0;
+}
+body.jar-web-refresh :is(.stat-card,.stat,.card,.settings-card,.calendar-shell,.jar26-summary-card,.jar26-todo-fold,.jar-prod-smart,.jar-status-strip-item,.reminders-card,.jar-prod-fullpage,.jar-account-billing-check,.jar-collab-shell,.jar-recurring-entry) {
+  border-radius:var(--jar26-radius-lg)!important;
+  border:1px solid var(--prod-border,var(--jar-family-border,var(--jar-appearance-border,#e7e1d6)))!important;
+  background:var(--prod-surface,var(--jar-family-surface,var(--jar-appearance-surface,var(--jar26-white))))!important;
+  color:var(--prod-text,var(--jar-family-ink,var(--jar-appearance-text,#3e3c37)))!important;
+  box-shadow:var(--jar26-shadow)!important;
+}
+body.jar-web-refresh .stat-card,
+body.jar-web-refresh .stat,
+body.jar-web-refresh .jar26-summary-card {
+  min-height:114px;
+  padding:18px 19px;
+}
+body.jar-web-refresh :is(.stat-icon,.card-title-icon) {
+  border-radius:14px;
+}
+body.jar-web-refresh .stat-card .stat-number,
+body.jar-web-refresh .stat strong,
+body.jar-web-refresh .jar26-summary-card strong {
+  font-variant-numeric:tabular-nums;
+  font-weight:800;
+  letter-spacing:-1.3px;
+}
+body.jar-web-refresh :is(.card,.settings-card,.calendar-shell,.jar-prod-fullpage) {
+  padding:clamp(17px,2.4vw,28px);
+}
+body.jar-web-refresh :is(.card-header,.card-head) {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px;
+}
+body.jar-web-refresh :is(.card-title h2,.card-head h2,.card-head h3) {
+  font-weight:800;
+  letter-spacing:-.7px;
+}
+body.jar-web-refresh :is(.filter-buttons,.calendar-toolbar-actions,.jar26-actions) {
+  gap:7px;
+}
+body.jar-web-refresh :is(.filter-button,.sort-select,.jar26-market,.pill) {
+  border-radius:12px;
+  font-weight:700;
+}
+body.jar-web-refresh .filter-button.active {
+  box-shadow:inset 0 0 0 1px var(--prod-accent,var(--jar-family-accent,#558879));
+}
+body.jar-web-refresh :is(.add-button,.btn-primary,.jar26-action,[data-jar-primary-action]) {
+  border-radius:14px;
+  font-weight:750;
+}
+body.jar-web-refresh .jar26-todo-fold {
+  overflow:visible;
+}
+body.jar-web-refresh :is(.jar-todo-form,.jar-prod-todo-form) {
+  gap:9px;
+}
+body.jar-web-refresh :is(.jar-todo-form input,.jar-prod-todo-form input) {
+  min-width:0;
+  min-height:45px;
+}
+body.jar-web-refresh :is(.jar-prod-more-grid>button,.jar-prod-more-grid>a) {
+  border:1px solid var(--prod-border,var(--jar-family-border,#e5e0d8));
+  border-radius:16px;
+  padding:18px 18px;
+  min-height:99px;
+  text-align:left;
+  box-shadow:none;
+}
+body.jar-web-refresh :is(.jar-prod-more-grid>button,.jar-prod-more-grid>a):hover {
+  border-color:var(--prod-accent,var(--jar-family-accent,#6f9281));
+  transform:translateY(-1px);
+}
+body.jar-web-refresh .jar-prod-page-head h1 {
+  font-size:clamp(27px,3vw,38px);
+  letter-spacing:-1.15px;
+}
+body.jar-web-refresh :is(.calendar-day,.jar26-calendar-day) {
+  border-radius:12px;
+}
+body.jar-web-refresh :is(.calendar-event,.jar26-calendar-event){
+  border-radius:8px;
+}
+body.jar-web-refresh :is(.modal,.modal-wrap .modal,.wizard-modal,.jar-personal-modal) {
+  border-radius:22px;
+  background:var(--prod-surface,var(--jar-family-surface,#fffefa));
+  color:var(--prod-text,var(--jar-family-ink,#3d3b36));
+}
+body.jar-web-refresh :is(.modal-header,.modal-head) {
+  border-color:var(--prod-border,var(--jar-family-border,#e6e0d6));
+}
+body.jar-web-refresh :is(.jar-prod-fullpage[hidden],.jar26-home[hidden],.modal[hidden],.card[hidden]){display:none!important}
+body.jar-web-refresh :is(.mobile-header,.jar26-bottom){
+  background:var(--prod-surface,var(--jar-family-surface,#fffefa));
+  color:var(--prod-text,var(--jar-family-ink,#383732));
+  border-color:var(--prod-border,var(--jar-family-border,#e5e0d8));
+}
+body.jar-web-refresh .jar26-bottom {
+  box-shadow:0 -12px 32px rgba(47,41,32,.055);
+}
+body.jar-web-refresh .jar26-bottom>button {
+  min-width:0;
+  border-radius:14px;
+  padding-inline:3px;
+}
+body.jar-web-refresh .jar26-bottom>button.is-active {
+  background:var(--prod-soft,var(--jar-family-accent-wash,#efe8db));
+  color:var(--prod-accent,var(--jar-family-accent,#6b8067));
+}
+body.jar-web-refresh .jar26-bottom :is(.jar26-nav-ico,.jar26-nav-icon) {
+  font-size:22px;
+  line-height:1.2;
+}
+body.jar-web-refresh .mobile-header {
+  min-height:65px;
+  padding-inline:clamp(13px,4vw,22px);
+  border-bottom:1px solid var(--prod-border,var(--jar-family-border,#e4dfd4));
+}
+body.jar-web-refresh .mobile-brand {
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:-.7px;
+}
+/* The existing theme preference system owns colour choices.
+   This dark-mode treatment affects only borders, shadows and visibility. */
+html[data-jar-appearance-mode="dark"] body.jar-web-refresh,
+html[data-jar-theme="dark"] body.jar-web-refresh {
+  --jar26-shadow:0 8px 32px rgba(0,0,0,.13);
+}
+@media(min-width:851px){
+  body.jar-web-refresh .content{max-width:1550px;margin-inline:auto;padding-inline:clamp(22px,3vw,46px)}
+  body.jar-web-refresh .dashboard-grid{gap:20px}
+  body.jar-web-refresh .stats{gap:15px}
+  body.jar-web-refresh .sidebar{padding-inline:15px}
+  body.jar-web-refresh .jar26-summary{gap:15px}
+}
+@media(max-width:850px){
+  body.jar-web-refresh .content{padding:18px 15px max(110px,calc(95px + env(safe-area-inset-bottom,0px)))!important}
+  body.jar-web-refresh .jar26-home,
+  body.jar-web-refresh .jar26-intro{width:100%;max-width:none;padding-inline:0!important}
+  body.jar-web-refresh .jar26-hero-grid{gap:8px}
+  body.jar-web-refresh .jar26-hero-grid h1{font-size:clamp(24px,5vw,31px)!important}
+  body.jar-web-refresh .stats{gap:9px}
+  body.jar-web-refresh :is(.stat-card,.stat,.jar26-summary-card){padding:14px 13px;min-height:102px}
+  body.jar-web-refresh .card,
+  body.jar-web-refresh .jar-prod-fullpage{padding:16px 14px!important}
+  body.jar-web-refresh .topbar{padding-inline:14px}
+  body.jar-web-refresh .jar-prod-more-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.jar-web-refresh .jar-prod-more-grid>button{padding:14px;min-height:96px}
+  body.jar-web-refresh :is(.modal,.modal-wrap .modal,.wizard-modal,.jar-personal-modal){max-width:calc(100vw - 20px);border-radius:18px}
+}
+@media(max-width:510px){
+  body.jar-web-refresh .content{padding-inline:11px!important}
+  body.jar-web-refresh .jar-prod-more-grid{grid-template-columns:1fr}
+  body.jar-web-refresh :is(.stat-card,.stat,.jar26-summary-card){min-height:95px}
+  body.jar-web-refresh .jar26-hero-grid p{font-size:13px}
+  body.jar-web-refresh .jar26-bottom>button{font-size:10px;min-height:54px}
+  body.jar-web-refresh .jar26-bottom :is(.jar26-nav-ico,.jar26-nav-icon){font-size:20px}
+  body.jar-web-refresh :is(.jar-todo-form,.jar-prod-todo-form){flex-wrap:wrap}
+  body.jar-web-refresh :is(.jar-todo-form input,.jar-prod-todo-form input){flex:1 1 140px}
+  body.jar-web-refresh :is(.jar-todo-form button,.jar-prod-todo-form button){flex:0 0 auto;min-height:43px}
+  body.jar-web-refresh .calendar-toolbar{gap:7px;flex-wrap:wrap}
+  body.jar-web-refresh .calendar-weekdays>*,body.jar-web-refresh .calendar-day{min-width:0}
+}
+@media(max-width:350px){
+  body.jar-web-refresh .jar26-bottom>button{font-size:9px;padding-inline:1px}
+  body.jar-web-refresh .jar26-bottom :is(.jar26-nav-ico,.jar26-nav-icon){font-size:19px}
+  body.jar-web-refresh .calendar-day{padding:3px}
+}
+@media(prefers-reduced-motion:reduce){
+  body.jar-web-refresh :is(button,.btn,.add-button,.filter-button,.jar26-action){transition:none!important;transform:none!important}
+}
