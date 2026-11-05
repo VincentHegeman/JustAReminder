@@ -1,0 +1,142 @@
+/* 2026 Privé public web account + settings facelift.
+   Styling only: auth, subscriptions, deletion, password reset JS untouched. */
+body.jar-web-auth,body.jar-web-settings{
+  --jar26-paper:#f9f7f2;
+  --jar26-card:#fffefa;
+  --jar26-ink:#3c3b35;
+  --jar26-sand:#987d58;
+  --jar26-teal:#3e766d;
+  --jar26-line:#e7e1d8;
+  --jar26-soft:#f1e9df;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:var(--jar26-paper);
+  color:var(--jar26-ink);
+  -webkit-font-smoothing:antialiased;
+}
+body.jar-web-auth :is(h1,h2,h3),body.jar-web-settings :is(h1,h2,h3){letter-spacing:-.85px;line-height:1.18}
+body.jar-web-auth :is(.auth-nav,.footer),body.jar-web-settings .top{
+  background:var(--jar26-card);
+  border-color:var(--jar26-line);
+}
+body.jar-web-auth .auth-nav,body.jar-web-settings .top {
+  min-height:78px;
+  padding-inline:clamp(18px,5vw,55px);
+}
+body.jar-web-auth :is(.auth-brand,.aside h1,.auth-card h2),
+body.jar-web-settings :is(.brand,.heading h1,.panel h2){
+  color:var(--jar26-ink);
+}
+body.jar-web-auth .brand-mark,body.jar-web-settings .brand-mark{
+  width:42px;height:42px;display:grid;place-items:center;
+  border-radius:14px;background:var(--jar26-teal);color:white;
+  transform:rotate(-5deg);
+}
+body.jar-web-auth .page {
+  max-width:1190px;
+  grid-template-columns:minmax(0,1fr) minmax(340px,455px);
+  gap:clamp(22px,7vw,95px);
+  padding-top:55px;
+}
+body.jar-web-auth .aside h1 {
+  font-weight:820;
+  font-size:clamp(39px,5.4vw,63px);
+}
+body.jar-web-auth .aside h1 span:not(:first-child) {color:var(--jar26-sand)}
+body.jar-web-auth .aside p{color:#716e67;max-width:530px}
+body.jar-web-auth .notes{
+  background:var(--jar26-card);
+  border:1px solid var(--jar26-line);
+  box-shadow:0 13px 34px rgba(55,49,39,.065);
+  transform:none;border-radius:21px;
+}
+body.jar-web-auth .notes strong{color:var(--jar26-ink)}
+body.jar-web-auth .note-row{
+  background:var(--jar26-soft);
+  border:1px solid var(--jar26-line);
+  border-radius:12px;
+  color:#645a4b;
+}
+body.jar-web-auth .note-row:nth-child(3){background:#eef4ee}
+body.jar-web-auth .note-row:nth-child(4){background:#f0eef6}
+body.jar-web-auth .auth-card,
+body.jar-web-settings :is(.side,.panel) {
+  background:var(--jar26-card)!important;
+  border:1px solid var(--jar26-line)!important;
+  border-radius:23px;
+  box-shadow:0 14px 42px rgba(51,44,33,.06)!important;
+}
+body.jar-web-auth .auth-tabbar {background:var(--jar26-soft);border-radius:14px}
+body.jar-web-auth .auth-tabbar a{border-radius:11px}
+body.jar-web-auth .auth-tabbar a.active{background:var(--jar26-teal);color:white}
+body.jar-web-auth .eyebrow,body.jar-web-settings .eyebrow {
+  color:var(--jar26-sand);
+  border-color:var(--jar26-line);
+  background:var(--jar26-card);
+  text-transform:uppercase;font-size:11px;letter-spacing:1.5px;
+}
+body.jar-web-auth :is(.field input,.language-select),
+body.jar-web-settings :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) {
+  border:1px solid var(--jar26-line);
+  border-radius:12px;
+  color:var(--jar26-ink);
+  background:white;
+  min-height:46px;
+}
+body.jar-web-auth .btn {
+  background:var(--jar26-teal);
+  border-radius:13px;
+  color:#fff;
+  box-shadow:none;
+}
+body.jar-web-auth .btn-subtle{background:#eaf1ed;color:#2c6a60}
+body.jar-web-auth .btn:not(:disabled):hover{background:#305e56}
+body.jar-web-auth .auth-card h2{font-size:clamp(23px,3.2vw,30px)}
+body.jar-web-auth .legal a{color:var(--jar26-teal)}
+body.jar-web-auth :is(button,a,input,select):focus-visible,
+body.jar-web-settings :is(button,a,input,select,textarea):focus-visible{
+  outline:3px solid var(--jar26-teal)!important;outline-offset:3px
+}
+body.jar-web-settings .wrap {max-width:1190px;padding-top:38px}
+body.jar-web-settings .heading h1 {font-size:clamp(31px,4vw,49px);font-weight:820}
+body.jar-web-settings .side {padding:12px;max-height:calc(100dvh - 35px);overflow-y:auto}
+body.jar-web-settings .side a {
+  color:var(--jar26-ink);
+  border-radius:12px;
+}
+body.jar-web-settings .side a:is(:hover,.current,:focus-visible){background:var(--jar26-soft);color:#4b624c}
+body.jar-web-settings .panel {padding:clamp(20px,3vw,31px)}
+body.jar-web-settings .panel-icon {
+  background:var(--jar26-soft);color:var(--jar26-sand);
+  border-radius:13px
+}
+body.jar-web-settings .topright :is(button,a){
+  background:var(--jar26-card);
+  border-color:var(--jar26-line);
+  border-radius:12px;
+}
+body.jar-web-settings :is(.btn,.button-primary,button[type="submit"]){
+  border-radius:12px;
+}
+@media(max-width:850px){
+ body.jar-web-settings .settings-layout{grid-template-columns:1fr}
+ body.jar-web-settings .side{position:static;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;max-height:none;scrollbar-width:thin;flex-wrap:nowrap}
+ body.jar-web-settings .side a{white-space:nowrap;flex:0 0 auto;font-size:13px;padding:10px 11px}
+ body.jar-web-settings .wrap{padding:25px 15px 70px}
+}
+@media(max-width:800px){
+ body.jar-web-auth .page{grid-template-columns:1fr;max-width:580px;padding:31px 18px 65px}
+ body.jar-web-auth .aside h1{font-size:clamp(32px,7vw,41px)}
+ body.jar-web-auth .auth-card{border-radius:22px}
+ body.jar-web-auth .notes{display:none}
+ body.jar-web-auth .auth-nav,body.jar-web-settings .top{padding-inline:15px;min-height:64px}
+}
+@media(max-width:520px){
+ body.jar-web-auth .page{padding-inline:12px}
+ body.jar-web-auth .auth-card{padding:24px 19px}
+ body.jar-web-settings .top{gap:10px}
+ body.jar-web-settings .form-grid{grid-template-columns:1fr}
+ body.jar-web-settings .panel{padding:20px 16px}
+}
+@media(prefers-reduced-motion:reduce){
+ body.jar-web-auth *,body.jar-web-settings *{scroll-behavior:auto!important;transition:none!important}
+}
